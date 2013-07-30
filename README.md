@@ -1,11 +1,6 @@
-KOServer ( this project owner is twostars )
+KOServer
+Note : Project owner is twostars
 ========
 
-Knight Online Sunucu Projesi ;
-
-* Düzeltilen Önemli Değişiklikler
-  - Seri Skill Kullanımı Engellendi.
-  - +PermitConnect Nick ( Oyun İçi Ban Açma Komutu Eklendi )
-  - +Reload_Tables ( Ebenezer ) ( MAGIC Tablolarını ve Rankları Yükler, Sunucuyu Resetlemeden Skill Düzeltmesine Olanak Sağlar. ) 
-  - Bir Kaç Mantıksal Hata Düzeltildi.
-  - /ATTAKCENABLE Komutu Düzeltildi.
+* Knight Online Server Project ( snoxd )
+* Project the real owner of the project is closed. ( is aimed to help for people )
