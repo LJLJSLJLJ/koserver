@@ -635,7 +635,7 @@ COMMAND_HANDLER(CUser::HandlePermitConnectCommand)
 	std::string strUserID = vargs.front();
 	vargs.pop_front();
 
-	g_DBAgent.UpdateUserAuthority(strUserID,1);
+	g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_PLAYER);
 
 	return true;
 }

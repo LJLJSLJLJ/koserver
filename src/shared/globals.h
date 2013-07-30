@@ -391,6 +391,7 @@ INLINE float TimeGet()
 	}
 	catch (std::exception & ex)
 	{
+		TRACE("TimeGet Ex : %s\n ", ex.what());
 		ReturnedObject = 0.0f;
 	}
 

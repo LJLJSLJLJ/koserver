@@ -3,6 +3,9 @@
 #include "KnightsManager.h"
 #include "KingSystem.h"
 #include "MagicInstance.h"
+#include "DBAgent.h"
+
+extern CDBAgent g_DBAgent;
 
 using namespace std;
 
@@ -2968,7 +2971,10 @@ void CUser::OperatorCommand(Packet & pkt)
 		pUser->m_bAuthority = AUTHORITY_PLAYER;
 		break;
 	case OPERATOR_UNMUTE:
-		pUser->m_bAuthority = AUTHORITY_PLAYER;
+		if (pUser->IsConnected())
+			pUser->m_bAuthority = AUTHORITY_PLAYER;
+		else
+			g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_PLAYER);
 		break;
 	}
 }
