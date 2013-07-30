@@ -6,7 +6,7 @@ void CUser::MoveProcess(Packet & pkt)
 	ASSERT(GetMap() != nullptr);
 	if (m_bWarp || isDead()) 
 		return;
-
+		
 	uint16 will_x, will_z, will_y;
 	int16 speed=0;
 	float real_x, real_z, real_y;
@@ -20,7 +20,7 @@ void CUser::MoveProcess(Packet & pkt)
 		// TO-DO: Handle proper speed checks against server-side amounts.
 		// We should also avoid relying on what the client has sent us.
 		if (speed > 200)	// What is the signifance of this number? Considering 90 is light feet...
-			// We shouldn't be using magic numbers at all here.
+							// We shouldn't be using magic numbers at all here.
 		{
 			Disconnect();
 			return;
@@ -55,8 +55,7 @@ void CUser::MoveProcess(Packet & pkt)
 	result << GetSocketID() << will_x << will_z << will_y << speed << echo;
 	SendToRegion(&result);
 
-	if (real_x > 0.0f && real_z> 0.0f)
-		GetMap()->CheckEvent(real_x, real_z, this);
+	GetMap()->CheckEvent(real_x, real_z, this);
 
 	result.Initialize(AG_USER_MOVE);
 	result << GetSocketID() << m_curx << m_curz << m_cury << speed;
@@ -110,7 +109,7 @@ void CUser::GetUserInfo(Packet & pkt)
 {
 	pkt.SByte();
 	pkt		<< GetName()
-		<< uint16(GetNation()) << GetClanID() << GetFame();
+			<< uint16(GetNation()) << GetClanID() << GetFame();
 
 	CKnights * pKnights = g_pMain->GetClanPtr(GetClanID());
 	if (pKnights == nullptr)
@@ -120,15 +119,15 @@ void CUser::GetUserInfo(Packet & pkt)
 	else
 	{
 		pkt	<< pKnights->GetAllianceID()
-			<< pKnights->m_strName
-			<< pKnights->m_byGrade << pKnights->m_byRanking
-			<< uint16(pKnights->m_sMarkVersion) // symbol/mark version
-			<< uint16(pKnights->m_sCape) // cape ID
-			<< pKnights->m_bCapeR << pKnights->m_bCapeG << pKnights->m_bCapeB << uint8(0) // this is stored in 4 bytes after all.
-			// not sure what this is, but it (just?) enables the clan symbol on the cape 
-			// value in dump was 9, but everything tested seems to behave as equally well...
-			// we'll probably have to implement logic to respect requirements.
-			<< uint8(1); 
+				<< pKnights->m_strName
+				<< pKnights->m_byGrade << pKnights->m_byRanking
+				<< uint16(pKnights->m_sMarkVersion) // symbol/mark version
+				<< uint16(pKnights->m_sCape) // cape ID
+				<< pKnights->m_bCapeR << pKnights->m_bCapeG << pKnights->m_bCapeB << uint8(0) // this is stored in 4 bytes after all.
+				// not sure what this is, but it (just?) enables the clan symbol on the cape 
+				// value in dump was 9, but everything tested seems to behave as equally well...
+				// we'll probably have to implement logic to respect requirements.
+				<< uint8(1); 
 	}
 
 	// There are two event-driven invisibility states; dispel on attack, and dispel on move.
@@ -218,13 +217,13 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 	case ZONE_ELMORAD_ESLANT:
 		return GetNation() == ELMORAD;
 
-		// Delos (30) may be entered by anybody, unless CSW is started -- in which case, it should only allow members of the clans competing for the castle (right?).
+	// Delos (30) may be entered by anybody, unless CSW is started -- in which case, it should only allow members of the clans competing for the castle (right?).
 	case ZONE_DELOS: // TO-DO: implement CSW logic
 		return true;
 
-		// Bifrost (31) may only be entered if the zone is open by the event. 
-		// If it's open, it should only be open for the zone in control of the monument in the first stage. 
-		// After that, it's open to both zones (note: this extended logic won't be implemented until we actually implement the event -- #84).
+	// Bifrost (31) may only be entered if the zone is open by the event. 
+	// If it's open, it should only be open for the zone in control of the monument in the first stage. 
+	// After that, it's open to both zones (note: this extended logic won't be implemented until we actually implement the event -- #84).
 	case ZONE_BIFROST: // TO-DO: implement Bifrost logic
 		return true;
 
@@ -296,15 +295,15 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z)
 			UpdateAngerGauge(0);
 
 		/* 
-		Here we also send a clan packet with subopcode 0x16 (with a byte flag of 2) if war zone/Moradon
-		or subopcode 0x17 (with nWarEnemyID) for all else
+			Here we also send a clan packet with subopcode 0x16 (with a byte flag of 2) if war zone/Moradon
+			or subopcode 0x17 (with nWarEnemyID) for all else
 		*/
 #if 0
 		if (isInClan())
 		{
 			CKnights * pKnights = g_pMain->GetClanPtr(GetClanID());
 			if (pKnights != nullptr
-				&& pKnights->bKnightsWarStarted)
+					&& pKnights->bKnightsWarStarted)
 			{
 				Packet clanPacket(WIZ_KNIGHTS_PROCESS);
 				if (pMap->isWarZone() || sNewZone == ZONE_MORADON)
@@ -346,7 +345,7 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z)
 		SendServerChange(pInfo->strServerIP, 2);
 		return;
 	}
-
+	
 	SetRegion(GetNewRegionX(), GetNewRegionZ());
 
 	Packet result(WIZ_ZONE_CHANGE, uint8(ZoneChangeTeleport));
@@ -375,13 +374,13 @@ void CUser::ZoneChange(uint16 sNewZone, float x, float z)
 }
 
 /**
-* @brief	Changes the zone of all party members within the user's zone.
-* 			If the user is not in a party, they should still be teleported.
-*
-* @param	sNewZone	ID of the new zone.
-* @param	x			The x coordinate.
-* @param	z			The z coordinate.
-*/
+ * @brief	Changes the zone of all party members within the user's zone.
+ * 			If the user is not in a party, they should still be teleported.
+ *
+ * @param	sNewZone	ID of the new zone.
+ * @param	x			The x coordinate.
+ * @param	z			The z coordinate.
+ */
 void CUser::ZoneChangeParty(uint16 sNewZone, float x, float z)
 {
 	_PARTY_GROUP * pParty = g_pMain->GetPartyPtr(GetPartyID());
@@ -398,13 +397,13 @@ void CUser::ZoneChangeParty(uint16 sNewZone, float x, float z)
 }
 
 /**
-* @brief	Changes the zone of all clan members in home/neutral zones (including Eslant).
-* 			If the user is not in a clan, they should not be teleported.
-*
-* @param	sNewZone	ID of the new zone.
-* @param	x			The x coordinate.
-* @param	z			The z coordinate.
-*/
+ * @brief	Changes the zone of all clan members in home/neutral zones (including Eslant).
+ * 			If the user is not in a clan, they should not be teleported.
+ *
+ * @param	sNewZone	ID of the new zone.
+ * @param	x			The x coordinate.
+ * @param	z			The z coordinate.
+ */
 void CUser::ZoneChangeClan(uint16 sNewZone, float x, float z)
 {
 	CKnights * pKnights = g_pMain->GetClanPtr(GetClanID());

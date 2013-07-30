@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "MAP.h"
 #include "ServerDlg.h"
 #include "Region.h"
@@ -14,7 +14,7 @@ INLINE int ParseSpace( char* tBuf, char* sBuf)
 {
 	int i = 0, index = 0;
 	bool flag = false;
-
+	
 	while (sBuf[index] == ' ' || sBuf[index] == '\t')
 		index++;
 
@@ -115,7 +115,7 @@ void MAP::RemoveMapData()
 		delete[] m_fHeight;
 		m_fHeight = nullptr;
 	}
-
+	
 	m_arRoomEventArray.DeleteAllData();
 }
 
@@ -178,16 +178,6 @@ bool MAP::RegionNpcRemove(int rx, int rz, int nid)
 	return true;
 }
 
-CRegion * MAP::GetRegion(uint16 regionX, uint16 regionZ)
-{
-	if (regionX > GetXRegionMax()
-		|| regionZ > GetZRegionMax())
-		return nullptr;
-
-	FastGuard lock(m_lock);
-	return &m_ppRegion[regionX][regionZ];
-} 
-
 bool MAP::LoadRoomEvent()
 {
 	uint32		length, count;
@@ -209,8 +199,8 @@ bool MAP::LoadRoomEvent()
 	}
 
 	is.seekg(0, is.end);
-	length = (uint32)is.tellg();
-	is.seekg (0, is.beg);
+    length = (uint32)is.tellg();
+    is.seekg (0, is.beg);
 
 	count = 0;
 
@@ -225,7 +215,7 @@ bool MAP::LoadRoomEvent()
 			buf[index] = (uint8) 0;
 			t_index = 0;
 
-			if( buf[t_index] == ';' || buf[t_index] == '/' )	{		// ÁÖ¼®¿¡ ´ëÇÑ Ã³¸®
+			if( buf[t_index] == ';' || buf[t_index] == '/' )	{		// �ּ��� ���� ó��
 				index = 0;
 				continue;
 			}
@@ -240,7 +230,7 @@ bool MAP::LoadRoomEvent()
 					TRACE("Event Double !!\n" );
 					goto cancel_event_load;
 				}
-
+				
 				pEvent = nullptr;
 				pEvent = SetRoomEvent( event_num );
 			}
@@ -358,7 +348,7 @@ int MAP::IsRoomCheck(float fx, float fz)
 			minX = pRoom->m_iEndMinX;		minZ = pRoom->m_iEndMinZ;
 			maxX = pRoom->m_iEndMaxX;		maxZ = pRoom->m_iEndMaxZ;
 		}
-
+	
 		CRect r(minX, minZ, maxX, maxZ);
 		if (r.PtInRect(nX, nZ))
 		{
@@ -368,13 +358,13 @@ int MAP::IsRoomCheck(float fx, float fz)
 				pRoom->m_tDelayTime = UNIXTIME;
 				room_number = itr->first;
 				TRACE(" Room Check - number = %d, x=%d, z=%d\n", room_number, nX, nZ);
-				//wsprintf(notify, "** ¾Ë¸² : [%d Zone][%d] ¹æ¿¡ µé¾î¿À½Å°ÍÀ» È¯¿µÇÕ´Ï´Ù **", m_nZoneNumber, pRoom->m_sRoomNumber);
+				//wsprintf(notify, "** �˸� : [%d Zone][%d] �濡 �����Ű��� ȯ���մϴ� **", m_nZoneNumber, pRoom->m_sRoomNumber);
 				//g_pMain->SendSystemMsg(notify, PUBLIC_CHAT);
 			}
 			else // room already in progress
 			{
 				pRoom->m_byStatus = RoomStatusCleared;
-				//wsprintf(notify, "** ¾Ë¸² : [%d Zone][%d] ¸ñÇ¥ÁöÁ¡±îÁö µµÂøÇØ¼­ Å¬¸®¾î µË´Ï´Ù¤· **", m_nZoneNumber, pRoom->m_sRoomNumber);
+				//wsprintf(notify, "** �˸� : [%d Zone][%d] ��ǥ�������� �����ؼ� Ŭ���� �˴ϴ٤� **", m_nZoneNumber, pRoom->m_sRoomNumber);
 				//g_pMain->SendSystemMsg(notify, PUBLIC_CHAT);
 			}
 
