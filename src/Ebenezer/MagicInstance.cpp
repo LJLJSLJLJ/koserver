@@ -116,7 +116,7 @@ void MagicInstance::Run()
 		if (bInitialResult)
 		{
 			if (nSkillID < 500000) {
-				pCaster->m_LastSkillUseTime = pCaster->TimeGet();
+				pCaster->m_LastSkillUseTime = TimeGet();
 				pCaster->m_LastSkillType = pSkill->bType[0];
 			}
 

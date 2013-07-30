@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <mmsystem.h>
 #include "version.h"
 #include "packets.h"
 #include "Packet.h"
@@ -353,6 +354,47 @@ INLINE bool CheckPercent(short percent)
 		return false;
 
 	return (percent > myrand(0, 1000));
+}
+
+INLINE float TimeGet()
+{
+	float ReturnedObject;
+	bool bInit = false;
+	bool bUseHWTimer = FALSE;
+	LARGE_INTEGER nTime, nFrequency;
+
+	try
+	{
+		if(bInit == false)
+		{
+			if(TRUE == ::QueryPerformanceCounter(&nTime))
+			{
+				::QueryPerformanceFrequency(&nFrequency);
+				bUseHWTimer = TRUE;
+			}
+			else 
+			{
+				bUseHWTimer = FALSE;
+			}
+
+			bInit = true;
+		}
+
+		if(bUseHWTimer)
+		{
+			::QueryPerformanceCounter(&nTime);
+			ReturnedObject = (float)((double)(nTime.QuadPart)/(double)nFrequency.QuadPart);
+		} else 
+		{
+			ReturnedObject =(float)timeGetTime();
+		}
+	}
+	catch (std::exception & ex)
+	{
+		ReturnedObject = 0.0f;
+	}
+
+	return ReturnedObject;
 }
 
 INLINE time_t getMSTime()

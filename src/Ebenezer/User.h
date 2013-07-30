@@ -1,6 +1,5 @@
 #pragma once
 
-#include <mmsystem.h>
 #include "LuaEngine.h"
 #include "../shared/KOSocket.h"
 
@@ -527,47 +526,6 @@ public:
 	_ITEM_TABLE * GetItemPrototype(uint8 pos, _ITEM_DATA *& pItem);
 
 	INLINE KOMap * GetMap() { return m_pMap; }
-
-	INLINE float TimeGet()
-	{
-		float ReturnedObject;
-		bool bInit = false;
-		bool bUseHWTimer = FALSE;
-		LARGE_INTEGER nTime, nFrequency;
-
-		try
-		{
-			if(bInit == false)
-			{
-				if(TRUE == ::QueryPerformanceCounter(&nTime))
-				{
-					::QueryPerformanceFrequency(&nFrequency);
-					bUseHWTimer = TRUE;
-				}
-				else 
-				{
-					bUseHWTimer = FALSE;
-				}
-
-				bInit = true;
-			}
-
-			if(bUseHWTimer)
-			{
-				::QueryPerformanceCounter(&nTime);
-				ReturnedObject = (float)((double)(nTime.QuadPart)/(double)nFrequency.QuadPart);
-			} else 
-			{
-				ReturnedObject =(float)timeGetTime();
-			}
-		}
-		catch (std::exception & ex)
-		{
-			printf("Exception occurred: %s\n", ex.what());
-		}
-
-		return ReturnedObject;
-	}
 
 	CUser(uint16 socketID, SocketMgr *mgr); 
 
