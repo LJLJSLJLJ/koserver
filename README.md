@@ -1,4 +1,4 @@
-KOServer
+KOServer ( this project owner is twostars )
 ========
 
 Knight Online Sunucu Projesi ;
