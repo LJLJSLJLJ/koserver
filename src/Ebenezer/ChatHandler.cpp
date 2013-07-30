@@ -637,6 +637,11 @@ COMMAND_HANDLER(CUser::HandlePermitConnectCommand)
 
 	g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_PLAYER);
 
+	std::string sNoticeMessage = string_format("%s has been unbanned..!", strUserID.c_str());
+
+	if (!sNoticeMessage.empty())
+		g_pMain->SendNotice(sNoticeMessage.c_str(),Nation::ALL);
+
 	return true;
 }
 

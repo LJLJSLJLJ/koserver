@@ -2945,6 +2945,8 @@ void CUser::OperatorCommand(Packet & pkt)
 	if (pUser == nullptr)
 		return;
 
+	std::string sNoticeMessage;
+
 	switch (opcode)
 	{
 	case OPERATOR_ARREST:
@@ -2960,23 +2962,28 @@ void CUser::OperatorCommand(Packet & pkt)
 	case OPERATOR_BAN_ACCOUNT: // ban account is meant to call a proc to do so
 		pUser->m_bAuthority = AUTHORITY_BANNED;
 		pUser->Disconnect();
+		sNoticeMessage = string_format("%s has been banned..!", pUser->GetName().c_str());
 		break;
 	case OPERATOR_MUTE:
 		pUser->m_bAuthority = AUTHORITY_MUTED;
+		sNoticeMessage = string_format("%s has been muted..!", pUser->GetName().c_str());
 		break;
 	case OPERATOR_DISABLE_ATTACK:
 		pUser->m_bAuthority = AUTHORITY_ATTACK_DISABLED;
+		sNoticeMessage = string_format("%s has been disabled attack..!", pUser->GetName().c_str());
 		break;
 	case OPERATOR_ENABLE_ATTACK:
 		pUser->m_bAuthority = AUTHORITY_PLAYER;
+		sNoticeMessage = string_format("%s has been enabled attack..!", pUser->GetName().c_str());
 		break;
 	case OPERATOR_UNMUTE:
-		if (pUser->IsConnected())
-			pUser->m_bAuthority = AUTHORITY_PLAYER;
-		else
-			g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_PLAYER);
+		pUser->m_bAuthority = AUTHORITY_PLAYER;
+		sNoticeMessage = string_format("%s has been unmuted..!", pUser->GetName().c_str());
 		break;
 	}
+
+	if (!sNoticeMessage.empty())
+		g_pMain->SendNotice(sNoticeMessage.c_str(),Nation::ALL);
 }
 
 void CUser::SpeedHackTime(Packet & pkt)
