@@ -22,6 +22,7 @@ void MagicInstance::Run()
 
 	if (bSendSkillFailed)
 	{
+		TRACE("*** Skill Failed : %d UserID : %s ***\n ",nSkillID, TO_USER(pSkillCaster)->GetName().c_str());
 		SendSkillFailed();
 		return;
 	}
@@ -116,7 +117,7 @@ void MagicInstance::Run()
 		if (bInitialResult)
 		{
 			if (nSkillID < 500000) {
-				pCaster->m_LastSkillUseTime = TimeGet();
+				pCaster->m_LastSkillUseTime = UNIXTIME;
 				pCaster->m_LastSkillType = pSkill->bType[0];
 			}
 
