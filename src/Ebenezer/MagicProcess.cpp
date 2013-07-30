@@ -25,8 +25,6 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 		return;
 	}
 
-	instance.bSendSkillFailed = false;
-
 	if (instance.nSkillID < 500000) {
 		if (instance.pSkill->bType[0] == TO_USER(pCaster)->m_LastSkillType) {
 			if ((UNIXTIME - TO_USER(pCaster)->m_LastSkillUseTime) <= PLAYER_SKILL_REQUEST_INTERVAL) {

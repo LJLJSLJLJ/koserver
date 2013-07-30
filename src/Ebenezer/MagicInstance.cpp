@@ -22,7 +22,6 @@ void MagicInstance::Run()
 
 	if (bSendSkillFailed)
 	{
-		TRACE("*** Skill Failed : %d UserID : %s ***\n ",nSkillID, TO_USER(pSkillCaster)->GetName().c_str());
 		SendSkillFailed();
 		return;
 	}
