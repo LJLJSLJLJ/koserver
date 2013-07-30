@@ -157,7 +157,7 @@ void CUser::Initialize()
 	m_bWeaponsDisabled = false;
 
 	m_teamColour = TeamColourNone;
-	m_LastSkillUseTime = 0.0f;
+	m_LastSkillUseTime = UNIXTIME;
 	m_LastSkillType = 0;
 }
 
