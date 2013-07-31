@@ -48,20 +48,20 @@ void CUser::QuestV2PacketProcess(Packet & pkt)
 	// Does this quest helper exist?
 	if (pQuestHelper == nullptr
 		// Does the quest NPC exist, and is it alive? 
-		|| pNpc == nullptr || pNpc->isDead()
-		// Are we even talking to this NPC?
-		|| pQuestHelper->sNpcId != pNpc->GetProtoID()
-		// Are we in range of this NPC?
-		|| !isInRange(pNpc, MAX_NPC_RANGE)
-		// Is this quest for this player's nation? NOTE: 3 indicates both (why not 0, I don't know)
-		|| (pQuestHelper->bNation != 3 && pQuestHelper->bNation != GetNation())
-		// Is the player's level high enough to do this quest?
-		|| (pQuestHelper->bLevel > GetLevel())
-		// Are we the correct class? NOTE: 5 indicates any class.
-		|| (pQuestHelper->bClass != 5 && !JobGroupCheck(pQuestHelper->bClass))
-		// Are we in the correct zone? NOTE: This isn't checked officially, may be for good reason.
-		|| GetZoneID() != pQuestHelper->bZone)
-		return;
+			|| pNpc == nullptr || pNpc->isDead()
+			// Are we even talking to this NPC?
+			|| pQuestHelper->sNpcId != pNpc->GetProtoID()
+			// Are we in range of this NPC?
+			|| !isInRange(pNpc, MAX_NPC_RANGE)
+			// Is this quest for this player's nation? NOTE: 3 indicates both (why not 0, I don't know)
+			|| (pQuestHelper->bNation != 3 && pQuestHelper->bNation != GetNation())
+			// Is the player's level high enough to do this quest?
+			|| (pQuestHelper->bLevel > GetLevel())
+			// Are we the correct class? NOTE: 5 indicates any class.
+			|| (pQuestHelper->bClass != 5 && !JobGroupCheck(pQuestHelper->bClass))
+			// Are we in the correct zone? NOTE: This isn't checked officially, may be for good reason.
+			|| GetZoneID() != pQuestHelper->bZone)
+			return;
 
 	// If we're the same min. level as the quest requires, 
 	// do we have the min. required XP? Seems kind of silly, but OK..
@@ -234,7 +234,7 @@ void CUser::QuestV2MonsterDataRequest()
 	m_sEventDataIndex = 
 		10000	*	QuestV2CheckMonsterCount(32005) +
 		100		*	QuestV2CheckMonsterCount(32006) +
-					QuestV2CheckMonsterCount(32007);
+		QuestV2CheckMonsterCount(32007);
 
 	// Lookup the current kill counts for each mob group in the active quest
 	m_bKillCounts[0] = QuestV2CheckMonsterCount(QUEST_KILL_GROUP1);
@@ -243,9 +243,9 @@ void CUser::QuestV2MonsterDataRequest()
 	m_bKillCounts[3] = QuestV2CheckMonsterCount(QUEST_KILL_GROUP4);
 
 	result	<< uint8(1)
-			<< m_sEventDataIndex
-			<< m_bKillCounts[0] << m_bKillCounts[1]
-			<< m_bKillCounts[2] << m_bKillCounts[3];
+		<< m_sEventDataIndex
+		<< m_bKillCounts[0] << m_bKillCounts[1]
+	<< m_bKillCounts[2] << m_bKillCounts[3];
 
 	Send(&result);
 }
@@ -293,7 +293,7 @@ bool CUser::QuestV2RunEvent(_QUEST_HELPER * pQuestHelper, uint32 nEventID, int8 
 }
 
 /* 
-	These are called by quest scripts. 
+These are called by quest scripts. 
 */
 
 void CUser::QuestV2SaveEvent(uint16 sQuestID)
@@ -320,10 +320,10 @@ void CUser::QuestV2ShowGiveItem(uint32 nUnk1, uint16 sUnk1,
 {
 	Packet result(WIZ_QUEST, uint8(10));
 	result	<< nUnk1 << sUnk1
-			<< nUnk2 << sUnk2
-			<< nUnk3 << sUnk3
-			<< nUnk4 << sUnk4
-			<< nUnk5 << sUnk5;
+		<< nUnk2 << sUnk2
+		<< nUnk3 << sUnk3
+		<< nUnk4 << sUnk4
+		<< nUnk5 << sUnk5;
 	Send(&result);
 }
 

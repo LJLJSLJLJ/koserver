@@ -1,11 +1,11 @@
 /*
- * Multiplatform Async Network Library
- * Copyright (c) 2007 Burlex
- *
- * ListenSocket<T>: Creates a socket listener on specified address and port,
- *				  requires Update() to be called every loop.
- *
- */
+* Multiplatform Async Network Library
+* Copyright (c) 2007 Burlex
+*
+* ListenSocket<T>: Creates a socket listener on specified address and port,
+*				  requires Update() to be called every loop.
+*
+*/
 
 #pragma once
 

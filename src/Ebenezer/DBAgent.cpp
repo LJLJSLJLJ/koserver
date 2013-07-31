@@ -25,8 +25,8 @@ bool CDBAgent::Startup(bool bMarsEnabled,
 					   tstring & strGameDSN, tstring & strGameUID, tstring & strGamePWD)
 {
 	if (!Connect(bMarsEnabled,
-		strAccountDSN, strAccountUID, strAccountPWD,
-		strGameDSN, strGameUID, strGamePWD))
+			strAccountDSN, strAccountUID, strAccountPWD,
+			strGameDSN, strGameUID, strGamePWD))
 	{
 		// we should probably be a little more specific (i.e. *which* database server)
 		printf(_T("ERROR: Failed to connect to the database server."));
@@ -357,7 +357,7 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 		return false;
 
 	char	strItem[INVENTORY_TOTAL * 8] = {0}, strSerial[INVENTORY_TOTAL * 8] = {0},
-		strQuest[QUEST_ARRAY_SIZE];
+			strQuest[QUEST_ARRAY_SIZE];
 
 	uint16 sQuestCount = 0;
 
@@ -685,7 +685,7 @@ bool CDBAgent::UpdateSavedMagic(CUser *pUser)
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
-
+	
 	FastGuard lock(pUser->m_savedMagicLock);
 	uint32 nSkillID[10] = {0};
 	uint32 tExpiryTime[10] = {0};
@@ -708,7 +708,7 @@ bool CDBAgent::UpdateSavedMagic(CUser *pUser)
 		ReportSQLError(m_GameDB->GetError());
 		return false;
 	}
-
+	
 	return true;
 }
 
@@ -874,7 +874,7 @@ FriendAddResult CDBAgent::AddFriend(short sid, short tid)
 
 	if (nRet < 0 || nRet >= FRIEND_ADD_MAX)
 		nRet = FRIEND_ADD_ERROR;
-
+		
 	return (FriendAddResult)nRet;
 }
 
@@ -938,16 +938,16 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)strQuest, sizeof(strQuest), SQL_BINARY);
 
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_USER_DATA ("
-		"?, " // strCharID 
-		"%d, %d, %d, %d, %d, "		// nation, race, class, hair, rank
-		"%d, %d, " I64FMTD ", %d, %d, "		// title, level, exp, loyalty, face
-		"%d, %d, %d, "				// city, knights, fame
-		"%d, %d, %d, "				// hp, mp, sp
-		"%d, %d, %d, %d, %d, "		// str, sta, dex, int, cha
-		"%d, %d, %d, %d, %d, "		// authority, free points, gold, zone, bind
-		"%d, %d, %d, %d, %d, "		// x, z, y, dwTime, sQuestCount
-		"?, ?, ?, ?, "				// strSkill, strItem, strSerial, strQuest
-		"%d, %d)}"),				// manner points, monthly NP
+			"?, " // strCharID 
+			"%d, %d, %d, %d, %d, "		// nation, race, class, hair, rank
+			"%d, %d, " I64FMTD ", %d, %d, "		// title, level, exp, loyalty, face
+			"%d, %d, %d, "				// city, knights, fame
+			"%d, %d, %d, "				// hp, mp, sp
+			"%d, %d, %d, %d, %d, "		// str, sta, dex, int, cha
+			"%d, %d, %d, %d, %d, "		// authority, free points, gold, zone, bind
+			"%d, %d, %d, %d, %d, "		// x, z, y, dwTime, sQuestCount
+			"?, ?, ?, ?, "				// strSkill, strItem, strSerial, strQuest
+			"%d, %d)}"),				// manner points, monthly NP
 		pUser->m_bNation, pUser->m_bRace, pUser->m_sClass, pUser->m_nHair, pUser->m_bRank, 
 		pUser->m_bTitle, pUser->m_bLevel, pUser->m_iExp /* temp hack, database needs to support it */, pUser->m_iLoyalty, pUser->m_bFace, 
 		pUser->m_bCity,	pUser->m_bKnights, pUser->m_bFame, 
@@ -969,7 +969,7 @@ bool CDBAgent::UpdateWarehouseData(string & strAccountID, UserUpdateType type, C
 {
 	if (strAccountID.length() == 0)
 		return false;
-
+	
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
@@ -1167,13 +1167,13 @@ bool CDBAgent::UpdateClanSymbol(uint16 sClanID, uint16 sSymbolSize, char *clanSy
 }
 
 /**
-* @brief	Handles the clan NP donations database request.
-* 			It is essentially the client packet's real handler
-* 			as the packet is simply forwarded here.
-*
-* @param	pUser	The user.
-* @param	pkt  	The packet.
-*/
+ * @brief	Handles the clan NP donations database request.
+ * 			It is essentially the client packet's real handler
+ * 			as the packet is simply forwarded here.
+ *
+ * @param	pUser	The user.
+ * @param	pkt  	The packet.
+ */
 void CKnightsManager::ReqDonateNP(CUser *pUser, Packet & pkt)
 {
 	if (pUser == nullptr || !pUser->isInClan())
@@ -1185,8 +1185,8 @@ void CKnightsManager::ReqDonateNP(CUser *pUser, Packet & pkt)
 	// Ensure the user has enough NP to donate to the clan.
 	if (amountNP > pUser->GetLoyalty()
 		// Users must have at least MIN_NP_TO_DONATE to donate.
-			|| (pUser->GetLoyalty() - amountNP) < MIN_NP_TO_DONATE)
-			return;
+		|| (pUser->GetLoyalty() - amountNP) < MIN_NP_TO_DONATE)
+		return;
 
 	// Ensure the clan exists
 	CKnights * pKnights = g_pMain->GetClanPtr(pUser->GetClanID());
@@ -1209,14 +1209,14 @@ void CKnightsManager::ReqDonateNP(CUser *pUser, Packet & pkt)
 }
 
 /**
-* @brief	Donates (clanPoints) clan points to the specified user's clan.
-* 			Also increases the user's total NP donated.
-*
-* @param	pUser	  	The donor user.
-* @param	amountNP  	The number of national points being donated by the user.
-*
-* @return	true if it succeeds, false if it fails.
-*/
+ * @brief	Donates (clanPoints) clan points to the specified user's clan.
+ * 			Also increases the user's total NP donated.
+ *
+ * @param	pUser	  	The donor user.
+ * @param	amountNP  	The number of national points being donated by the user.
+ *
+ * @return	true if it succeeds, false if it fails.
+ */
 bool CDBAgent::DonateClanPoints(CUser * pUser,  uint32 amountNP)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -1234,14 +1234,14 @@ bool CDBAgent::DonateClanPoints(CUser * pUser,  uint32 amountNP)
 }
 
 /**
-* @brief	Handles the database request to refund the specified
-* 			logged out character's donated NP.
-* 			
-* 			NOTE: Logged in players don't need to be handled as their NP is
-* 			refunded in-game.
-*
-* @param	pkt	The packet.
-*/
+ * @brief	Handles the database request to refund the specified
+ * 			logged out character's donated NP.
+ * 			
+ * 			NOTE: Logged in players don't need to be handled as their NP is
+ * 			refunded in-game.
+ *
+ * @param	pkt	The packet.
+ */
 void CKnightsManager::ReqRefundNP(Packet & pkt)
 {
 	string strUserID;
@@ -1251,11 +1251,11 @@ void CKnightsManager::ReqRefundNP(Packet & pkt)
 }
 
 /**
-* @brief	Handles the database request to update the
-* 			specified clan's clan point fund.
-*
-* @param	pkt	The packet.
-*/
+ * @brief	Handles the database request to update the
+ * 			specified clan's clan point fund.
+ *
+ * @param	pkt	The packet.
+ */
 void CKnightsManager::ReqUpdateNP(Packet & pkt)
 {
 	uint16 sClanID;
@@ -1265,22 +1265,28 @@ void CKnightsManager::ReqUpdateNP(Packet & pkt)
 }
 
 /**
-* @brief	Refunds the specified amount of NP to a logged out character.
-*
-* @param	strUserID	Character's name.
-* @param	nRefundNP	The amount of NP to refund.
-*/
+ * @brief	Refunds the specified amount of NP to a logged out character.
+ *
+ * @param	strUserID	Character's name.
+ * @param	nRefundNP	The amount of NP to refund.
+ */
 void CDBAgent::RefundNP(string & strUserID, uint32 nRefundNP)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return;
-
+	
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strUserID.c_str(), strUserID.length());
 	if (!dbCommand->Execute(string_format(_T("UPDATE USERDATA SET Loyalty += %d WHERE strUserID = ?"), nRefundNP)))
 		ReportSQLError(m_GameDB->GetError());
 }
 
+/**
+ * @brief	Change authority is logged out character.
+ *
+ * @param	strUserID	Character's name.
+ * @param	nAuthority	New user authority.
+ */
 void CDBAgent::UpdateUserAuthority(string & strUserID, uint16 nAuthority)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -1293,33 +1299,33 @@ void CDBAgent::UpdateUserAuthority(string & strUserID, uint16 nAuthority)
 }
 
 /**
-* @brief	Updates the clan fund.
-*
-* @param	sClanID		  	Identifier for the clan.
-* @param	nClanPointFund	The current clan point fund.
-*/
+ * @brief	Updates the clan fund.
+ *
+ * @param	sClanID		  	Identifier for the clan.
+ * @param	nClanPointFund	The current clan point fund.
+ */
 void CDBAgent::UpdateClanFund(uint16 sClanID, uint32 nClanPointFund)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return;
-
+	
 	if (!dbCommand->Execute(string_format(_T("UPDATE KNIGHTS SET ClanPointFund = %d WHERE IDNum = %d"), nClanPointFund, sClanID)))
 		ReportSQLError(m_GameDB->GetError());
 }
 
 /**
-* @brief	Updates the clan notice.
-*
-* @param	sClanID		 	Identifier for the clan.
-* @param	strClanNotice	The clan notice.
-*/
+ * @brief	Updates the clan notice.
+ *
+ * @param	sClanID		 	Identifier for the clan.
+ * @param	strClanNotice	The clan notice.
+ */
 void CDBAgent::UpdateClanNotice(uint16 sClanID, std::string & strClanNotice)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return;
-
+	
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strClanNotice.c_str(), strClanNotice.length());
 	if (!dbCommand->Execute(string_format(_T("UPDATE KNIGHTS SET strClanNotice = ? WHERE IDNum = %d"), sClanID)))
 		ReportSQLError(m_GameDB->GetError());
@@ -1346,40 +1352,40 @@ NameChangeOpcode CDBAgent::UpdateCharacterName(std::string & strAccountID, std::
 }
 
 /**
-* @brief	Handles clan cape database updates.
-*
-* @param	sClanID	Identifier for the clan.
-* @param	sCapeID	Identifier for the cape.
-* @param	r 	Red colour component.
-* @param	g 	Green colour component.
-* @param	b 	Blue colour component.
-*
-* @return	true if it succeeds, false if it fails.
-*/
+ * @brief	Handles clan cape database updates.
+ *
+ * @param	sClanID	Identifier for the clan.
+ * @param	sCapeID	Identifier for the cape.
+ * @param	r 	Red colour component.
+ * @param	g 	Green colour component.
+ * @param	b 	Blue colour component.
+ *
+ * @return	true if it succeeds, false if it fails.
+ */
 void CDBAgent::UpdateCape(uint16 sClanID, uint16 sCapeID, uint8 r, uint8 g, uint8 b)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return;
-
+	
 	if (!dbCommand->Execute(string_format(_T("UPDATE KNIGHTS SET sCape=%d, bCapeR=%d, bCapeG=%d, bCapeB=%d WHERE IDNum=%d"), 
-		sCapeID, r, g, b, sClanID)))
+			sCapeID, r, g, b, sClanID)))
 		ReportSQLError(m_GameDB->GetError());
 }
 
 /**
-* @brief	Updates the clan grade.
-*
-* @param	sClanID	Identifier for the clan.
-* @param	byFlag 	The clan type (training, promoted, etc).
-* @param	sCapeID	Identifier for the cape.
-*/
+ * @brief	Updates the clan grade.
+ *
+ * @param	sClanID	Identifier for the clan.
+ * @param	byFlag 	The clan type (training, promoted, etc).
+ * @param	sCapeID	Identifier for the cape.
+ */
 void CDBAgent::UpdateClanGrade(uint16 sClanID, uint8 byFlag, uint16 sCapeID)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return;
-
+	
 	if (!dbCommand->Execute(string_format(_T("UPDATE KNIGHTS SET sCape=%d, Flag=%d WHERE IDNum=%d"), 
 		sCapeID, byFlag, sClanID)))
 		ReportSQLError(m_GameDB->GetError());
@@ -1484,15 +1490,15 @@ bool CDBAgent::GetLetterList(string & strCharID, Packet & result, bool bNewLette
 		dbCommand->FetchUInt16(11, sDaysRemaining); 
 
 		result	<< nLetterID // letter ID
-			<< bStatus  // letter status, doesn't seem to affect anything
-			<< strSubject << strSender
-			<< bType;	
+				<< bStatus  // letter status, doesn't seem to affect anything
+				<< strSubject << strSender
+				<< bType;	
 
 		if (bType == 2)
 			result	<< nItemID << sCount << nCoins;
 
 		result	<< nDate // date (yy*10000 + mm*100 + dd)
-			<< sDaysRemaining;
+				<< sDaysRemaining;
 
 	} while (dbCommand->MoveNext());
 
@@ -1602,11 +1608,11 @@ void CDBAgent::DeleteLetter(string & strCharID, uint32 nLetterID)
 }
 
 /**
-* @brief	Updates the election status.
-*
-* @param	byType  	Election status.
-* @param	byNation	Electoral nation.
-*/
+ * @brief	Updates the election status.
+ *
+ * @param	byType  	Election status.
+ * @param	byNation	Electoral nation.
+ */
 void CDBAgent::UpdateElectionStatus(uint8 byType, uint8 byNation)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -1618,16 +1624,16 @@ void CDBAgent::UpdateElectionStatus(uint8 byType, uint8 byNation)
 }
 
 /**
-* @brief	Updates the election list.
-*
-* @param	byDBType  	Procedure-specific database action.
-* 						If 1, insert. If 2, delete.
-* @param	byType	  	Flag to specify what the user's in the election list for (election, impeachment, and thereof).
-* @param	byNation  	Electoral nation.
-* @param	sKnights  	The nominee's clan ID.
-* @param	nAmount		Vote count.
-* @param	strNominee	The nominee's name.
-*/
+ * @brief	Updates the election list.
+ *
+ * @param	byDBType  	Procedure-specific database action.
+ * 						If 1, insert. If 2, delete.
+ * @param	byType	  	Flag to specify what the user's in the election list for (election, impeachment, and thereof).
+ * @param	byNation  	Electoral nation.
+ * @param	sKnights  	The nominee's clan ID.
+ * @param	nAmount		Vote count.
+ * @param	strNominee	The nominee's name.
+ */
 void CDBAgent::UpdateElectionList(uint8 byDBType, uint8 byType, uint8 byNation, uint16 sKnights, uint32 nAmount, string & strNominee)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -1641,14 +1647,14 @@ void CDBAgent::UpdateElectionList(uint8 byDBType, uint8 byType, uint8 byNation, 
 }
 
 /**
-* @brief	Nominates/recommends strNominee as King.
-*
-* @param	strNominator	The nominator.
-* @param	strNominee  	The nominee.
-* @param	byNation		Their nation.
-*
-* @return	.
-*/
+ * @brief	Nominates/recommends strNominee as King.
+ *
+ * @param	strNominator	The nominator.
+ * @param	strNominee  	The nominee.
+ * @param	byNation		Their nation.
+ *
+ * @return	.
+ */
 int16 CDBAgent::UpdateCandidacyRecommend(std::string & strNominator, std::string & strNominee, uint8 byNation)
 {
 	int16 sRet = -1;
@@ -1668,12 +1674,12 @@ int16 CDBAgent::UpdateCandidacyRecommend(std::string & strNominator, std::string
 }
 
 /**
-* @brief	Updates the candidacy notice board.
-*
-* @param	strCharID	Candidate's name.
-* @param	byNation 	Candidate's nation.
-* @param	strNotice	The notice.
-*/
+ * @brief	Updates the candidacy notice board.
+ *
+ * @param	strCharID	Candidate's name.
+ * @param	byNation 	Candidate's nation.
+ * @param	strNotice	The notice.
+ */
 void CDBAgent::UpdateCandidacyNoticeBoard(string & strCharID, uint8 byNation, string & strNotice)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -1689,7 +1695,7 @@ void CDBAgent::UpdateCandidacyNoticeBoard(string & strCharID, uint8 byNation, st
 		sNoticeLen = sizeof(strBinaryNotice);
 
 	memcpy(strBinaryNotice, strNotice.c_str(), sNoticeLen);
-
+	
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strBinaryNotice, sizeof(strBinaryNotice));
 
@@ -1722,8 +1728,8 @@ void CDBAgent::InsertPrizeEvent(uint8 byType, uint8 byNation, uint32 nCoins, std
 }
 
 /**
-* @brief	Resets the monthly NP total accumulated in the last month.
-*/
+ * @brief	Resets the monthly NP total accumulated in the last month.
+ */
 void CDBAgent::ResetLoyaltyMonthly()
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -1735,10 +1741,10 @@ void CDBAgent::ResetLoyaltyMonthly()
 }
 
 /**
-* @brief	Clears the remaining users who were connected to this server
-from the logged in user list that may still be there as the 
-result of an improper shutdown.
-*/
+ * @brief	Clears the remaining users who were connected to this server
+			from the logged in user list that may still be there as the 
+			result of an improper shutdown.
+ */
 void CDBAgent::ClearRemainUsers()
 {
 	_ZONE_SERVERINFO * pInfo = g_pMain->m_ServerArray.GetData(g_pMain->m_nServerNo);

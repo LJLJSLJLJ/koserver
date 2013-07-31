@@ -10,7 +10,6 @@ using std::vector;
 void MagicInstance::Run()
 {
 	SkillUseResult result;
-
 	if (pSkill == nullptr)
 		pSkill = g_pMain->m_MagictableArray.GetData(nSkillID);
 
@@ -34,8 +33,6 @@ void MagicInstance::Run()
 		return;
 	}
 
-	CUser * pCaster = TO_USER(pSkillCaster);
-
 	// If the skill's already been handled (e.g. death taunts), 
 	// we don't need to do anything further.
 	if (result == SkillUseHandled)
@@ -54,6 +51,7 @@ void MagicInstance::Run()
 			// Handle arrow & mana checking/removals.
 			if (pSkillCaster->isPlayer())
 			{
+				CUser * pCaster = TO_USER(pSkillCaster);
 				_MAGIC_TYPE2 * pType = g_pMain->m_Magictype2Array.GetData(nSkillID);
 
 				// NOTE: Not all skills that use MAGIC_FLYING are type 2 skills.
@@ -116,9 +114,9 @@ void MagicInstance::Run()
 		if (bInitialResult)
 		{
 			if (nSkillID < 500000) {
-				pCaster->m_LastSkillID = nSkillID;
-				pCaster->m_LastSkillUseTime = UNIXTIME;
-				pCaster->m_LastSkillType = pSkill->bType[0];
+				TO_USER(pSkillCaster)->m_LastSkillID = nSkillID;
+				TO_USER(pSkillCaster)->m_LastSkillUseTime = UNIXTIME;
+				TO_USER(pSkillCaster)->m_LastSkillType = pSkill->bType[0];
 			}
 
 			ExecuteSkill(pSkill->bType[1]);
@@ -126,7 +124,6 @@ void MagicInstance::Run()
 			if (pSkill->bType[0] != 2)
 				ConsumeItem();
 		}
-
 		break;
 
 	case MAGIC_CANCEL:

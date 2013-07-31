@@ -9,70 +9,70 @@ bool CAISocket::HandlePacket(Packet & pkt)
 {
 	switch (pkt.GetOpcode())
 	{
-		case AG_CHECK_ALIVE_REQ:
-			RecvCheckAlive(pkt);
-			break;
-		case AI_SERVER_CONNECT:
-			LoginProcess(pkt);
-			break;
-		case AG_SERVER_INFO:
-			RecvServerInfo(pkt);
-			break;
-		case NPC_INFO_ALL:
-			RecvNpcInfoAll(pkt);
-			break;
-		case MOVE_RESULT:
-			RecvNpcMoveResult(pkt);
-			break;
-		case MOVE_END_RESULT:
-			break;
-		case AG_ATTACK_REQ:
-			RecvNpcAttack(pkt);
-			break;
+	case AG_CHECK_ALIVE_REQ:
+		RecvCheckAlive(pkt);
+		break;
+	case AI_SERVER_CONNECT:
+		LoginProcess(pkt);
+		break;
+	case AG_SERVER_INFO:
+		RecvServerInfo(pkt);
+		break;
+	case NPC_INFO_ALL:
+		RecvNpcInfoAll(pkt);
+		break;
+	case MOVE_RESULT:
+		RecvNpcMoveResult(pkt);
+		break;
+	case MOVE_END_RESULT:
+		break;
+	case AG_ATTACK_REQ:
+		RecvNpcAttack(pkt);
+		break;
 		// The AI server should send magic system requests to us.
 		// It shouldn't have to duplicate all the processing code.
-		case AG_MAGIC_ATTACK_REQ:
-			CMagicProcess::MagicPacket(pkt);
-			break;
-		case AG_NPC_INFO:
-			RecvNpcInfo(pkt);
-			break;
-		case AG_NPC_REGION_UPDATE:
-			RecvNpcRegionUpdate(pkt);
-			break;
-		case AG_USER_EXP:
-			RecvUserExp(pkt);
-			break;
-		case AG_SYSTEM_MSG:
-			RecvSystemMsg(pkt);
-			break;
-		case AG_NPC_GIVE_ITEM:
-			RecvNpcGiveItem(pkt);
-			break;
-		case AG_NPC_GATE_DESTORY:
-			RecvGateDestory(pkt);
-			break;
-		case AG_DEAD:
-			RecvNpcDead(pkt);
-			break;
-		case AG_NPC_INOUT:
-			RecvNpcInOut(pkt);
-			break;
-		case AG_BATTLE_EVENT:
-			RecvBattleEvent(pkt);
-			break;
-		case AG_NPC_EVENT_ITEM:
-			RecvNpcEventItem(pkt);
-			break;
-		case AG_NPC_GATE_OPEN:
-			RecvGateOpen(pkt);
-			break;
-		case AG_COMPRESSED:
-			RecvCompressed(pkt);
-			break;
-		case AG_NPC_HP_CHANGE:
-			RecvNpcHpChange(pkt);
-			break;
+	case AG_MAGIC_ATTACK_REQ:
+		CMagicProcess::MagicPacket(pkt);
+		break;
+	case AG_NPC_INFO:
+		RecvNpcInfo(pkt);
+		break;
+	case AG_NPC_REGION_UPDATE:
+		RecvNpcRegionUpdate(pkt);
+		break;
+	case AG_USER_EXP:
+		RecvUserExp(pkt);
+		break;
+	case AG_SYSTEM_MSG:
+		RecvSystemMsg(pkt);
+		break;
+	case AG_NPC_GIVE_ITEM:
+		RecvNpcGiveItem(pkt);
+		break;
+	case AG_NPC_GATE_DESTORY:
+		RecvGateDestory(pkt);
+		break;
+	case AG_DEAD:
+		RecvNpcDead(pkt);
+		break;
+	case AG_NPC_INOUT:
+		RecvNpcInOut(pkt);
+		break;
+	case AG_BATTLE_EVENT:
+		RecvBattleEvent(pkt);
+		break;
+	case AG_NPC_EVENT_ITEM:
+		RecvNpcEventItem(pkt);
+		break;
+	case AG_NPC_GATE_OPEN:
+		RecvGateOpen(pkt);
+		break;
+	case AG_COMPRESSED:
+		RecvCompressed(pkt);
+		break;
+	case AG_NPC_HP_CHANGE:
+		RecvNpcHpChange(pkt);
+		break;
 	}
 
 	return true;
@@ -185,7 +185,7 @@ void CAISocket::RecvNpcInfoAll(Packet & pkt)
 				pEvent->byLife = 1;
 		}
 
-	//	TRACE("Recv --> NpcUserInfoAll : uid=%d, sid=%d, name=%s, x=%f, z=%f. gate=%d, objecttype=%d \n", nid, sPid, szName, fPosX, fPosZ, byGateOpen, byObjectType);
+		//	TRACE("Recv --> NpcUserInfoAll : uid=%d, sid=%d, name=%s, x=%f, z=%f. gate=%d, objecttype=%d \n", nid, sPid, szName, fPosX, fPosZ, byGateOpen, byObjectType);
 
 		if (!g_pMain->m_arNpcArray.PutData(pNpc->GetID(), pNpc))
 		{
@@ -221,7 +221,7 @@ void CAISocket::RecvNpcMoveResult(Packet & pkt)
 		result << sNid << pNpc->m_iHP;
 		Send(&result);
 	}
-	
+
 	pNpc->MoveResult(fX, fY, fZ, fSecForMetor);
 }
 

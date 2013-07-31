@@ -16,11 +16,11 @@
 #define UPGRADE_PEARL_EARRING_MAX 310150007
 
 /**
- * @brief	Packet handler for the assorted systems that
- * 			were deemed to come under the 'upgrade' system.
- *
- * @param	pkt	The packet.
- */
+* @brief	Packet handler for the assorted systems that
+* 			were deemed to come under the 'upgrade' system.
+*
+* @param	pkt	The packet.
+*/
 void CUser::ItemUpgradeProcess(Packet & pkt)
 {
 	uint8 opcode = pkt.read<uint8>();
@@ -53,10 +53,10 @@ void CUser::ItemUpgradeProcess(Packet & pkt)
 }
 
 /**
- * @brief	Packet handler for the standard item upgrade system.
- *
- * @param	pkt	The packet.
- */
+* @brief	Packet handler for the standard item upgrade system.
+*
+* @param	pkt	The packet.
+*/
 void CUser::ItemUpgrade(Packet & pkt)
 {
 	enum UpgradeErrorCodes
@@ -98,7 +98,7 @@ void CUser::ItemUpgrade(Packet & pkt)
 
 	pOriginItem = GetItem(SLOT_MAX + bPos[0]);
 	if (pOriginItem->nNum != nItemID[0]
-		|| (proto = g_pMain->GetItemPtr(nItemID[0])) == nullptr)
+	|| (proto = g_pMain->GetItemPtr(nItemID[0])) == nullptr)
 		goto fail_return; // error with error code UpgradeNoMatch ("Items required for upgrade do not match")
 	else if (pOriginItem->isRented() 
 		|| pOriginItem->isSealed()) // unsure if there's another error code for sealed items
@@ -114,7 +114,7 @@ void CUser::ItemUpgrade(Packet & pkt)
 			&& nItemID[x] != GetItem(SLOT_MAX + bPos[x])->nNum)
 			goto fail_return;
 	}
-	
+
 	{ // scoped lock to prevent race conditions
 		int nReqOriginItem = nItemID[0] % 1000;
 		_ITEM_UPGRADE * pUpgrade = nullptr;
@@ -133,76 +133,76 @@ void CUser::ItemUpgrade(Packet & pkt)
 			{
 				switch (pUpgrade->bOriginType)
 				{
-					case 0:
-						if (!proto->isStaff()) 
-							continue;
-						break;
+				case 0:
+					if (!proto->isStaff()) 
+						continue;
+					break;
 
-					case 1:
-						if (proto->m_bKind != 21)
-							continue;
-						break;
+				case 1:
+					if (proto->m_bKind != 21)
+						continue;
+					break;
 
-					case 2:
-						if (proto->m_bKind != 22)
-							continue;
-						break;
+				case 2:
+					if (proto->m_bKind != 22)
+						continue;
+					break;
 
-					case 3:
-						if (proto->m_bKind != 31) 
-							continue;
-						break;
+				case 3:
+					if (proto->m_bKind != 31) 
+						continue;
+					break;
 
-					case 4:
-						if (proto->m_bKind != 32) 
-							continue;
-						break;
+				case 4:
+					if (proto->m_bKind != 32) 
+						continue;
+					break;
 
-					case 5:
-						if (proto->m_bKind != 41) 
-							continue;
-						break;
+				case 5:
+					if (proto->m_bKind != 41) 
+						continue;
+					break;
 
-					case 6:
-						if (proto->m_bKind != 42) 
-							continue;
-						break;
+				case 6:
+					if (proto->m_bKind != 42) 
+						continue;
+					break;
 
-					case 7:
-						if (proto->m_bKind != 51) 
-							continue;
-						break;
+				case 7:
+					if (proto->m_bKind != 51) 
+						continue;
+					break;
 
-					case 8:
-						if (proto->m_bKind != 52) 
-							continue;
-						break;
+				case 8:
+					if (proto->m_bKind != 52) 
+						continue;
+					break;
 
-					case 9:
-						if (proto->m_bKind != 70 && proto->m_bKind != 71) 
-							continue;
-						break;
+				case 9:
+					if (proto->m_bKind != 70 && proto->m_bKind != 71) 
+						continue;
+					break;
 
-					case 10:
-						if (proto->m_bKind != 110) 
-							continue;
-						break;
+				case 10:
+					if (proto->m_bKind != 110) 
+						continue;
+					break;
 
-					case 11:
-						if ((nItemID[0] / 10000000) != 19) 
-							continue;
-						break;
+				case 11:
+					if ((nItemID[0] / 10000000) != 19) 
+						continue;
+					break;
 
-					case 12:
-						if (proto->m_bKind != 60) 
-							continue;
-						break;
+				case 12:
+					if (proto->m_bKind != 60) 
+						continue;
+					break;
 				}
 			}
 
 			if ((nItemID[0] / MIN_ITEM_ID) != (pUpgrade->nIndex / 100000) 
 				&& ((pUpgrade->nIndex / 100000) == 1 
-					|| (pUpgrade->nIndex / 100000) == 2))
+				|| (pUpgrade->nIndex / 100000) == 2))
 				continue;
 
 			bool isValidMatch = true;
@@ -326,29 +326,29 @@ fail_return:
 }
 
 /**
- * @brief	Packet handler for the accessory upgrade system.
- *
- * @param	pkt	The packet.
- */
+* @brief	Packet handler for the accessory upgrade system.
+*
+* @param	pkt	The packet.
+*/
 void CUser::ItemUpgradeAccessories(Packet & pkt)
 {
 }
 
 /**
- * @brief	Packet handler for the Chaotic Generator system
- * 			which is used to exchange Bifrost pieces/fragments.
- *
- * @param	pkt	The packet.
- */
+* @brief	Packet handler for the Chaotic Generator system
+* 			which is used to exchange Bifrost pieces/fragments.
+*
+* @param	pkt	The packet.
+*/
 void CUser::BifrostPieceProcess(Packet & pkt)
 {
 }
 
 /**
- * @brief	Packet handler for the upgrading of 'rebirthed' items.
- *
- * @param	pkt	The packet.
- */
+* @brief	Packet handler for the upgrading of 'rebirthed' items.
+*
+* @param	pkt	The packet.
+*/
 void CUser::ItemUpgradeRebirth(Packet & pkt)
 {
 }

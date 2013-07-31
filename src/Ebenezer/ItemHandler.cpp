@@ -28,9 +28,9 @@ void CUser::WarehouseProcess(Packet & pkt)
 		{
 			_ITEM_DATA *pItem = &m_sWarehouseArray[i];
 			result	<< pItem->nNum 
-					<< pItem->sDuration << pItem->sCount
-					<< pItem->bFlag 
-					<< uint64(0);
+				<< pItem->sDuration << pItem->sCount
+				<< pItem->bFlag 
+				<< uint64(0);
 		}
 		Send(&result);
 		return;
@@ -52,7 +52,7 @@ void CUser::WarehouseProcess(Packet & pkt)
 
 	switch (opcode)
 	{
-	// Inventory -> inn
+		// Inventory -> inn
 	case WAREHOUSE_INPUT:
 		pkt >> nCount;
 
@@ -83,12 +83,12 @@ void CUser::WarehouseProcess(Packet & pkt)
 		// Forbid users from moving non-stackable items into a slot already occupied by an item.
 		if ((!pTable->isStackable() && pDstItem->nNum != 0)
 			// Forbid users from moving stackable items into a slot already occupied by a different item.
-			|| (pTable->isStackable() 
+				|| (pTable->isStackable() 
 				&& pDstItem->nNum != 0 // slot in use
 				&& pDstItem->nNum != pSrcItem->nNum) // ... by a different item.
-			// Ensure users have enough of the specified item to move.
-			|| pSrcItem->sCount < nCount)
-			goto fail_return;
+				// Ensure users have enough of the specified item to move.
+				|| pSrcItem->sCount < nCount)
+				goto fail_return;
 
 		pDstItem->nNum = pSrcItem->nNum;
 		pDstItem->sDuration = pSrcItem->sDuration;
@@ -111,7 +111,7 @@ void CUser::WarehouseProcess(Packet & pkt)
 		SendItemWeight();
 		break;
 
-	// Inn -> inventory
+		// Inn -> inventory
 	case WAREHOUSE_OUTPUT:
 		pkt >> nCount;
 
@@ -139,12 +139,12 @@ void CUser::WarehouseProcess(Packet & pkt)
 		// Forbid users from moving non-stackable items into a slot already occupied by an item.
 		if ((!pTable->isStackable() && pDstItem->nNum != 0)
 			// Forbid users from moving stackable items into a slot already occupied by a different item.
-			|| (pTable->isStackable() 
+				|| (pTable->isStackable() 
 				&& pDstItem->nNum != 0 // slot in use
 				&& pDstItem->nNum != pSrcItem->nNum) // ... by a different item.
-			// Ensure users have enough of the specified item to move.
-			|| pSrcItem->sCount < nCount)
-			goto fail_return;
+				// Ensure users have enough of the specified item to move.
+				|| pSrcItem->sCount < nCount)
+				goto fail_return;
 
 		pDstItem->nNum = pSrcItem->nNum;
 		pDstItem->sDuration = pSrcItem->sDuration;
@@ -167,7 +167,7 @@ void CUser::WarehouseProcess(Packet & pkt)
 		SendItemWeight();
 		break;
 
-	// Inn -> inn
+		// Inn -> inn
 	case WAREHOUSE_MOVE:
 		// Ensure we're not being given an invalid slot ID.
 		if (reference_pos + bSrcPos > WAREHOUSE_MAX
@@ -180,14 +180,14 @@ void CUser::WarehouseProcess(Packet & pkt)
 		// Check that the source item we're moving is what the client says it is.
 		if (pSrcItem->nNum != nItemID
 			// You can't move a partial stack in the inn (the whole stack is moved).
-			|| pDstItem->nNum != 0)
-			goto fail_return;
+				|| pDstItem->nNum != 0)
+				goto fail_return;
 
 		memcpy(pDstItem, pSrcItem, sizeof(_ITEM_DATA));
 		memset(pSrcItem, 0, sizeof(_ITEM_DATA));
 		break;
 
-	// Inventory -> inventory (using the inn dialog)
+		// Inventory -> inventory (using the inn dialog)
 	case WAREHOUSE_INVENMOVE:
 		// Ensure we're not being given an invalid slot ID.
 		if (bSrcPos > HAVE_MAX
@@ -200,8 +200,8 @@ void CUser::WarehouseProcess(Packet & pkt)
 		// Check that the source item we're moving is what the client says it is.
 		if (pSrcItem->nNum != nItemID
 			// You can't move a partial stack in the inventory (the whole stack is moved).
-			|| pDstItem->nNum != 0)
-			goto fail_return;
+				|| pDstItem->nNum != 0)
+				goto fail_return;
 
 		memcpy(pDstItem, pSrcItem, sizeof(_ITEM_DATA));
 		memset(pSrcItem, 0, sizeof(_ITEM_DATA));
@@ -224,10 +224,10 @@ bool CUser::CheckWeight(uint32 nItemID, uint16 sCount)
 bool CUser::CheckWeight(_ITEM_TABLE * pTable, uint32 nItemID, uint16 sCount)
 {
 	return (pTable != nullptr // Make sure the item exists
-			// and that the weight doesn't exceed our limit
-			&& (m_sItemWeight + (pTable->m_sWeight * sCount)) <= m_sMaxWeight
-			// and we have room for the item.
-			&& FindSlotForItem(nItemID, sCount) >= 0);
+		// and that the weight doesn't exceed our limit
+		&& (m_sItemWeight + (pTable->m_sWeight * sCount)) <= m_sMaxWeight
+		// and we have room for the item.
+		&& FindSlotForItem(nItemID, sCount) >= 0);
 }
 
 bool CUser::CheckExistItem(int itemid, short count /*= 1*/)
@@ -237,7 +237,7 @@ bool CUser::CheckExistItem(int itemid, short count /*= 1*/)
 	{
 		// This implementation fixes a bug where it ignored the possibility for multiple stacks.
 		if (m_sItemArray[i].nNum == itemid
-				&& m_sItemArray[i].sCount >= count)
+			&& m_sItemArray[i].sCount >= count)
 			return true;
 	}
 
@@ -262,7 +262,7 @@ uint16 CUser::GetItemCount(uint32 nItemID)
 
 // Pretend you didn't see me. This really needs to go (just copying official)
 bool CUser::CheckExistItemAnd(int32 nItemID1, int16 sCount1, int32 nItemID2, int16 sCount2,
-		int32 nItemID3, int16 sCount3, int32 nItemID4, int16 sCount4, int32 nItemID5, int16 sCount5)
+							  int32 nItemID3, int16 sCount3, int32 nItemID4, int16 sCount4, int32 nItemID5, int16 sCount5)
 {
 	if (nItemID1
 		&& !CheckExistItem(nItemID1, sCount1))
@@ -303,7 +303,7 @@ bool CUser::RobItem(uint32 nItemID, uint16 sCount /*= 1*/)
 		if (RobItem(i, pTable, sCount))
 			return true;
 	}
-	
+
 	return false;
 }
 
@@ -336,14 +336,14 @@ bool CUser::RobItem(uint8 bPos, _ITEM_TABLE * pTable, uint16 sCount /*= 1*/)
 }
 
 /**
- * @brief	Checks if all players in the party have sCount of item nItemID
- * 			and if so, removes it.
- *
- * @param	nItemID	Identifier for the item.
- * @param	sCount 	Stack size.
- *
- * @return	true if the required items were taken, false if not.
- */
+* @brief	Checks if all players in the party have sCount of item nItemID
+* 			and if so, removes it.
+*
+* @param	nItemID	Identifier for the item.
+* @param	sCount 	Stack size.
+*
+* @return	true if the required items were taken, false if not.
+*/
 bool CUser::RobAllItemParty(uint32 nItemID, uint16 sCount /*= 1*/)
 {
 	_PARTY_GROUP * pParty = g_pMain->GetPartyPtr(GetPartyID());
@@ -376,7 +376,7 @@ bool CUser::GiveItem(uint32 itemid, uint16 count, bool send_packet /*= true*/)
 	_ITEM_TABLE* pTable = g_pMain->GetItemPtr( itemid );
 	if (pTable == nullptr)
 		return false;	
-	
+
 	pos = FindSlotForItem(itemid, count);
 	if (pos < 0)
 		return false;
@@ -392,7 +392,7 @@ bool CUser::GiveItem(uint32 itemid, uint16 count, bool send_packet /*= true*/)
 	pItem->sCount += count;
 	if (pItem->sCount > MAX_ITEM_COUNT)
 		pItem->sCount = MAX_ITEM_COUNT;
-	
+
 	pItem->sDuration = pTable->m_sDuration;
 
 	// This is really silly, but match the count up with the duration
@@ -449,24 +449,24 @@ void CUser::ItemMove(Packet & pkt)
 	pTable = g_pMain->GetItemPtr(nItemID);
 	if (pTable == nullptr
 		//  || dir == ITEM_INVEN_SLOT && ((pTable->m_sWeight + m_sItemWeight) > m_sMaxWeight))
-		//  || dir > ITEM_MBAG_TO_MBAG || bSrcPos >= SLOT_MAX+HAVE_MAX+COSP_MAX+MBAG_MAX || bDstPos >= SLOT_MAX+HAVE_MAX+COSP_MAX+MBAG_MAX
-			|| ((dir == ITEM_INVEN_SLOT || dir == ITEM_SLOT_SLOT) 
+			//  || dir > ITEM_MBAG_TO_MBAG || bSrcPos >= SLOT_MAX+HAVE_MAX+COSP_MAX+MBAG_MAX || bDstPos >= SLOT_MAX+HAVE_MAX+COSP_MAX+MBAG_MAX
+				|| ((dir == ITEM_INVEN_SLOT || dir == ITEM_SLOT_SLOT) 
 				&& (bDstPos > SLOT_MAX || !ItemEquipAvailable(pTable)))
-			|| (dir == ITEM_SLOT_INVEN && bSrcPos > SLOT_MAX)
-			|| ((dir == ITEM_INVEN_SLOT || dir == ITEM_SLOT_SLOT) && bDstPos == RESERVED))
-			goto fail_return;
+				|| (dir == ITEM_SLOT_INVEN && bSrcPos > SLOT_MAX)
+				|| ((dir == ITEM_INVEN_SLOT || dir == ITEM_SLOT_SLOT) && bDstPos == RESERVED))
+				goto fail_return;
 
 	switch (dir)
 	{
 	case ITEM_MBAG_TO_MBAG:
 		if (bDstPos >= MBAG_TOTAL || bSrcPos >= MBAG_TOTAL
 			// We also need to make sure that if we're setting an item in a magic bag, we need to actually
-			// have a magic back to put the item in!
-			|| (INVENTORY_MBAG+bDstPos <  INVENTORY_MBAG2 && m_sItemArray[BAG1].nNum == 0)
-			|| (INVENTORY_MBAG+bDstPos >= INVENTORY_MBAG2 && m_sItemArray[BAG2].nNum == 0)
-			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[INVENTORY_MBAG + bSrcPos].nNum)
-			goto fail_return;
+				// have a magic back to put the item in!
+					|| (INVENTORY_MBAG+bDstPos <  INVENTORY_MBAG2 && m_sItemArray[BAG1].nNum == 0)
+					|| (INVENTORY_MBAG+bDstPos >= INVENTORY_MBAG2 && m_sItemArray[BAG2].nNum == 0)
+					// Make sure that the item actually exists there.
+					|| nItemID != m_sItemArray[INVENTORY_MBAG + bSrcPos].nNum)
+					goto fail_return;
 
 		pSrcItem = &m_sItemArray[INVENTORY_MBAG + bSrcPos];
 		pDstItem = &m_sItemArray[INVENTORY_MBAG + bDstPos];
@@ -475,13 +475,13 @@ void CUser::ItemMove(Packet & pkt)
 	case ITEM_MBAG_TO_INVEN:
 		if (bDstPos >= HAVE_MAX || bSrcPos >= MBAG_TOTAL
 			// We also need to make sure that if we're taking an item from a magic bag, we need to actually
-			// have a magic back to take it from!
-			|| (INVENTORY_MBAG+bSrcPos <  INVENTORY_MBAG2 && m_sItemArray[BAG1].nNum == 0)
-			|| (INVENTORY_MBAG+bSrcPos >= INVENTORY_MBAG2 && m_sItemArray[BAG2].nNum == 0)
-			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[INVENTORY_MBAG + bSrcPos].nNum)
-			goto fail_return;
-		
+				// have a magic back to take it from!
+					|| (INVENTORY_MBAG+bSrcPos <  INVENTORY_MBAG2 && m_sItemArray[BAG1].nNum == 0)
+					|| (INVENTORY_MBAG+bSrcPos >= INVENTORY_MBAG2 && m_sItemArray[BAG2].nNum == 0)
+					// Make sure that the item actually exists there.
+					|| nItemID != m_sItemArray[INVENTORY_MBAG + bSrcPos].nNum)
+					goto fail_return;
+
 		pSrcItem = &m_sItemArray[INVENTORY_MBAG + bSrcPos];
 		pDstItem = &m_sItemArray[INVENTORY_INVENT + bDstPos];
 		break;
@@ -489,13 +489,13 @@ void CUser::ItemMove(Packet & pkt)
 	case ITEM_INVEN_TO_MBAG:
 		if (bDstPos >= MBAG_TOTAL || bSrcPos >= HAVE_MAX
 			// We also need to make sure that if we're adding an item to a magic bag, we need to actually
-			// have a magic back to put the item in!
-			|| (INVENTORY_MBAG + bDstPos < INVENTORY_MBAG2 && m_sItemArray[BAG1].nNum == 0)
-			|| (INVENTORY_MBAG + bDstPos >= INVENTORY_MBAG2 && m_sItemArray[BAG2].nNum == 0)
-			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[INVENTORY_INVENT + bSrcPos].nNum)
-			goto fail_return;
-		
+				// have a magic back to put the item in!
+					|| (INVENTORY_MBAG + bDstPos < INVENTORY_MBAG2 && m_sItemArray[BAG1].nNum == 0)
+					|| (INVENTORY_MBAG + bDstPos >= INVENTORY_MBAG2 && m_sItemArray[BAG2].nNum == 0)
+					// Make sure that the item actually exists there.
+					|| nItemID != m_sItemArray[INVENTORY_INVENT + bSrcPos].nNum)
+					goto fail_return;
+
 		pSrcItem = &m_sItemArray[INVENTORY_INVENT + bSrcPos];
 		pDstItem = &m_sItemArray[INVENTORY_MBAG + bDstPos];
 		break;
@@ -503,9 +503,9 @@ void CUser::ItemMove(Packet & pkt)
 	case ITEM_COSP_TO_INVEN:
 		if (bDstPos >= HAVE_MAX || bSrcPos >= COSP_MAX
 			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[INVENTORY_COSP + bSrcPos].nNum)
-			goto fail_return;
-		
+				|| nItemID != m_sItemArray[INVENTORY_COSP + bSrcPos].nNum)
+				goto fail_return;
+
 		pSrcItem = &m_sItemArray[INVENTORY_COSP + bSrcPos];
 		pDstItem = &m_sItemArray[SLOT_MAX + bDstPos];
 		break;
@@ -513,9 +513,9 @@ void CUser::ItemMove(Packet & pkt)
 	case ITEM_INVEN_TO_COSP:
 		if (bDstPos >= COSP_MAX+MBAG_COUNT || bSrcPos >= HAVE_MAX
 			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[SLOT_MAX + bSrcPos].nNum
-			|| !IsValidSlotPos(pTable, bDstPos))
-			goto fail_return;
+				|| nItemID != m_sItemArray[SLOT_MAX + bSrcPos].nNum
+				|| !IsValidSlotPos(pTable, bDstPos))
+				goto fail_return;
 
 		pSrcItem = &m_sItemArray[SLOT_MAX + bSrcPos];
 		pDstItem = &m_sItemArray[INVENTORY_COSP + bDstPos];
@@ -526,18 +526,18 @@ void CUser::ItemMove(Packet & pkt)
 			// Can't replace existing magic bag.
 			if (pDstItem->nNum != 0
 				// Can't set any old item in the bag slot, it must be a bag.
-				|| pTable->m_bSlot != ItemSlotBag)
-				goto fail_return;
+					|| pTable->m_bSlot != ItemSlotBag)
+					goto fail_return;
 		}
 		break;
 
 	case ITEM_INVEN_SLOT:
 		if (bDstPos >= SLOT_MAX || bSrcPos >= HAVE_MAX
 			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[INVENTORY_INVENT + bSrcPos].nNum
-			// Ensure the item is able to be equipped in that slot
-			|| !IsValidSlotPos(pTable, bDstPos))
-			goto fail_return;
+				|| nItemID != m_sItemArray[INVENTORY_INVENT + bSrcPos].nNum
+				// Ensure the item is able to be equipped in that slot
+				|| !IsValidSlotPos(pTable, bDstPos))
+				goto fail_return;
 
 		pSrcItem = &m_sItemArray[INVENTORY_INVENT + bSrcPos];
 		pDstItem = &m_sItemArray[bDstPos];
@@ -546,9 +546,9 @@ void CUser::ItemMove(Packet & pkt)
 	case ITEM_SLOT_INVEN:
 		if (bDstPos >= HAVE_MAX || bSrcPos >= SLOT_MAX
 			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[bSrcPos].nNum)
-			goto fail_return;
-		
+				|| nItemID != m_sItemArray[bSrcPos].nNum)
+				goto fail_return;
+
 		pSrcItem = &m_sItemArray[bSrcPos];
 		pDstItem = &m_sItemArray[INVENTORY_INVENT + bDstPos];
 		break;
@@ -556,9 +556,9 @@ void CUser::ItemMove(Packet & pkt)
 	case ITEM_INVEN_INVEN:
 		if (bDstPos >= HAVE_MAX || bSrcPos >= HAVE_MAX
 			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[INVENTORY_INVENT + bSrcPos].nNum)
-			goto fail_return;
-		
+				|| nItemID != m_sItemArray[INVENTORY_INVENT + bSrcPos].nNum)
+				goto fail_return;
+
 		pSrcItem = &m_sItemArray[INVENTORY_INVENT + bSrcPos];
 		pDstItem = &m_sItemArray[INVENTORY_INVENT + bDstPos];
 		break;
@@ -566,11 +566,11 @@ void CUser::ItemMove(Packet & pkt)
 	case ITEM_SLOT_SLOT:
 		if (bDstPos >= SLOT_MAX || bSrcPos >= SLOT_MAX
 			// Make sure that the item actually exists there.
-			|| nItemID != m_sItemArray[bSrcPos].nNum
-			// Ensure the item is able to be equipped in that slot
-			|| !IsValidSlotPos(pTable, bDstPos))
-			goto fail_return;
-		
+				|| nItemID != m_sItemArray[bSrcPos].nNum
+				// Ensure the item is able to be equipped in that slot
+				|| !IsValidSlotPos(pTable, bDstPos))
+				goto fail_return;
+
 		pSrcItem = &m_sItemArray[bSrcPos];
 		pDstItem = &m_sItemArray[bDstPos];
 		break;
@@ -596,8 +596,8 @@ void CUser::ItemMove(Packet & pkt)
 	// If equipping/de-equipping an item
 	if (dir == ITEM_INVEN_SLOT || dir == ITEM_SLOT_INVEN
 		// or moving an item to/from our cospre item slots
-		|| dir == ITEM_INVEN_TO_COSP || dir == ITEM_COSP_TO_INVEN
-		|| dir == ITEM_SLOT_SLOT)
+			|| dir == ITEM_INVEN_TO_COSP || dir == ITEM_COSP_TO_INVEN
+			|| dir == ITEM_SLOT_SLOT)
 	{
 		// Re-update item stats
 		SetUserAbility(false);
@@ -704,29 +704,29 @@ bool CUser::RunExchange(int nExchangeID)
 	// Does the exchange exist?
 	if (pExchange == nullptr
 		// Is it a valid exchange (do we have room?)
-		|| !CheckExchange(nExchangeID)
-		// We handle flags from 0-101 only. Anything else is broken.
-		|| pExchange->bRandomFlag > 101
-		// Do we have all of the required items?
-		|| !CheckExistItemAnd(
+			|| !CheckExchange(nExchangeID)
+			// We handle flags from 0-101 only. Anything else is broken.
+			|| pExchange->bRandomFlag > 101
+			// Do we have all of the required items?
+			|| !CheckExistItemAnd(
 			pExchange->nOriginItemNum[0], pExchange->sOriginItemCount[0], 
 			pExchange->nOriginItemNum[1], pExchange->sOriginItemCount[1], 
 			pExchange->nOriginItemNum[2], pExchange->sOriginItemCount[2], 
 			pExchange->nOriginItemNum[3], pExchange->sOriginItemCount[3], 
 			pExchange->nOriginItemNum[4], pExchange->sOriginItemCount[4])
-		// These checks are a little pointless, but remove the required items as well.
-		|| !RobItem(pExchange->nOriginItemNum[0], pExchange->sOriginItemCount[0])
-		|| !RobItem(pExchange->nOriginItemNum[1], pExchange->sOriginItemCount[1])
-		|| !RobItem(pExchange->nOriginItemNum[2], pExchange->sOriginItemCount[2])
-		|| !RobItem(pExchange->nOriginItemNum[3], pExchange->sOriginItemCount[3])
-		|| !RobItem(pExchange->nOriginItemNum[4], pExchange->sOriginItemCount[4]))
-		return false;
-		
+			// These checks are a little pointless, but remove the required items as well.
+			|| !RobItem(pExchange->nOriginItemNum[0], pExchange->sOriginItemCount[0])
+			|| !RobItem(pExchange->nOriginItemNum[1], pExchange->sOriginItemCount[1])
+			|| !RobItem(pExchange->nOriginItemNum[2], pExchange->sOriginItemCount[2])
+			|| !RobItem(pExchange->nOriginItemNum[3], pExchange->sOriginItemCount[3])
+			|| !RobItem(pExchange->nOriginItemNum[4], pExchange->sOriginItemCount[4]))
+			return false;
+
 	// No random element? We're just exchanging x items for y items.
 	if (!pExchange->bRandomFlag)
 	{
 		for (int i = 0; i < ITEMS_IN_EXCHANGE_GROUP; i++)
-		    GiveItem(pExchange->nExchangeItemNum[i], pExchange->sExchangeItemCount[i]);
+			GiveItem(pExchange->nExchangeItemNum[i], pExchange->sExchangeItemCount[i]);
 	}
 	// For these items the rate set by bRandomFlag.
 	else if (pExchange->bRandomFlag <= 100)
@@ -806,8 +806,8 @@ bool CUser::IsValidSlotPos(_ITEM_TABLE* pTable, int destpos)
 		bOneHandedItem = true;
 		break;
 
-	// If we're equipping a 2H item in our right hand, there must
-	// be no item in our left hand.
+		// If we're equipping a 2H item in our right hand, there must
+		// be no item in our left hand.
 	case ItemSlot2HRightHand:
 		if (destpos != RIGHTHAND
 			|| GetItem(LEFTHAND)->nNum != 0)
@@ -821,8 +821,8 @@ bool CUser::IsValidSlotPos(_ITEM_TABLE* pTable, int destpos)
 		bOneHandedItem = true;
 		break;
 
-	// If we're equipping a 2H item in our left hand, there must
-	// be no item in our right hand.
+		// If we're equipping a 2H item in our left hand, there must
+		// be no item in our right hand.
 	case ItemSlot2HLeftHand:
 		if (destpos != LEFTHAND
 			|| GetItem(RIGHTHAND)->nNum != 0)

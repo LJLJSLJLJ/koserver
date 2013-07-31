@@ -4,10 +4,10 @@
 #include "Npc.h"
 
 /**
- * @brief	Adds user instance to the region.
- *
- * @param	pUser	The user to add.
- */
+* @brief	Adds user instance to the region.
+*
+* @param	pUser	The user to add.
+*/
 void CRegion::Add(CUser * pUser)
 {
 	FastGuard lock(m_lock);
@@ -15,10 +15,10 @@ void CRegion::Add(CUser * pUser)
 }
 
 /**
- * @brief	Removes the given user instance from the region.
- *
- * @param	pUser	The user to remove.
- */
+* @brief	Removes the given user instance from the region.
+*
+* @param	pUser	The user to remove.
+*/
 void CRegion::Remove(CUser * pUser)
 {
 	FastGuard lock(m_lock);
@@ -26,10 +26,10 @@ void CRegion::Remove(CUser * pUser)
 }
 
 /**
- * @brief	Adds the given NPC to the region.
- *
- * @param	pNpc	The NPC to add.
- */
+* @brief	Adds the given NPC to the region.
+*
+* @param	pNpc	The NPC to add.
+*/
 void CRegion::Add(CNpc * pNpc)
 {
 	FastGuard lock(m_lock);
@@ -37,10 +37,10 @@ void CRegion::Add(CNpc * pNpc)
 }
 
 /**
- * @brief	Removes the given NPC from the region.
- *
- * @param	pNpc	The NPC to remove.
- */
+* @brief	Removes the given NPC from the region.
+*
+* @param	pNpc	The NPC to remove.
+*/
 void CRegion::Remove(CNpc * pNpc)
 {
 	FastGuard lock(m_lock);

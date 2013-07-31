@@ -3,9 +3,6 @@
 #include "KnightsManager.h"
 #include "KingSystem.h"
 #include "MagicInstance.h"
-#include "DBAgent.h"
-
-extern CDBAgent g_DBAgent;
 
 using namespace std;
 
@@ -2976,7 +2973,6 @@ void CUser::OperatorCommand(Packet & pkt)
 	case OPERATOR_ENABLE_ATTACK:
 		pUser->m_bAuthority = AUTHORITY_PLAYER;
 		sNoticeMessage = string_format("%s has been enabled attack..!", pUser->GetName().c_str());
-		break;
 	case OPERATOR_UNMUTE:
 		pUser->m_bAuthority = AUTHORITY_PLAYER;
 		sNoticeMessage = string_format("%s has been unmuted..!", pUser->GetName().c_str());

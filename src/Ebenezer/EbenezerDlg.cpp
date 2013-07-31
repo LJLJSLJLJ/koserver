@@ -76,17 +76,17 @@ CEbenezerDlg::CEbenezerDlg()
 	m_nServerGroupNo = 0;
 	m_nServerGroup = 0;
 	m_sDiscount = 0;
-	
+
 	m_bPermanentChatMode = false;
 	m_bSantaOrAngel = FLYING_NONE;
 }
 
 /**
- * @brief	Loads config, table data, initialises sockets and generally
- * 			starts up the server.
- *
- * @return	true if it succeeds, false if it fails.
- */
+* @brief	Loads config, table data, initialises sockets and generally
+* 			starts up the server.
+*
+* @return	true if it succeeds, false if it fails.
+*/
 bool CEbenezerDlg::Startup()
 {
 	m_sZoneCount = 0;
@@ -96,7 +96,7 @@ bool CEbenezerDlg::Startup()
 	m_bServerCheckFlag = false;
 
 	GetTimeFromIni();
-	
+
 	if (!g_pMain->m_socketMgr.Listen(_LISTEN_PORT, MAX_USER))
 	{
 		printf(_T("ERROR: Failed to listen on server port (%d)."), _LISTEN_PORT);
@@ -113,8 +113,8 @@ bool CEbenezerDlg::Startup()
 	m_aiSocketMgr.InitSessions(1);
 
 	if (!g_DBAgent.Startup(m_bMarsEnabled, 
-			m_strAccountDSN, m_strAccountUID, m_strAccountPWD,
-			m_strGameDSN, m_strGameUID, m_strGamePWD)
+		m_strAccountDSN, m_strAccountUID, m_strAccountPWD,
+		m_strGameDSN, m_strGameUID, m_strGamePWD)
 		|| !LoadItemTable()
 		|| !LoadSetItemTable()
 		|| !LoadItemExchangeTable()
@@ -172,8 +172,8 @@ bool CEbenezerDlg::Startup()
 }
 
 /**
- * @brief	Loads the server's config from the INI file.
- */
+* @brief	Loads the server's config from the INI file.
+*/
 void CEbenezerDlg::GetTimeFromIni()
 {
 	CIni ini(CONF_GAME_SERVER);
@@ -253,11 +253,11 @@ void CEbenezerDlg::GetTimeFromIni()
 }
 
 /**
- * @brief	Gets & formats a cached server resource (_SERVER_RESOURCE entry).
- *
- * @param	nResourceID	Identifier for the resource.
- * @param	result	   	The string to store the formatted result in.
- */
+* @brief	Gets & formats a cached server resource (_SERVER_RESOURCE entry).
+*
+* @param	nResourceID	Identifier for the resource.
+* @param	result	   	The string to store the formatted result in.
+*/
 void CEbenezerDlg::GetServerResource(int nResourceID, string * result, ...)
 {
 	_SERVER_RESOURCE *pResource = m_ServerResourceArray.GetData(nResourceID);
@@ -274,25 +274,25 @@ void CEbenezerDlg::GetServerResource(int nResourceID, string * result, ...)
 }
 
 /**
- * @brief	Gets the starting positions (for both nations) 
- * 			for the specified zone.
- *
- * @param	nZoneID	Identifier for the zone.
- */
+* @brief	Gets the starting positions (for both nations) 
+* 			for the specified zone.
+*
+* @param	nZoneID	Identifier for the zone.
+*/
 _START_POSITION *CEbenezerDlg::GetStartPosition(int nZoneID)
 {
 	return m_StartPositionArray.GetData(nZoneID);
 }
 
 /**
- * @brief	Gets the experience points required for the 
- * 			specified level.
- *
- * @param	nLevel	The level.
- *
- * @return	The experience points required to level up from 
- * 			the specified level.
- */
+* @brief	Gets the experience points required for the 
+* 			specified level.
+*
+* @param	nLevel	The level.
+*
+* @return	The experience points required to level up from 
+* 			the specified level.
+*/
 int64 CEbenezerDlg::GetExpByLevel(int nLevel)
 {
 	LevelUpArray::iterator itr = m_LevelUpArray.find(nLevel);
@@ -303,25 +303,25 @@ int64 CEbenezerDlg::GetExpByLevel(int nLevel)
 }
 
 /**
- * @brief	Gets zone by its identifier.
- *
- * @param	zoneID	Identifier for the zone.
- *
- * @return	null if it fails, otherwise the zone.
- */
+* @brief	Gets zone by its identifier.
+*
+* @param	zoneID	Identifier for the zone.
+*
+* @return	null if it fails, otherwise the zone.
+*/
 C3DMap * CEbenezerDlg::GetZoneByID(int zoneID)
 {
 	return m_ZoneArray.GetData(zoneID);
 }
 
 /**
- * @brief	Looks up a user by name.
- *
- * @param	findName	The name to find.
- * @param	type		The type of name (account, character).
- *
- * @return	null if it fails, else the user pointer.
- */
+* @brief	Looks up a user by name.
+*
+* @param	findName	The name to find.
+* @param	type		The type of name (account, character).
+*
+* @return	null if it fails, else the user pointer.
+*/
 CUser* CEbenezerDlg::GetUserPtr(string findName, NameType type)
 {
 	// As findName is a copy of the string passed in, we can change it
@@ -346,10 +346,10 @@ CUser* CEbenezerDlg::GetUserPtr(string findName, NameType type)
 }
 
 /**
- * @brief	Adds the account name & session to a hashmap (on login)
- *
- * @param	pSession	The session.
- */
+* @brief	Adds the account name & session to a hashmap (on login)
+*
+* @param	pSession	The session.
+*/
 void CEbenezerDlg::AddAccountName(CUser *pSession)
 {
 	FastGuard lock(m_accountNameLock);
@@ -359,10 +359,10 @@ void CEbenezerDlg::AddAccountName(CUser *pSession)
 }
 
 /**
- * @brief	Adds the character name & session to a hashmap (when in-game)
- *
- * @param	pSession	The session.
- */
+* @brief	Adds the character name & session to a hashmap (when in-game)
+*
+* @param	pSession	The session.
+*/
 void CEbenezerDlg::AddCharacterName(CUser *pSession)
 {
 	FastGuard lock(m_characterNameLock);
@@ -372,13 +372,13 @@ void CEbenezerDlg::AddCharacterName(CUser *pSession)
 }
 
 /**
- * @brief	Removes an existing character name/session from the hashmap, 
- * 			replaces the character's name and reinserts the session with 
- * 			the new name into the hashmap.
- *
- * @param	pSession		The session.
- * @param	strNewUserID	Character's new name.
- */
+* @brief	Removes an existing character name/session from the hashmap, 
+* 			replaces the character's name and reinserts the session with 
+* 			the new name into the hashmap.
+*
+* @param	pSession		The session.
+* @param	strNewUserID	Character's new name.
+*/
 void CEbenezerDlg::ReplaceCharacterName(CUser *pSession, std::string & strNewUserID)
 {
 	FastGuard lock(m_characterNameLock);
@@ -394,10 +394,10 @@ void CEbenezerDlg::ReplaceCharacterName(CUser *pSession, std::string & strNewUse
 }
 
 /**
- * @brief	Removes the account name & character names from the hashmaps (on logout)
- *
- * @param	pSession	The session.
- */
+* @brief	Removes the account name & character names from the hashmaps (on logout)
+*
+* @param	pSession	The session.
+*/
 void CEbenezerDlg::RemoveSessionNames(CUser *pSession)
 {
 	string upperName = pSession->m_strAccountID;
@@ -434,25 +434,25 @@ Unit * CEbenezerDlg::GetUnitPtr(uint16 id)
 }
 
 /**
- * @brief	Spawn one or more event NPC/monsters.
- *
- * @param	sSid	  	The database ID of the NPC/monster to spawn.
- * @param	bIsMonster	true if we are spawning a monster, false for an NPC.
- * @param	byZone	  	The zone ID to spawn the monster to.
- * @param	fX		  	The x coordinate.
- * @param	fY		  	The y coordinate.
- * @param	fZ		  	The z coordinate.
- * @param	sCount	  	Number of spawns to create.
- * @param	sRadius	  	Spawn radius.
- */
+* @brief	Spawn one or more event NPC/monsters.
+*
+* @param	sSid	  	The database ID of the NPC/monster to spawn.
+* @param	bIsMonster	true if we are spawning a monster, false for an NPC.
+* @param	byZone	  	The zone ID to spawn the monster to.
+* @param	fX		  	The x coordinate.
+* @param	fY		  	The y coordinate.
+* @param	fZ		  	The z coordinate.
+* @param	sCount	  	Number of spawns to create.
+* @param	sRadius	  	Spawn radius.
+*/
 void CEbenezerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sCount /*= 1*/, uint16 sRadius /*= 0*/)
 {
 	Packet result(AG_NPC_SPAWN_REQ);
 	result	<< sSid << bIsMonster 
-			<< byZone 
-			<< uint16(fX * 10) << uint16(fY * 10) << uint16(fZ * 10) 
-			<< sCount 
-			<< sRadius;
+		<< byZone 
+		<< uint16(fX * 10) << uint16(fY * 10) << uint16(fZ * 10) 
+		<< sCount 
+		<< sRadius;
 	Send_AIServer(&result);
 }
 
@@ -540,7 +540,7 @@ void CEbenezerDlg::ReqUpdateConcurrent()
 {
 	Packet result(WIZ_ZONE_CONCURRENT);
 	result	<< uint32(m_nServerNo)
-			<< uint32(m_socketMgr.GetActiveSessionMap().size());
+		<< uint32(m_socketMgr.GetActiveSessionMap().size());
 	g_pMain->m_socketMgr.ReleaseLock();
 	AddDatabaseRequest(result);
 }
@@ -576,14 +576,14 @@ void CEbenezerDlg::AIServerConnect()
 }
 
 /**
- * @brief	Sends a packet to all users in the zone matching the specified class types.
- *
- * @param	pkt				   	The packet.
- * @param	bZoneID			   	Identifier for the zone.
- * @param	pExceptUser		   	The except user.
- * @param	nation			   	The nation.
- * @param	seekingPartyOptions	Bitmask of classes to send to.
- */
+* @brief	Sends a packet to all users in the zone matching the specified class types.
+*
+* @param	pkt				   	The packet.
+* @param	bZoneID			   	Identifier for the zone.
+* @param	pExceptUser		   	The except user.
+* @param	nation			   	The nation.
+* @param	seekingPartyOptions	Bitmask of classes to send to.
+*/
 void CEbenezerDlg::Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* pExceptUser, uint8 nation, uint8 seekingPartyOptions)
 {
 	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
@@ -605,22 +605,22 @@ void CEbenezerDlg::Send_Zone_Matched_Class(Packet *pkt, uint8 bZoneID, CUser* pE
 				||	((seekingPartyOptions & 2) && pUser->JobGroupCheck(ClassRogue))
 				||	((seekingPartyOptions & 4) && pUser->JobGroupCheck(ClassMage))
 				||	((seekingPartyOptions & 8) && pUser->JobGroupCheck(ClassPriest)))
-			pUser->Send(pkt);
+				pUser->Send(pkt);
 		}
 	}
 	g_pMain->m_socketMgr.ReleaseLock();
 }
 
 /**
- * @brief	Sends a packet to all players in the specified zone
- * 			matching the specified criteria.
- *
- * @param	pkt		   	The packet.
- * @param	bZoneID	   	Zone's identifier.
- * @param	pExceptUser	User to except. If specified, will ignore this user.
- * @param	nation	   	Nation to allow. If unspecified, will default to Nation::ALL 
- * 						which will send to all/both nations.
- */
+* @brief	Sends a packet to all players in the specified zone
+* 			matching the specified criteria.
+*
+* @param	pkt		   	The packet.
+* @param	bZoneID	   	Zone's identifier.
+* @param	pExceptUser	User to except. If specified, will ignore this user.
+* @param	nation	   	Nation to allow. If unspecified, will default to Nation::ALL 
+* 						which will send to all/both nations.
+*/
 void CEbenezerDlg::Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser /*= nullptr*/, uint8 nation /*= 0*/)
 {
 	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
@@ -639,13 +639,13 @@ void CEbenezerDlg::Send_Zone(Packet *pkt, uint8 bZoneID, CUser* pExceptUser /*= 
 }
 
 /**
- * @brief	Sends a packet to all users connected and logged into the server.
- *
- * @param	pkt		   	The packet.
- * @param	pExceptUser	User to except. If specified, will ignore this user.
- * @param	nation	   	Nation to allow. If unspecified, will default to Nation::ALL 
- * 						which will send to all/both nations.
- */
+* @brief	Sends a packet to all users connected and logged into the server.
+*
+* @param	pkt		   	The packet.
+* @param	pExceptUser	User to except. If specified, will ignore this user.
+* @param	nation	   	Nation to allow. If unspecified, will default to Nation::ALL 
+* 						which will send to all/both nations.
+*/
 void CEbenezerDlg::Send_All(Packet *pkt, CUser* pExceptUser /*= nullptr*/, uint8 nation /*= 0*/)
 {
 	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
@@ -728,7 +728,7 @@ void CEbenezerDlg::Send_NewRegions(Packet *pkt, int new_x, int new_z, C3DMap *pM
 	if (new_z != 0)
 	{
 		Send_UnitRegion(pkt, pMap, x, z+new_z);
-		
+
 		if (new_x < 0)
 			Send_UnitRegion(pkt, pMap, x+1, z+new_z);
 		else if (new_x > 0)
@@ -1267,7 +1267,7 @@ bool CEbenezerDlg::LoadNoticeData()
 
 	while (!file.eof())
 	{
- 		if (count > 19)
+		if (count > 19)
 		{
 			TRACE("Too many lines in Notice.txt\n");
 			break;
@@ -1374,14 +1374,14 @@ void CEbenezerDlg::DeleteAllNpcList(int flag)
 }
 
 /**
- * @brief	Searches for the first NPC in the specified zone
- * 			with the specified picture/model ID.
- *
- * @param	sPid	Picture/model ID of the NPC.
- * @param	byZone	Zone to search in.
- *
- * @return	null if it fails, else the NPC instance we found.
- */
+* @brief	Searches for the first NPC in the specified zone
+* 			with the specified picture/model ID.
+*
+* @param	sPid	Picture/model ID of the NPC.
+* @param	byZone	Zone to search in.
+*
+* @return	null if it fails, else the NPC instance we found.
+*/
 CNpc*  CEbenezerDlg::FindNpcInZone(uint16 sPid, uint8 byZone)
 {
 	if (!m_bPointCheckFlag)
@@ -1393,11 +1393,11 @@ CNpc*  CEbenezerDlg::FindNpcInZone(uint16 sPid, uint8 byZone)
 		CNpc * pNpc = itr->second;
 		if (pNpc == nullptr || pNpc->GetZoneID() != byZone
 			// This isn't a typo, it's actually just a hack.
-			// The picture/model ID of most spawns is the same as their prototype ID.
-			// When there's more than one spawn prototype (i.e. different sSid), we keep using
-			// the same picture/model ID. So we check this instead of the sSid...
-			|| pNpc->m_sPid != sPid) 
-			continue;
+				// The picture/model ID of most spawns is the same as their prototype ID.
+					// When there's more than one spawn prototype (i.e. different sSid), we keep using
+						// the same picture/model ID. So we check this instead of the sSid...
+							|| pNpc->m_sPid != sPid) 
+							continue;
 
 		return pNpc;
 	}
@@ -1520,7 +1520,7 @@ void CEbenezerDlg::BattleZoneVictoryCheck()
 			else
 				pTUser->SendLoyaltyChange(300);
 		}
-				
+
 		// Make the winning nation use a victory emotion (yay!)
 		pTUser->StateChangeServerDirect(4, 12);
 	}	
@@ -1528,9 +1528,9 @@ void CEbenezerDlg::BattleZoneVictoryCheck()
 }
 
 /**
- * @brief	Kicks invaders out of the invaded nation after a war
- *			and resets captains.
- **/
+* @brief	Kicks invaders out of the invaded nation after a war
+*			and resets captains.
+**/
 void CEbenezerDlg::BanishLosers()
 {
 	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
@@ -1547,8 +1547,8 @@ void CEbenezerDlg::BanishLosers()
 		// Kick out invaders
 		if ((pUser->GetZoneID() <= ELMORAD && pUser->GetZoneID() != pUser->GetNation())
 			// and those still in the war zone.
-			|| pUser->GetMap()->isWarZone())
-			pUser->KickOutZoneUser(true);
+				|| pUser->GetMap()->isWarZone())
+				pUser->KickOutZoneUser(true);
 	}
 	g_pMain->m_socketMgr.ReleaseLock();
 }
@@ -1559,7 +1559,7 @@ void CEbenezerDlg::ResetBattleZone()
 	m_byBanishFlag = false;
 	m_sBanishDelay = 0;
 	m_bKarusFlag = 0,
-	m_bElmoradFlag = 0;
+		m_bElmoradFlag = 0;
 	m_byKarusOpenFlag = m_byElmoradOpenFlag = false;
 	m_byBattleOpen = NO_BATTLE;
 	m_byOldBattleOpen = NO_BATTLE;
@@ -1576,46 +1576,46 @@ void CEbenezerDlg::Announcement(uint8 type, int nation, int chat_type)
 
 	switch (type)
 	{
-		case BATTLEZONE_OPEN:
-		case SNOW_BATTLEZONE_OPEN:
-			GetServerResource(IDP_BATTLEZONE_OPEN, &chatstr);
-			break;
+	case BATTLEZONE_OPEN:
+	case SNOW_BATTLEZONE_OPEN:
+		GetServerResource(IDP_BATTLEZONE_OPEN, &chatstr);
+		break;
 
-		case DECLARE_WINNER:
-			if (m_bVictory == KARUS)
-				GetServerResource(IDP_KARUS_VICTORY, &chatstr, m_sElmoradDead, m_sKarusDead);
-			else if (m_bVictory == ELMORAD)
-				GetServerResource(IDP_ELMORAD_VICTORY, &chatstr, m_sKarusDead, m_sElmoradDead);
-			else 
-				return;
-			break;
-		case DECLARE_LOSER:
-			if (m_bVictory == KARUS)
-				GetServerResource(IDS_ELMORAD_LOSER, &chatstr, m_sKarusDead, m_sElmoradDead);
-			else if (m_bVictory == ELMORAD)
-				GetServerResource(IDS_KARUS_LOSER, &chatstr, m_sElmoradDead, m_sKarusDead);
-			else 
-				return;
-			break;
+	case DECLARE_WINNER:
+		if (m_bVictory == KARUS)
+			GetServerResource(IDP_KARUS_VICTORY, &chatstr, m_sElmoradDead, m_sKarusDead);
+		else if (m_bVictory == ELMORAD)
+			GetServerResource(IDP_ELMORAD_VICTORY, &chatstr, m_sKarusDead, m_sElmoradDead);
+		else 
+			return;
+		break;
+	case DECLARE_LOSER:
+		if (m_bVictory == KARUS)
+			GetServerResource(IDS_ELMORAD_LOSER, &chatstr, m_sKarusDead, m_sElmoradDead);
+		else if (m_bVictory == ELMORAD)
+			GetServerResource(IDS_KARUS_LOSER, &chatstr, m_sElmoradDead, m_sKarusDead);
+		else 
+			return;
+		break;
 
-		case DECLARE_BAN:
-			GetServerResource(IDS_BANISH_USER, &chatstr);
-			break;
-		case BATTLEZONE_CLOSE:
-			GetServerResource(IDS_BATTLE_CLOSE, &chatstr);
-			break;
-		case KARUS_CAPTAIN_NOTIFY:
-			GetServerResource(IDS_KARUS_CAPTAIN, &chatstr, m_strKarusCaptain.c_str());
-			break;
-		case ELMORAD_CAPTAIN_NOTIFY:
-			GetServerResource(IDS_ELMO_CAPTAIN, &chatstr, m_strElmoradCaptain.c_str());
-			break;
-		case KARUS_CAPTAIN_DEPRIVE_NOTIFY:
-			GetServerResource(IDS_KARUS_CAPTAIN_DEPRIVE, &chatstr, m_strKarusCaptain.c_str());
-			break;
-		case ELMORAD_CAPTAIN_DEPRIVE_NOTIFY:
-			GetServerResource(IDS_ELMO_CAPTAIN_DEPRIVE, &chatstr, m_strElmoradCaptain.c_str());
-			break;
+	case DECLARE_BAN:
+		GetServerResource(IDS_BANISH_USER, &chatstr);
+		break;
+	case BATTLEZONE_CLOSE:
+		GetServerResource(IDS_BATTLE_CLOSE, &chatstr);
+		break;
+	case KARUS_CAPTAIN_NOTIFY:
+		GetServerResource(IDS_KARUS_CAPTAIN, &chatstr, m_strKarusCaptain.c_str());
+		break;
+	case ELMORAD_CAPTAIN_NOTIFY:
+		GetServerResource(IDS_ELMO_CAPTAIN, &chatstr, m_strElmoradCaptain.c_str());
+		break;
+	case KARUS_CAPTAIN_DEPRIVE_NOTIFY:
+		GetServerResource(IDS_KARUS_CAPTAIN_DEPRIVE, &chatstr, m_strKarusCaptain.c_str());
+		break;
+	case ELMORAD_CAPTAIN_DEPRIVE_NOTIFY:
+		GetServerResource(IDS_ELMO_CAPTAIN_DEPRIVE, &chatstr, m_strElmoradCaptain.c_str());
+		break;
 	}
 
 	Packet result;
@@ -1626,11 +1626,11 @@ void CEbenezerDlg::Announcement(uint8 type, int nation, int chat_type)
 }
 
 /**
- * @brief	Loads the specified user's NP ranks
- * 			from the rankings tables.
- *
- * @param	pUser	The user.
- */
+* @brief	Loads the specified user's NP ranks
+* 			from the rankings tables.
+*
+* @param	pUser	The user.
+*/
 void CEbenezerDlg::GetUserRank(CUser *pUser)
 {
 	// Acquire the lock for thread safety
@@ -1654,7 +1654,7 @@ uint16 CEbenezerDlg::GetKnightsAllMembers(uint16 sClanID, Packet & result, uint1
 	CKnights* pKnights = GetClanPtr(sClanID);
 	if (pKnights == nullptr)
 		return 0;
-	
+
 	uint16 count = 0;
 	foreach_array (i, pKnights->m_arKnightsUser)
 	{
@@ -1675,15 +1675,15 @@ uint16 CEbenezerDlg::GetKnightsAllMembers(uint16 sClanID, Packet & result, uint1
 }
 
 /**
- * @brief	Calculates the clan grade from the specified
- * 			loyalty points (NP).
- *
- * @param	nPoints	Loyalty points (NP). 
- * 					The points will be converted to clan points 
- * 					by this method.
- *
- * @return	The clan grade.
- */
+* @brief	Calculates the clan grade from the specified
+* 			loyalty points (NP).
+*
+* @param	nPoints	Loyalty points (NP). 
+* 					The points will be converted to clan points 
+* 					by this method.
+*
+* @return	The clan grade.
+*/
 int CEbenezerDlg::GetKnightsGrade(uint32 nPoints)
 {
 	uint32 nClanPoints = nPoints / MAX_CLAN_USERS;
@@ -1701,10 +1701,10 @@ int CEbenezerDlg::GetKnightsGrade(uint32 nPoints)
 }
 
 /**
- * @brief	Disconnects all players in the server.
- *
- * @return	The number of users who were in-game.
- */
+* @brief	Disconnects all players in the server.
+*
+* @return	The number of users who were in-game.
+*/
 int CEbenezerDlg::KickOutAllUsers()
 {
 	int count = 0;
@@ -1723,8 +1723,8 @@ int CEbenezerDlg::KickOutAllUsers()
 }
 
 /**
- * @brief	Generates a new item serial.
- */
+* @brief	Generates a new item serial.
+*/
 uint64 CEbenezerDlg::GenerateItemSerial()
 {
 	static FastMutex _mutex;
@@ -1753,17 +1753,17 @@ uint64 CEbenezerDlg::GenerateItemSerial()
 }
 
 /**
- * @brief	Kick out all users from the specified zone
- * 			to their home zone.
- *
- * @param	zone	The zone to kick users out from.
- */
+* @brief	Kick out all users from the specified zone
+* 			to their home zone.
+*
+* @param	zone	The zone to kick users out from.
+*/
 void CEbenezerDlg::KickOutZoneUsers(short zone)
 {
 	// TO-DO: Make this localised to zones.
 	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
 	C3DMap	*pKarusMap		= GetZoneByID(KARUS),
-			*pElMoradMap	= GetZoneByID(ELMORAD);	
+		*pElMoradMap	= GetZoneByID(ELMORAD);	
 
 	ASSERT (pKarusMap != nullptr && pElMoradMap != nullptr);
 
@@ -1809,9 +1809,9 @@ void CEbenezerDlg::GetCaptainUserPtr()
 }
 
 /**
- * @brief	Updates the number of users currently in the war zone
- * 			and sends the user counts to all servers in this group.
- */
+* @brief	Updates the number of users currently in the war zone
+* 			and sends the user counts to all servers in this group.
+*/
 void CEbenezerDlg::BattleZoneCurrentUsers()
 {
 	C3DMap* pMap = GetZoneByID(ZONE_BATTLE_BASE + m_byBattleZone);
@@ -1838,8 +1838,8 @@ void CEbenezerDlg::BattleZoneCurrentUsers()
 }
 
 /**
- * @brief	Sends the flying santa/angel packet to all users in the server.
- */
+* @brief	Sends the flying santa/angel packet to all users in the server.
+*/
 void CEbenezerDlg::SendFlyingSantaOrAngel()
 {
 	Packet result(WIZ_SANTA, uint8(m_bSantaOrAngel));

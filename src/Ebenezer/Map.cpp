@@ -68,13 +68,13 @@ bool C3DMap::RegionItemAdd(uint16 rx, uint16 rz, _LOOT_BUNDLE * pBundle)
 }
 
 /**
-* @brief Removes an item from a region's bundle.
-* If the bundle's empty, the bundle is then
-* removed from the region.
+* @brief	Removes an item from a region's bundle.
+* 			If the bundle's empty, the bundle is then 
+* 			removed from the region.
 *
-* @param pRegion The region.
-* @param pBundle The bundle.
-* @param pItem The item being removed from the bundle.
+* @param	pRegion	The region.
+* @param	pBundle	The bundle.
+* @param	pItem  	The item being removed from the bundle.
 */
 void C3DMap::RegionItemRemove(CRegion * pRegion, _LOOT_BUNDLE * pBundle, _LOOT_ITEM * pItem)
 {

@@ -98,7 +98,7 @@ void CKnightsManager::CreateKnights(CUser* pUser, Packet & pkt)
 {
 	if (pUser == nullptr)
 		return;
-	
+
 	Packet result(WIZ_KNIGHTS_PROCESS, uint8(KNIGHTS_CREATE));
 	std::string idname;
 	uint8 ret_value = 0;
@@ -124,8 +124,8 @@ void CKnightsManager::CreateKnights(CUser* pUser, Packet & pkt)
 		if (knightindex >= 0)
 		{	
 			result	<< uint8(ClanTypeTraining) 
-					<< knightindex << pUser->GetNation()
-					<< idname << pUser->GetName();
+				<< knightindex << pUser->GetNation()
+				<< idname << pUser->GetName();
 			g_pMain->AddDatabaseRequest(result, pUser);
 			return;
 		}
@@ -213,7 +213,7 @@ void CKnightsManager::JoinKnights(CUser *pUser, Packet & pkt)
 			break;
 
 		result	<< uint8(KNIGHTS_JOIN_REQ) << uint8(1)
-				<< pUser->GetSocketID() << sClanID << pKnights->m_strName;
+			<< pUser->GetSocketID() << sClanID << pKnights->m_strName;
 		pTUser->Send(&result);
 		return;
 	} while (0);
@@ -276,7 +276,7 @@ void CKnightsManager::WithdrawKnights(CUser *pUser, Packet & pkt)
 			break;
 
 		result	<< uint8(pUser->isClanLeader() ? KNIGHTS_DESTROY : KNIGHTS_WITHDRAW)
-				<< pUser->GetClanID();
+			<< pUser->GetClanID();
 		g_pMain->AddDatabaseRequest(result, pUser);
 		return;
 	} while (0);
@@ -317,7 +317,7 @@ void CKnightsManager::ModifyKnightsMember(CUser *pUser, Packet & pkt, uint8 opco
 	Packet result(WIZ_KNIGHTS_PROCESS, opcode);
 	uint8 bResult = 1, bRemoveFlag = 0;
 	std::string strUserID;
-	
+
 	pkt >> strUserID;
 	do
 	{
@@ -392,12 +392,12 @@ void CKnightsManager::AllKnightsList(CUser *pUser, Packet & pkt)
 			continue;
 
 		result	<< uint16(pKnights->m_sIndex) << pKnights->m_strName 
-				<< uint16(pKnights->m_sMembers) << pKnights->m_strChief 
-				<< uint32(pKnights->m_nPoints);
+			<< uint16(pKnights->m_sMembers) << pKnights->m_strChief 
+			<< uint32(pKnights->m_nPoints);
 		if (count >= start + 10)
 			break;
 	}
-	
+
 	count -= start;
 	result.put(4, count);
 	pUser->Send(&result);
@@ -456,8 +456,8 @@ void CKnightsManager::CurrentKnightsMember(CUser *pUser, Packet & pkt)
 	uint16 count = 0;
 
 	result	<< uint8(1) // success
-			<< pKnights->m_strChief
-			<< page;
+		<< pKnights->m_strChief
+		<< page;
 
 	size_t pos = result.wpos();
 	result	<< count; // placeholder
@@ -647,7 +647,7 @@ void CKnightsManager::AddUserDonatedNP(int index, std::string & strUserID, uint3
 	{
 		if (pKnights->m_arKnightsUser[i].byUsed == 0)
 			continue;
-		
+
 		if (STRCASECMP(pKnights->m_arKnightsUser[i].strUserName.c_str(), strUserID.c_str()) == 0)
 		{
 			pKnights->m_arKnightsUser[i].nDonatedNP += nDonatedNP;
@@ -748,7 +748,7 @@ void CKnightsManager::RequestClanSymbolVersion(CUser* pUser, Packet & pkt)
 		sFailCode = 11;
 	else if (pUser->GetZoneID() != pUser->GetNation())
 		sFailCode = 12;
-	
+
 	result << sFailCode;
 
 	if (sFailCode == 1)
@@ -758,9 +758,9 @@ void CKnightsManager::RequestClanSymbolVersion(CUser* pUser, Packet & pkt)
 }
 
 /**
- * The clan member (leader only?) tells groups of users to update the clan symbols
- * they have for this clan. This is a horrible, horrible idea.
- **/
+* The clan member (leader only?) tells groups of users to update the clan symbols
+* they have for this clan. This is a horrible, horrible idea.
+**/
 void CKnightsManager::RequestClanSymbols(CUser* pUser, Packet & pkt)
 {
 	// Should we force them to be a clan leader too? 
@@ -798,41 +798,41 @@ void CKnightsManager::GetClanSymbol(CUser* pUser, uint16 sClanID)
 	// Dose that clan exist?
 	if (pKnights == nullptr 
 		// Are they promoted?
-		|| !pKnights->isPromoted()
-		// Is their symbol version set?
-		|| pKnights->m_sMarkVersion == 0
-		// The clan symbol is more than 0 bytes, right?
-		|| pKnights->m_sMarkLen <= 0)
-		return;
+			|| !pKnights->isPromoted()
+			// Is their symbol version set?
+			|| pKnights->m_sMarkVersion == 0
+			// The clan symbol is more than 0 bytes, right?
+			|| pKnights->m_sMarkLen <= 0)
+			return;
 
 	result	<< uint8(KNIGHTS_MARK_REQ) << uint16(1); // success
 	result	<< uint16(pKnights->m_byNation) << sClanID
-			<< uint16(pKnights->m_sMarkVersion) << uint16(pKnights->m_sMarkLen);
+		<< uint16(pKnights->m_sMarkVersion) << uint16(pKnights->m_sMarkLen);
 	result.append(pKnights->m_Image, pKnights->m_sMarkLen);
 	pUser->SendCompressed(&result);
 }
 
 /**
- * @brief	Performs CSW/Delos checks to determine whether an alliance
- * 			can be made with the specified clan.
- *
- * @param	pMainClan  	The clan seeking to form an alliance.
- * @param	pTargetClan	Target clan an alliance is being formed with.
- *
- * @return	true if it succeeds, false if it fails.
- */
+* @brief	Performs CSW/Delos checks to determine whether an alliance
+* 			can be made with the specified clan.
+*
+* @param	pMainClan  	The clan seeking to form an alliance.
+* @param	pTargetClan	Target clan an alliance is being formed with.
+*
+* @return	true if it succeeds, false if it fails.
+*/
 bool CKnightsManager::CheckAlliance(CKnights * pMainClan, CKnights * pTargetClan)
 {
 	return true;
 }
 
 /**
- * @brief	Handles the client packet responsible for creating an alliance
- * 			with another clan.
- *
- * @param	pUser	The user.
- * @param	pkt  	The packet.
- */
+* @brief	Handles the client packet responsible for creating an alliance
+* 			with another clan.
+*
+* @param	pUser	The user.
+* @param	pkt  	The packet.
+*/
 void CKnightsManager::KnightsAllianceCreate(CUser* pUser, Packet & pkt)
 {
 	if (pUser == nullptr
@@ -847,30 +847,30 @@ void CKnightsManager::KnightsAllianceCreate(CUser* pUser, Packet & pkt)
 	// Only clan leaders can form alliances with other clans (error #2)
 	if (!pUser->isClanLeader()
 		// Ensure the clan still exists (error #3)
-		|| (pMainClan = g_pMain->GetClanPtr(pUser->GetClanID())) == nullptr
-		// Clans must be promoted before they can form alliances (error #4)
-		|| pMainClan->isPromoted()
-		// A clan can not create an alliance if they're already part of one. (error #5)
-		|| pMainClan->isInAlliance()
-		// Ensure the target clan leader is online. (error #7, #6 is invalid ID but this checks it anyway)
-		|| (pTargetLeader = g_pMain->GetUserPtr(targetClanLeaderID)) == nullptr
-		// ... and that the target clan leader is not dead. (error #8)
-		|| pTargetLeader->isDead()
-		// Alliances can only be formed between clan leaders. (error #9)
-		|| !pTargetLeader->isClanLeader()
-		// Ensure the target clan still exists. (error #10)
-		|| (pTargetClan = g_pMain->GetClanPtr(pTargetLeader->GetClanID())) == nullptr
-		/* note: error #11 is unknown */
-		// An alliance cannot be formed with a clan already in an alliance. (error #12)
-		|| pTargetClan->isInAlliance()
-		// Alliances can only be formed between same-nation clans. (error #13)
-		|| pUser->GetNation() != pTargetLeader->GetNation()
-		// Perform additional Delos/CSW checks to determine whether an alliance can be formed. (error #14)
-		|| !CheckAlliance(pMainClan, pTargetClan))
+			|| (pMainClan = g_pMain->GetClanPtr(pUser->GetClanID())) == nullptr
+			// Clans must be promoted before they can form alliances (error #4)
+			|| pMainClan->isPromoted()
+			// A clan can not create an alliance if they're already part of one. (error #5)
+			|| pMainClan->isInAlliance()
+			// Ensure the target clan leader is online. (error #7, #6 is invalid ID but this checks it anyway)
+			|| (pTargetLeader = g_pMain->GetUserPtr(targetClanLeaderID)) == nullptr
+			// ... and that the target clan leader is not dead. (error #8)
+			|| pTargetLeader->isDead()
+			// Alliances can only be formed between clan leaders. (error #9)
+			|| !pTargetLeader->isClanLeader()
+			// Ensure the target clan still exists. (error #10)
+			|| (pTargetClan = g_pMain->GetClanPtr(pTargetLeader->GetClanID())) == nullptr
+			/* note: error #11 is unknown */
+			// An alliance cannot be formed with a clan already in an alliance. (error #12)
+			|| pTargetClan->isInAlliance()
+			// Alliances can only be formed between same-nation clans. (error #13)
+			|| pUser->GetNation() != pTargetLeader->GetNation()
+			// Perform additional Delos/CSW checks to determine whether an alliance can be formed. (error #14)
+			|| !CheckAlliance(pMainClan, pTargetClan))
 	{
 		/* NOTE: 
-			We don't need to error. None of these are handled by the client anyway. 
-			Ignoring the packet produces the same behaviour.
+		We don't need to error. None of these are handled by the client anyway. 
+		Ignoring the packet produces the same behaviour.
 		*/
 		return;
 	}
@@ -883,16 +883,16 @@ void CKnightsManager::KnightsAllianceRequest(CUser* pUser, Packet & pkt)
 }
 
 /**
- * @brief	Handles the client packet responsible for forming an alliance
- * 			with another clan. We must already lead an alliance.
- * 			
- * 			NOTE: Most of the logic (error codes also) is for the most part 
- * 			identical to the creation of the alliance. 
- * 			It just doesn't _create_ an alliance (and requires the alliance to exist).
- *
- * @param	pUser	The user.
- * @param	pkt  	The packet.
- */
+* @brief	Handles the client packet responsible for forming an alliance
+* 			with another clan. We must already lead an alliance.
+* 			
+* 			NOTE: Most of the logic (error codes also) is for the most part 
+* 			identical to the creation of the alliance. 
+* 			It just doesn't _create_ an alliance (and requires the alliance to exist).
+*
+* @param	pUser	The user.
+* @param	pkt  	The packet.
+*/
 void CKnightsManager::KnightsAllianceInsert(CUser* pUser, Packet & pkt)
 {
 	if (pUser == nullptr
@@ -908,36 +908,36 @@ void CKnightsManager::KnightsAllianceInsert(CUser* pUser, Packet & pkt)
 	// Only clan leaders can form alliances with other clans (error #2)
 	if (!pUser->isClanLeader()
 		// Ensure the clan still exists (error #3)
-		|| (pMainClan = g_pMain->GetClanPtr(pUser->GetClanID())) == nullptr
-		// Clans must be promoted before they can form alliances (error #4)
-		|| pMainClan->isPromoted()
-		// A clan can not add a clan to their alliance if they're not already elading one. (error #5)
-		|| !pMainClan->isInAlliance()
-		// Ensure the target clan leader is online. (error #7, #6 is invalid ID but this checks it anyway)
-		|| (pTargetLeader = g_pMain->GetUserPtr(targetClanLeaderID)) == nullptr
-		// ... and that the target clan leader is not dead. (error #8)
-		|| pTargetLeader->isDead()
-		// Alliances can only be formed between clan leaders. (error #9)
-		|| !pTargetLeader->isClanLeader()
-		// Ensure the target clan still exists. (error #10)
-		|| (pTargetClan = g_pMain->GetClanPtr(pTargetLeader->GetClanID())) == nullptr
-		/* note: error #11 is unknown */
-		// An alliance cannot be formed with a clan already in an alliance. (error #12)
-		|| pTargetClan->isInAlliance()
-		// The alliance must already exist. (error #13)
-		|| (pAlliance = g_pMain->GetAlliancePtr(pMainClan->GetAllianceID())) == nullptr
-		// Alliances can only be formed between same-nation clans. (error #14)
-		|| pUser->GetNation() != pTargetLeader->GetNation()
-		// Only one clan can be promoted (sub clan). (error #15)
-		|| (pTargetClan->isPromoted() && pAlliance->sSubAllianceKnights > 0)
-		// The only other clans must be training clans. (error #17, #16 is similar but only applies to one clan when some flag is set)
-		|| (!pTargetClan->isPromoted() && (pAlliance->sMercenaryClan_1 > 0 || pAlliance->sMercenaryClan_2 > 0))
-		// Perform additional Delos/CSW checks to determine whether an alliance can be formed. (error #18)
-		|| !CheckAlliance(pMainClan, pTargetClan))
+			|| (pMainClan = g_pMain->GetClanPtr(pUser->GetClanID())) == nullptr
+			// Clans must be promoted before they can form alliances (error #4)
+			|| pMainClan->isPromoted()
+			// A clan can not add a clan to their alliance if they're not already elading one. (error #5)
+			|| !pMainClan->isInAlliance()
+			// Ensure the target clan leader is online. (error #7, #6 is invalid ID but this checks it anyway)
+			|| (pTargetLeader = g_pMain->GetUserPtr(targetClanLeaderID)) == nullptr
+			// ... and that the target clan leader is not dead. (error #8)
+			|| pTargetLeader->isDead()
+			// Alliances can only be formed between clan leaders. (error #9)
+			|| !pTargetLeader->isClanLeader()
+			// Ensure the target clan still exists. (error #10)
+			|| (pTargetClan = g_pMain->GetClanPtr(pTargetLeader->GetClanID())) == nullptr
+			/* note: error #11 is unknown */
+			// An alliance cannot be formed with a clan already in an alliance. (error #12)
+			|| pTargetClan->isInAlliance()
+			// The alliance must already exist. (error #13)
+			|| (pAlliance = g_pMain->GetAlliancePtr(pMainClan->GetAllianceID())) == nullptr
+			// Alliances can only be formed between same-nation clans. (error #14)
+			|| pUser->GetNation() != pTargetLeader->GetNation()
+			// Only one clan can be promoted (sub clan). (error #15)
+			|| (pTargetClan->isPromoted() && pAlliance->sSubAllianceKnights > 0)
+			// The only other clans must be training clans. (error #17, #16 is similar but only applies to one clan when some flag is set)
+			|| (!pTargetClan->isPromoted() && (pAlliance->sMercenaryClan_1 > 0 || pAlliance->sMercenaryClan_2 > 0))
+			// Perform additional Delos/CSW checks to determine whether an alliance can be formed. (error #18)
+			|| !CheckAlliance(pMainClan, pTargetClan))
 	{
 		/* NOTE: 
-			We don't need to error. None of these are handled by the client anyway. 
-			Ignoring the packet produces the same behaviour.
+		We don't need to error. None of these are handled by the client anyway. 
+		Ignoring the packet produces the same behaviour.
 		*/
 		return;
 	}
@@ -954,12 +954,12 @@ void CKnightsManager::KnightsAlliancePunish(CUser* pUser, Packet & pkt)
 }
 
 /**
- * @brief	Handles the client packet responsible for displaying
- * 			all clans that are part of the user's clan's alliance.
- *
- * @param	pUser	The user.
- * @param	pkt  	The packet.
- */
+* @brief	Handles the client packet responsible for displaying
+* 			all clans that are part of the user's clan's alliance.
+*
+* @param	pUser	The user.
+* @param	pkt  	The packet.
+*/
 void CKnightsManager::KnightsAllianceList(CUser* pUser, Packet & pkt)
 {
 	if (pUser == nullptr
@@ -1026,9 +1026,9 @@ void CKnightsManager::ListTop10Clans(CUser *pUser)
 				|| (pKnights = g_pMain->GetClanPtr(pRating->sClanID)) == nullptr)
 			{
 				result	<< int16(-1)	// Clan ID
-						<< ""			// Clan name (2 byte length)
-						<< int16(-1)	// Symbol version
-						<< int16(i-1);	// Rank (0 - 4)
+					<< ""			// Clan name (2 byte length)
+					<< int16(-1)	// Symbol version
+					<< int16(i-1);	// Rank (0 - 4)
 			}
 			else
 			{
@@ -1041,13 +1041,13 @@ void CKnightsManager::ListTop10Clans(CUser *pUser)
 }
 
 /**
- * @brief	Handles the clan NP info packet from the client.
- * 			It is designed to tell the user how many points are
- * 			currently stored, and how much they can donate.
- *
- * @param	pUser	The user.
- * @param	pkt  	The packet.
- */
+* @brief	Handles the clan NP info packet from the client.
+* 			It is designed to tell the user how many points are
+* 			currently stored, and how much they can donate.
+*
+* @param	pUser	The user.
+* @param	pkt  	The packet.
+*/
 void CKnightsManager::DonateNPReq(CUser * pUser, Packet & pkt)
 {
 	if (pUser == nullptr
@@ -1060,17 +1060,17 @@ void CKnightsManager::DonateNPReq(CUser * pUser, Packet & pkt)
 
 	Packet result(WIZ_KNIGHTS_PROCESS, uint8(KNIGHTS_POINT_REQ));
 	result	<< uint8(1) 
-			<< uint32(pUser->GetLoyalty()) 
-			<< uint32(pKnights->m_nClanPointFund); // note: amount shown is in NP form
+		<< uint32(pUser->GetLoyalty()) 
+		<< uint32(pKnights->m_nClanPointFund); // note: amount shown is in NP form
 	pUser->Send(&result);
 }
 
 /**
- * @brief	Handles the clan NP donations packet from the client.
- *
- * @param	pUser	The user.
- * @param	pkt  	The packet.
- */
+* @brief	Handles the clan NP donations packet from the client.
+*
+* @param	pUser	The user.
+* @param	pkt  	The packet.
+*/
 void CKnightsManager::DonateNP(CUser *pUser, Packet & pkt)
 {
 	// Ensure the user's valid and in a clan.
@@ -1091,12 +1091,12 @@ void CKnightsManager::DonateNP(CUser *pUser, Packet & pkt)
 }
 
 /**
- * @brief	Handles the clan NP donations list packet from the client.
- * 			i.e. the "save cont" button's "accumulation status" list.
- *
- * @param	pUser	The user.
- * @param	pkt  	The packet.
- */
+* @brief	Handles the clan NP donations list packet from the client.
+* 			i.e. the "save cont" button's "accumulation status" list.
+*
+* @param	pUser	The user.
+* @param	pkt  	The packet.
+*/
 void CKnightsManager::DonationList(CUser *pUser, Packet & pkt)
 {
 	// Ensure the user's valid and in a clan.

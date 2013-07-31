@@ -14,7 +14,7 @@ INLINE int ParseSpace( char* tBuf, char* sBuf)
 {
 	int i = 0, index = 0;
 	bool flag = false;
-
+	
 	while (sBuf[index] == ' ' || sBuf[index] == '\t')
 		index++;
 
@@ -115,7 +115,7 @@ void MAP::RemoveMapData()
 		delete[] m_fHeight;
 		m_fHeight = nullptr;
 	}
-
+	
 	m_arRoomEventArray.DeleteAllData();
 }
 
@@ -178,6 +178,7 @@ bool MAP::RegionNpcRemove(int rx, int rz, int nid)
 	return true;
 }
 
+
 CRegion * MAP::GetRegion(uint16 regionX, uint16 regionZ)
 {
 	if (regionX > GetXRegionMax()
@@ -209,8 +210,8 @@ bool MAP::LoadRoomEvent()
 	}
 
 	is.seekg(0, is.end);
-	length = (uint32)is.tellg();
-	is.seekg (0, is.beg);
+    length = (uint32)is.tellg();
+    is.seekg (0, is.beg);
 
 	count = 0;
 
@@ -240,7 +241,7 @@ bool MAP::LoadRoomEvent()
 					TRACE("Event Double !!\n" );
 					goto cancel_event_load;
 				}
-
+				
 				pEvent = nullptr;
 				pEvent = SetRoomEvent( event_num );
 			}
@@ -358,7 +359,7 @@ int MAP::IsRoomCheck(float fx, float fz)
 			minX = pRoom->m_iEndMinX;		minZ = pRoom->m_iEndMinZ;
 			maxX = pRoom->m_iEndMaxX;		maxZ = pRoom->m_iEndMaxZ;
 		}
-
+	
 		CRect r(minX, minZ, maxX, maxZ);
 		if (r.PtInRect(nX, nZ))
 		{

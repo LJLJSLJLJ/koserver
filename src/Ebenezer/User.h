@@ -278,7 +278,6 @@ public:
 	int		m_LastSkillType;
 
 public:
-
 	INLINE bool isBanned() { return GetAuthority() == AUTHORITY_BANNED; }
 	INLINE bool isMuted() { return GetAuthority() == AUTHORITY_MUTED; }
 	INLINE bool isAttackDisabled() { return GetAuthority() == AUTHORITY_ATTACK_DISABLED; }

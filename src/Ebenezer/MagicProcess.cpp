@@ -45,7 +45,6 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 
 	instance.bIsRecastingSavedMagic = false;
 	instance.Run();
-
 }
 
 void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode, 
