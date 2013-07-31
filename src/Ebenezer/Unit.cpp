@@ -80,7 +80,10 @@ which understandably screws things up a lot.
 // Calculate the distance between 2 2D points.
 float Unit::GetDistance(float fx, float fz)
 {
-	return GetDistance(GetX(), GetZ(), fx, fz);
+	if (fx != 0.0f && fz != 0.0f)
+		return GetDistance(GetX(), GetZ(), fx, fz);
+	else
+		return 0.0f;
 }
 
 // Calculate the 2D distance between Units.
@@ -106,7 +109,10 @@ float Unit::GetDistanceSqrt(Unit * pTarget)
 // Range MUST be squared already.
 bool Unit::isInRange(Unit * pTarget, float fSquaredRange)
 {
-	return (GetDistance(pTarget) <= fSquaredRange);
+	if (pTarget != nullptr && fSquaredRange != 0.0f)
+		return (GetDistance(pTarget) <= fSquaredRange);
+	else
+		return false;
 }
 
 // Check to see if we're in the 2D range of the specified coordinates.
