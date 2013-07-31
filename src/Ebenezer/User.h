@@ -273,6 +273,7 @@ public:
 	bool	m_bWeaponsDisabled;
 
 	TeamColour	m_teamColour;
+	int		m_LastSkillID;
 	time_t	m_LastSkillUseTime;
 	int		m_LastSkillType;
 
