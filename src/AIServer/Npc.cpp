@@ -89,10 +89,10 @@ void CNpc::SendNpcInfo()
 }
 
 /**
- * @brief	Sends a region update packet to the game server
- * 			to indicate the NPC has changed regions, so it should
- * 			handle showing/removing the NPCs from applicable players.
- */
+* @brief	Sends a region update packet to the game server
+* 			to indicate the NPC has changed regions, so it should
+* 			handle showing/removing the NPCs from applicable players.
+*/
 void CNpc::SendRegionUpdate()
 {
 	Packet result(AG_NPC_REGION_UPDATE);
@@ -430,7 +430,7 @@ time_t CNpc::NpcAttacking()
 		m_NpcState = NPC_STANDING;
 		return m_sStandTime/2;
 	}
-	
+
 	auto result = IsCloseTarget(m_byAttackRange, AttackTypeNone);
 	if (result == CloseTargetInGeneralRange)
 	{
@@ -485,11 +485,11 @@ time_t CNpc::NpcMoving()
 
 	if (FindEnemy())
 	{
-	/*	if (isGuard()) 
+		/*	if (isGuard()) 
 		{ 
-			NpcMoveEnd();
-			m_NpcState = NPC_FIGHTING; 
-			return 0; 
+		NpcMoveEnd();
+		m_NpcState = NPC_FIGHTING; 
+		return 0; 
 		}
 		else */
 		{ 
@@ -524,10 +524,10 @@ time_t CNpc::NpcMoving()
 
 time_t CNpc::NpcStanding()
 {
-/*	if (g_pMain->m_bIsNight)
+	/*	if (g_pMain->m_bIsNight)
 	{
-		m_NpcState = NPC_SLEEPING;
-		return 0;
+	m_NpcState = NPC_SLEEPING;
+	return 0;
 	}	*/
 
 	MAP* pMap = GetMap();
@@ -553,7 +553,7 @@ time_t CNpc::NpcStanding()
 	}	
 
 	m_NpcState = NPC_STANDING;
-	
+
 	if (GetType() == NPC_SPECIAL_GATE 
 		&& g_pMain->m_byBattleEvent == BATTLEZONE_OPEN)
 	{
@@ -593,7 +593,7 @@ time_t CNpc::NpcBack()
 			m_curz = m_fPrevZ; 
 		}
 	}
-	
+
 	if (IsMovingEnd())	
 	{
 		m_curx = m_fPrevX;		
@@ -764,7 +764,7 @@ bool CNpc::SetLive()
 			g_pMain->GameServerAcceptThread();
 		}
 	}
-	
+
 	if (m_byMoveType == 3 && m_sMaxPathCount == 2)
 	{
 		__Vector3 vS, vE, vDir;
@@ -803,7 +803,7 @@ bool CNpc::RandomMove()
 
 	__Vector3 vStart, vEnd, vNewPos;
 	float fDis = 0.0f;
- 
+
 	int nPathCount = 0;
 
 	int random_x = 0, random_z = 0;
@@ -957,7 +957,7 @@ bool CNpc::RandomMove()
 		return false;
 	}
 
-    if (GetType() == NPC_DUNGEON_MONSTER
+	if (GetType() == NPC_DUNGEON_MONSTER
 		&& !isInSpawnRange((int)fDestX, (int)fDestZ))
 		return false;	
 
@@ -1025,7 +1025,7 @@ bool CNpc::RandomBackMove()
 	m_fSecForMetor = m_fSpeed_2;
 
 	if (m_bySearchRange == 0) return false;
-	
+
 	float fDestX = -1.0f, fDestZ = -1.0f;
 	if (GetMap() == nullptr) 
 	{
@@ -1158,8 +1158,8 @@ bool CNpc::IsInPathRange()
 
 	static const float fPathRange = 40.0f;
 	return isInRangeSlow((float)m_PathList.pPattenPos[m_sPathCount].x + m_fBattlePos_x, 
-						(float)m_PathList.pPattenPos[m_sPathCount].z + m_fBattlePos_z,
-						fPathRange + 1);
+		(float)m_PathList.pPattenPos[m_sPathCount].z + m_fBattlePos_z,
+		fPathRange + 1);
 }
 
 int CNpc::GetNearPathPoint()
@@ -1227,7 +1227,7 @@ int CNpc::PathFind(CPoint start, CPoint end, float fDistance)
 		m_pPoint[0].fZPos = m_fEndPoint_Y;
 		return 1;
 	}
-	
+
 	if (IsPathFindCheck(fDistance))
 	{
 		m_bPathFlag = true;
@@ -1252,7 +1252,7 @@ int CNpc::PathFind(CPoint start, CPoint end, float fDistance)
 		m_pPoint[count].pPoint.x = m_pPath->x + m_min_x;		
 		m_pPoint[count++].pPoint.y = m_pPath->y + m_min_y;
 	}	
-	
+
 	if (count <= 0 || count >= MAX_PATH_LINE)
 		return 0;
 
@@ -1409,9 +1409,9 @@ bool CNpc::FindEnemy()
 int CNpc::FindEnemyRegion()
 {
 	/*
-        1	2	3
-		4	0	5
-		6	7	8
+	1	2	3
+	4	0	5
+	6	7	8
 	*/
 	int iRetValue = 0;
 	int  iSX = GetRegionX() * VIEW_DIST;
@@ -1423,7 +1423,7 @@ int CNpc::FindEnemyRegion()
 	int iCurSY = (int)GetX() - m_bySearchRange;
 	int iCurEX = (int)GetX() + m_bySearchRange;
 	int iCurEY = (int)GetX() + m_bySearchRange;
-	
+
 	int iMyPos = GetMyField();
 
 	switch(iMyPos)
@@ -1544,7 +1544,7 @@ float CNpc::FindEnemyExpand(int nRX, int nRZ, float fCompDis, UnitType unitType)
 	uint16 target_uid;
 	__Vector3 vUser, vNpc, vMon;
 	vNpc.Set(GetX(), GetY(), GetZ());
-	
+
 	// Finding players
 	if (unitType == UnitPlayer)	
 	{
@@ -1576,7 +1576,7 @@ float CNpc::FindEnemyExpand(int nRX, int nRZ, float fCompDis, UnitType unitType)
 			// Aggressive spawns don't mind attacking first.
 			if (m_tNpcAttType == ATROCITY_ATTACK_TYPE
 				// Passive spawns will only attack if they've been attacked first, or they've got backup! (Cowards!)
-				|| (m_tNpcAttType == TENDER_ATTACK_TYPE && (IsDamagedUserList(pUser) || (m_bHasFriends && m_Target.id == target_uid))))
+					|| (m_tNpcAttType == TENDER_ATTACK_TYPE && (IsDamagedUserList(pUser) || (m_bHasFriends && m_Target.id == target_uid))))
 			{
 				m_Target.id	= target_uid;
 				m_Target.bSet = true;
@@ -1689,7 +1689,7 @@ bool CNpc::IsMovingEnd()
 bool CNpc::StepMove()
 {
 	if(m_NpcState != NPC_MOVING && m_NpcState != NPC_TRACING && m_NpcState != NPC_BACK) return false;
-	
+
 	__Vector3 vStart, vEnd, vDis;
 	float fDis;
 
@@ -1735,7 +1735,7 @@ bool CNpc::StepMove()
 				GetVectorPosition(vStart, vEnd, m_fSecForMetor, &vDis);
 				m_fPrevX = vDis.x;
 				m_fPrevZ = vDis.z;
-//				m_iAniFrameCount--;
+				//				m_iAniFrameCount--;
 			}
 			else
 			{
@@ -1776,7 +1776,7 @@ bool CNpc::StepMove()
 		m_curx = fOldCurX;		 m_curz = fOldCurZ;
 		if(GetX() < 0 || GetZ() < 0)
 			TRACE("Npc-StepMove : nid=(%d, %s), x=%.2f, z=%.2f\n", GetID(), GetName().c_str(), GetX(), GetZ());
-		
+
 		return RegisterRegion(GetX(), GetZ());
 	}
 
@@ -1786,7 +1786,7 @@ bool CNpc::StepMove()
 bool CNpc::StepNoPathMove()
 {
 	if(m_NpcState != NPC_MOVING && m_NpcState != NPC_TRACING && m_NpcState != NPC_BACK) return false;
-	
+
 	__Vector3 vStart, vEnd;
 	float fOldCurX = 0.0f, fOldCurZ = 0.0f;
 
@@ -1797,7 +1797,7 @@ bool CNpc::StepNoPathMove()
 		fOldCurX = m_fPrevX; fOldCurZ = m_fPrevZ;
 	}
 
-	
+
 	if(m_sStepCount < 0 || m_sStepCount >= m_iAniFrameIndex)	{	
 		TRACE("#### IsNoPtahfind Fail : nid=%d,%s, count=%d/%d ####\n", GetID(), GetName().c_str(), m_sStepCount, m_iAniFrameIndex);
 		return false;
@@ -1814,7 +1814,7 @@ bool CNpc::StepNoPathMove()
 	}
 
 	m_fSecForRealMoveMetor = GetDistance(vStart, vEnd);
-	
+
 	if (m_sStepCount++ > 0)
 	{
 		if(fOldCurX < 0 || fOldCurZ < 0)	{
@@ -1825,7 +1825,7 @@ bool CNpc::StepNoPathMove()
 		{
 			m_curx = fOldCurX;	 m_curz = fOldCurZ;
 		}
-		
+
 		return RegisterRegion(GetX(), GetZ());
 	}
 
@@ -1875,13 +1875,13 @@ CloseTargetResult CNpc::IsCloseTarget(int nRange, AttackType attackType)
 		fX = pNpc->GetX();
 		fZ = pNpc->GetZ();
 	}
-	
+
 	vDistance = vUser - vNpc;
 	fDis = vDistance.Magnitude();	
 
 	fDis = fDis - m_proto->m_fBulk;
 
-    if (GetType() == NPC_DUNGEON_MONSTER
+	if (GetType() == NPC_DUNGEON_MONSTER
 		&& !isInSpawnRange((int)vUser.x, (int)vUser.z))
 		return CloseTargetInvalid;
 
@@ -1894,7 +1894,7 @@ CloseTargetResult CNpc::IsCloseTarget(int nRange, AttackType attackType)
 				m_bStopFollowingTarget = false;
 		}
 	}
-	
+
 	if ((int)fDis > nRange)	
 	{
 		if (attackType == AttackTypeMagic)			
@@ -2030,10 +2030,10 @@ int CNpc::GetTargetPath(int option)
 		}
 
 		m_fStartPoint_X = GetX();		m_fStartPoint_Y = GetZ();
-	
+
 		vNpc.Set(GetX(), GetY(), GetZ());
 		vUser.Set(pUser->GetX(), pUser->GetY(), pUser->GetZ()); 
-		
+
 		IsSurround(pUser);
 
 		if(m_byAttackPos > 0 && m_byAttackPos < 9)	{
@@ -2062,10 +2062,10 @@ int CNpc::GetTargetPath(int option)
 		}
 
 		m_fStartPoint_X = GetX();		m_fStartPoint_Y = GetZ();
-	
+
 		vNpc.Set(GetX(), GetY(), GetZ());
 		vUser.Set(pNpc->GetX(), pNpc->GetY(), pNpc->GetZ()); 
-		
+
 		CalcAdaptivePosition(vNpc, vUser, 2.0f+m_proto->m_fBulk, &vEnd22);
 		m_fEndPoint_X = vEnd22.x;	m_fEndPoint_Y = vEnd22.z;
 	}
@@ -2081,13 +2081,13 @@ int CNpc::GetTargetPath(int option)
 		m_pPoint[0].fZPos = m_fEndPoint_Y;
 		return true;
 	}
-	
+
 	if((int)fDis > iTempRange)	{
 		TRACE("Npc-GetTargetPath() searchrange over Fail return -1: [nid=%d,%s]\n", GetID(), GetName().c_str());
 		return -1; 
 	}
 
-	
+
 	if (GetType() != NPC_DUNGEON_MONSTER 
 		&& hasTarget())	
 		return 0;	
@@ -2098,7 +2098,7 @@ int CNpc::GetTargetPath(int option)
 	end.x = (int)(vEnd22.x/TILE_SIZE) - min_x;
 	end.y = (int)(vEnd22.z/TILE_SIZE) - min_z;
 
-    if (GetType() == NPC_DUNGEON_MONSTER
+	if (GetType() == NPC_DUNGEON_MONSTER
 		&& !isInSpawnRange((int)vEnd22.x, (int)vEnd22.z))
 		return -1;	
 
@@ -2127,7 +2127,7 @@ time_t CNpc::Attack()
 
 	if (GetProto()->m_byDirectAttack == 1)
 		return LongAndMagicAttack();
-		
+
 	int nStandingTime = m_sStandTime;
 	auto result = IsCloseTarget(m_byAttackRange, AttackTypeMagic);
 	if (result == CloseTargetNotInRange)   
@@ -2366,10 +2366,10 @@ void CNpc::MoveAttack()
 		CalcAdaptivePosition(vNpc, vUser, 2, &vEnd22);
 		fX = vEnd22.x;	fZ = vEnd22.z;
 	}
-	
+
 	vDistance = vUser - vNpc;
 	fDis = vDistance.Magnitude();	
-	
+
 	if ((int)fDis < 3) return;
 
 	vDistance = vEnd22 - vNpc;
@@ -2388,7 +2388,7 @@ void CNpc::MoveAttack()
 	SendMoveResult(GetX(), GetY(), GetZ());
 
 	RegisterRegion(GetX(), GetZ());
-	
+
 	m_fEndPoint_X = GetX();
 	m_fEndPoint_Y = GetZ();
 }
@@ -2401,7 +2401,7 @@ bool CNpc::IsChangePath()
 	__Vector3 vStart, vEnd;
 	vStart.Set(m_fEndPoint_X, 0, m_fEndPoint_Y);
 	vEnd.Set(fCurX, 0, fCurZ);
-	
+
 	float fDis = GetDistance(vStart, vEnd);
 	float fCompDis = 3.0f;
 
@@ -2432,7 +2432,7 @@ bool CNpc::ResetPath()
 	float cur_x, cur_z;
 	GetTargetPos(cur_x, cur_z);
 
-//	TRACE("ResetPath : user pos ,, x=%.2f, z=%.2f\n", cur_x, cur_z);
+	//	TRACE("ResetPath : user pos ,, x=%.2f, z=%.2f\n", cur_x, cur_z);
 
 	m_Target.x = cur_x;
 	m_Target.z = cur_z;
@@ -2514,7 +2514,7 @@ void CNpc::ChangeTarget(int nAttackType, CUser *pUser)
 		}
 	}
 	else if(preUser == nullptr && nAttackType == 1004)		return;		// Heal magic에 반응하지 않도록..
-		
+
 	m_Target.id	= pUser->GetID();
 	m_Target.bSet = true;
 	m_Target.x	= pUser->GetX();
@@ -2554,7 +2554,7 @@ void CNpc::ChangeTarget(int nAttackType, CUser *pUser)
 			}
 		}
 	}
-//	else m_NpcState = NPC_ATTACKING;	// 한참 공격하는데 누가 방해하면 목표를 바꿈
+	//	else m_NpcState = NPC_ATTACKING;	// 한참 공격하는데 누가 방해하면 목표를 바꿈
 
 	if (m_bHasFriends || GetType() == NPC_BOSS)	 
 		FindFriend(GetType() == NPC_BOSS ? MonSearchAny : MonSearchSameFamily);
@@ -2589,7 +2589,7 @@ void CNpc::ChangeNTarget(CNpc *pNpc)
 	lastDamage = (int)((double)lastDamage/fDist + 0.5);
 
 	if(preDamage > lastDamage) return;
-		
+
 	m_Target.id	= pNpc->GetID();
 	m_Target.bSet = true;
 	m_Target.x	= pNpc->GetX();
@@ -2626,7 +2626,7 @@ void CNpc::ChangeNTarget(CNpc *pNpc)
 			}
 		}
 	}
-//	else m_NpcState = NPC_ATTACKING;	// 한참 공격하는데 누가 방해하면 목표를 바꿈
+	//	else m_NpcState = NPC_ATTACKING;	// 한참 공격하는데 누가 방해하면 목표를 바꿈
 
 	if (m_bHasFriends)
 		FindFriend();
@@ -2766,10 +2766,10 @@ void CNpc::SendExpToUserList()
 
 		Packet result(AG_USER_EXP);
 		result	<< pUser->GetID()
-				<< GetID()
-				// target's damage vs total damage dealt to the NPC
-				<< itr->second << m_TotalDamage 
-				<< m_proto->m_iExp << m_proto->m_iLoyalty;
+			<< GetID()
+			// target's damage vs total damage dealt to the NPC
+			<< itr->second << m_TotalDamage 
+			<< m_proto->m_iExp << m_proto->m_iLoyalty;
 		g_pMain->Send(&result);
 
 		if (itr->second > nMaxDamage)
@@ -2801,14 +2801,14 @@ void CNpc::SendExpToUserList()
 		g_pMain->Send(&result);
 
 		bool	bKarusComplete = (g_pMain->m_sKillKarusNpc == GetMap()->m_sKarusRoom),
-				bElMoradComplete = (g_pMain->m_sKillElmoNpc == GetMap()->m_sElmoradRoom);
+			bElMoradComplete = (g_pMain->m_sKillElmoNpc == GetMap()->m_sElmoradRoom);
 
 		if (bKarusComplete || bElMoradComplete)
 		{
 			result.clear();
 			result	<< uint8(BATTLE_EVENT_RESULT) 
-					<< uint8(bKarusComplete ? KARUS : ELMORAD)
-					<< strMaxDamageUser;
+				<< uint8(bKarusComplete ? KARUS : ELMORAD)
+				<< strMaxDamageUser;
 			g_pMain->Send(&result);
 		}
 	}
@@ -2846,7 +2846,7 @@ int CNpc::FindFriend(MonSearchType type)
 
 	int search_x = max_x - min_x + 1;		
 	int search_z = max_z - min_z + 1;	
-	
+
 	int i, j, count = 0;
 	_TargetHealer arHealer[9];
 	for(i=0; i<9; i++)	{
@@ -2971,30 +2971,30 @@ void CNpc::NpcStrategy(uint8 type)
 void CNpc::FillNpcInfo(Packet & result)
 {
 	result	<< uint8(1) 
-			<< GetID() << GetProtoID() << m_proto->m_sPid
-			<< m_sSize << m_iWeapon_1 << m_iWeapon_2
-			<< GetZoneID() << GetName()
-			<< GetNation() << GetLevel()
-			<< GetX() << GetZ() << GetY() << m_byDirection
-			<< GetType()
-			<< m_iSellingGroup << m_iMaxHP << m_iHP
-			<< m_byGateOpen 
-			<< m_fTotalHitrate << m_fTotalEvasionrate 
-			<< m_sTotalAc << m_sTotalHit
-			<< m_byObjectType << m_byTrapNumber 
-			<< m_bMonster
-			// Include resistance data, note that we don't need to send modified amounts as 
-			// there's no skill handling here - it happens in Ebenezer.
-			// We will probably need to update the AI server (from Ebenezer) with this data.
-			<< m_sFireR << m_sColdR << m_sLightningR 
-			<< m_sMagicR << m_sDiseaseR << m_sPoisonR;
+		<< GetID() << GetProtoID() << m_proto->m_sPid
+		<< m_sSize << m_iWeapon_1 << m_iWeapon_2
+		<< GetZoneID() << GetName()
+		<< GetNation() << GetLevel()
+		<< GetX() << GetZ() << GetY() << m_byDirection
+		<< GetType()
+		<< m_iSellingGroup << m_iMaxHP << m_iHP
+		<< m_byGateOpen 
+		<< m_fTotalHitrate << m_fTotalEvasionrate 
+		<< m_sTotalAc << m_sTotalHit
+		<< m_byObjectType << m_byTrapNumber 
+		<< m_bMonster
+		// Include resistance data, note that we don't need to send modified amounts as 
+		// there's no skill handling here - it happens in Ebenezer.
+		// We will probably need to update the AI server (from Ebenezer) with this data.
+		<< m_sFireR << m_sColdR << m_sLightningR 
+		<< m_sMagicR << m_sDiseaseR << m_sPoisonR;
 }
 
 int CNpc::GetDir(float x1, float z1, float x2, float z2)
 {
 	int nDir;					//	3 4 5
-								//	2 8 6
-								//	1 0 7
+	//	2 8 6
+	//	1 0 7
 
 	int nDirCount = 0;
 
@@ -3114,7 +3114,7 @@ bool CNpc::GetUserInView()
 
 	int search_x = max_x - min_x + 1;		
 	int search_z = max_z - min_z + 1;	
-	
+
 	bool bFlag = false;
 	int i, j;
 
@@ -3138,8 +3138,8 @@ bool CNpc::GetUserInViewRange(int x, int z)
 	}
 
 	FastGuard lock(pMap->m_lock);
-	CRegion * pRegion = &pMap->m_ppRegion[x][z];
-	float fDis = 0.0f; 
+	CRegion * pRegion = pMap->GetRegion(x, z);
+	float fDis = 0.0f;
 
 	foreach_stlmap (itr, pRegion->m_RegionUserArray)
 	{
@@ -3147,10 +3147,10 @@ bool CNpc::GetUserInViewRange(int x, int z)
 		if (pUser == nullptr)
 			continue;
 
-		if (isInRange(pUser, NPC_VIEW_RANGE))
+		if (isInRangeSlow(pUser, NPC_VIEW_RANGE))
 			return true;
 	}
-	
+
 	return false;
 }
 
@@ -3196,7 +3196,7 @@ bool CNpc::IsPathFindCheck(float fDistance)
 			nError = -1;
 			break;
 		}
-		
+
 		nX = (int)(vDis.x / TILE_SIZE);
 		nZ = (int)(vDis.z / TILE_SIZE);
 
@@ -3256,7 +3256,7 @@ void CNpc::IsNoPathFind(float fDistance)
 		vOldDis.Set(vDis.x, 0, vDis.z);
 		GetVectorPosition(vDis, vEnd, fDistance, &vDis);
 		fDis = GetDistance(vOldDis, vEnd);
-		
+
 		nX = (int)(vDis.x / TILE_SIZE);
 		nZ = (int)(vDis.z / TILE_SIZE);
 		if(count < 0 || count >= MAX_PATH_LINE)	{	
@@ -3297,7 +3297,7 @@ void CNpc::GiveNpcHaveItem()
 		m_GiveItemList[nCount].sSid = TYPE_MONEY_SID;
 		m_GiveItemList[nCount++].count = iMoney;
 	}
-	
+
 	_K_MONSTER_ITEM * pItem = g_pMain->m_NpcItemArray.GetData(m_iItem);
 	if (pItem != nullptr)
 	{
@@ -3349,9 +3349,9 @@ void CNpc::GiveNpcHaveItem()
 
 	Packet result(AG_NPC_GIVE_ITEM);
 	result	<< m_sMaxDamageUserid << GetID()
-			<< GetZoneID() << GetRegionX() << GetRegionZ()
-			<< GetX() << GetZ() << GetY()
-			<< uint8(nCount);
+		<< GetZoneID() << GetRegionX() << GetRegionZ()
+		<< GetX() << GetZ() << GetY()
+		<< uint8(nCount);
 
 	for (int i = 0; i < nCount; i++)
 		result << m_GiveItemList[i].sSid << m_GiveItemList[i].count;
@@ -3377,7 +3377,7 @@ void CNpc::Yaw2D(float fDirX, float fDirZ, float& fYawResult)
 			fYawResult = D3DXToRadian(180.0f) + (float)(asin(-fDirX)); 
 	}
 }
-  
+
 void CNpc::ComputeDestPos(__Vector3 & vCur, float fDegree, float fDistance, __Vector3 * vResult)
 {
 	__Matrix44 mtxRot; 
@@ -3404,21 +3404,10 @@ bool CNpc::CheckFindEnemy()
 	if (isGuard())
 		return true;
 
-	MAP* pMap = GetMap();
-
-	if (pMap == nullptr
-		|| GetRegionX() > pMap->GetXRegionMax() 
-		|| GetRegionZ() > pMap->GetZRegionMax())
-	{
-		TRACE("#### CheckFindEnemy Fail : [nid=%d, sid=%d], nRX=%d, nRZ=%d #####\n", GetID(), GetProtoID(), GetRegionX(), GetRegionZ());
+	if (GetRegion() == nullptr)
 		return false;
-	}
 
-	FastGuard lock(pMap->m_lock);
-	if (pMap->m_ppRegion[GetRegionX()][GetRegionZ()].m_byMoving == 1)
-		return true;
-
-	return false;
+	return (GetRegion()->m_byMoving == 1);
 }
 
 int	CNpc::ItemProdution(int item_number)							// 아이템 제작
@@ -3457,7 +3446,7 @@ int	CNpc::ItemProdution(int item_number)							// 아이템 제작
 		iRand4 = myrand(1, 10000);					// 한손, 양손무기인지를 결정
 		if( COMPARE( iRand4, 1, 5000) )	iRand4 = 0;
 		else	iRand4 = 5000000;
-		
+
 		iRandom = GetItemCodeNumber(iItemLevel, 1);	// 레이매직표 적용
 		//TRACE("ItemProdution : GetItemCodeNumber() = %d, iRand2=%d, iRand3=%d, iRand4=%d\n", iRandom, iRand2, iRand3, iRand4);
 		if(iRandom == -1)	{						// 잘못된 아이템 생성실패
@@ -3470,7 +3459,7 @@ int	CNpc::ItemProdution(int item_number)							// 아이템 제작
 	}
 	else if( COMPARE( iRandom, 4001, 8001) )	{		// 방어구 아이템
 		iDefault = 200000000;			
-		
+
 		iTemp1 = GetWeaponItemCodeNumber(false);
 		//TRACE("ItemProdution : GetWeaponItemCodeNumber() = %d\n", iTemp1 );
 		if( iTemp1 == 0 )	return 0;
@@ -3524,9 +3513,9 @@ int	CNpc::ItemProdution(int item_number)							// 아이템 제작
 				if( COMPARE( iItemKey, 0, 5000) )	iRand3 = 120000;
 				else								iRand3 = 130000;
 			}
-			
+
 		}
-		
+
 		iTemp2 = myrand(0, 10000);					// 몸의 부위 아이템 결정
 		if( COMPARE( iTemp2, 0, 2000) )				iRand4 = 1000;
 		else if( COMPARE( iTemp2, 2000, 4000) )		iRand4 = 2000;
@@ -3560,7 +3549,7 @@ int	CNpc::ItemProdution(int item_number)							// 아이템 제작
 		iItemNumber = iDefault + iRand2 + iRand3 + iRand4 + iItemGrade;
 		//TRACE("ItemProdution : Accessary Success item_number = %d, default=%d, iRand2=%d, iRand3=%d, iRand4=%d, iItemGrade=%d\n", iItemNumber, iDefault, iRand2, iRand3, iRand4, iItemGrade);
 	}
-	
+
 	return iItemNumber;
 }
 
@@ -3598,7 +3587,7 @@ int  CNpc::GetItemGrade(int item_grade)
 				continue;
 			}
 		}
-		
+
 	}
 
 	return 0;
@@ -3674,31 +3663,31 @@ int  CNpc::GetItemCodeNumber(int level, int item_type)
 
 	switch (iItemType)
 	{
-		case 1:						// lare item
-			if (item_type == 1)
-				iItemCode = myrand(16, 24);
-			else if (item_type == 2)
-				iItemCode = myrand(12, 24);
-			else if (item_type == 3)
-				iItemCode = myrand(0, 10);
-			break;
+	case 1:						// lare item
+		if (item_type == 1)
+			iItemCode = myrand(16, 24);
+		else if (item_type == 2)
+			iItemCode = myrand(12, 24);
+		else if (item_type == 3)
+			iItemCode = myrand(0, 10);
+		break;
 
-		case 2:						// magic item
-			if (item_type == 1)
-				iItemCode = myrand(6, 15);
-			else if (item_type == 2)
-				iItemCode = myrand(6, 11);
-			else if (item_type == 3)
-				iItemCode = myrand(0, 10);
-			break;
+	case 2:						// magic item
+		if (item_type == 1)
+			iItemCode = myrand(6, 15);
+		else if (item_type == 2)
+			iItemCode = myrand(6, 11);
+		else if (item_type == 3)
+			iItemCode = myrand(0, 10);
+		break;
 
-		case 3:						// general item
-			if (item_type == 1
-				|| item_type == 2)
-				iItemCode = 5;
-			else if (item_type == 3)
-				iItemCode = myrand(0, 10);
-			break;	
+	case 3:						// general item
+		if (item_type == 1
+			|| item_type == 2)
+			iItemCode = 5;
+		else if (item_type == 3)
+			iItemCode = myrand(0, 10);
+		break;	
 	}
 
 	return iItemCode;
