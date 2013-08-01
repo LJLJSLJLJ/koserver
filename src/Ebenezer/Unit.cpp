@@ -333,7 +333,7 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 		{	// Normal Hit.	
 			if (isGM() && !pTarget->isPlayer())
 			{
-				//damage = 30000;
+				damage = 30000;
 				return damage;
 			}
 
