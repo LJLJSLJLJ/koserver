@@ -46,6 +46,7 @@
 #include "../shared/database/KingElectionListSet.h"
 #include "../shared/database/MonsterSummonListSet.h"
 #include "../shared/database/PremiumItemSet.h"
+#include "../shared/database/PremiumItemExpSet.h"
 
 
 bool CEbenezerDlg::LoadItemTable()
@@ -307,8 +308,12 @@ bool CEbenezerDlg::LoadMonsterSummonListTable()
 
 bool CEbenezerDlg::LoadPremiumItemTable()
 {
-	LOAD_TABLE(CPremiumItemSet, g_DBAgent.m_GameDB, &m_CPremiumItemArray, true);
-	return true;
+	LOAD_TABLE(CPremiumItemSet, g_DBAgent.m_GameDB, &m_PremiumItemArray, true);
+}
+
+bool CEbenezerDlg::LoadPremiumItemExpTable()
+{
+	LOAD_TABLE(CPremiumItemExpSet, g_DBAgent.m_GameDB, &m_PremiumItemExpArray, true);
 }
 
 bool CEbenezerDlg::MapFileLoad()

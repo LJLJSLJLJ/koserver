@@ -578,8 +578,8 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 		if (bIsKillReward)
 		{
 			if (m_bPremiumType != 0) {
-				m_iLoyalty += g_pMain->m_CPremiumItemArray.GetData(m_bPremiumType)->BonusLoyalty;
-				m_iLoyaltyMonthly += g_pMain->m_CPremiumItemArray.GetData(m_bPremiumType)->BonusLoyalty;
+				m_iLoyalty += g_pMain->m_PremiumItemArray.GetData(m_bPremiumType)->BonusLoyalty;
+				m_iLoyaltyMonthly += g_pMain->m_PremiumItemArray.GetData(m_bPremiumType)->BonusLoyalty;
 			}
 		}
 
@@ -1397,12 +1397,8 @@ void CUser::ExpChange(int64 iExp)
 		// NOTE: They officially check to see if the XP is <= 100,000.
 		iExp = iExp * (100 + g_pMain->m_byExpEventAmount) / 100;
 
-		if (m_bPremiumType != 0) {
-			if (GetLevel() <= 55)
-				iExp = iExp * (100 + g_pMain->m_CPremiumItemArray.GetData(m_bPremiumType)->ExpPercentLevelBefore55) / 100;
-			else
-				iExp = iExp * (100 + g_pMain->m_CPremiumItemArray.GetData(m_bPremiumType)->ExpPercentLevelAfter55) / 100;
-		}
+		if (m_bPremiumType != 0)
+			iExp = iExp * (100 + GetPremiumExpPercent()) / 100;
 	}
 
 	bool bLevel = true;
@@ -1455,6 +1451,29 @@ void CUser::ExpChange(int64 iExp)
 	// If we've lost XP, save it for possible refund later.
 	if (iExp < 0)
 		m_iLostExp = -iExp;
+}
+
+/**
+* @brief	Player Premium experience point percent.
+*/
+uint16 CUser::GetPremiumExpPercent() {
+
+	uint16 iBonusExpPercent = 0;
+
+	foreach_stlmap_nolock(itr, g_pMain->m_PremiumItemExpArray) {
+		_PREMIUM_ITEM_EXP *pPremiumItemExp = g_pMain->m_PremiumItemExpArray.GetData(itr->first);
+
+		if (m_bPremiumType == pPremiumItemExp->Type)
+		{
+			if (GetLevel() >= pPremiumItemExp->MinLevel && GetLevel() <= pPremiumItemExp->MaxLevel)
+			{
+				iBonusExpPercent= pPremiumItemExp->sPercent;
+				break;
+			}
+		}
+	}
+
+	return iBonusExpPercent;
 }
 
 /**

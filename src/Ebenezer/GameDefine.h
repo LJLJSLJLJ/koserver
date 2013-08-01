@@ -589,14 +589,21 @@ struct _RENTAL_ITEM
 struct _PREMIUM_ITEM
 {
 	uint8	Type;
-	uint16	ExpPercentLevelBefore55;
-	uint16	ExpPercentLevelAfter55;
-	uint16	ExpPercentDeath;
+	uint16	ExpRestorePercent;
 	uint16	NoahPercent;
 	uint16	DropPercent;
 	uint32	BonusLoyalty;
 	uint16	RepairDiscountPercent;
 	uint16	ItemSellPercent;
+};
+
+struct _PREMIUM_ITEM_EXP
+{
+	uint16	nIndex;
+	uint8	Type;
+	uint8	MinLevel;
+	uint8	MaxLevel;
+	uint16	sPercent;
 };
 
 enum BuffType

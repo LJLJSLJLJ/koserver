@@ -54,4 +54,5 @@ typedef std::map<uint16, QuestHelperList>	QuestNpcList;
 typedef std::vector<_MONSTER_SUMMON_LIST>	MonsterSummonList;
 typedef CSTLMap <MonsterSummonList>			MonsterSummonListArray;
 
-typedef CSTLMap <_PREMIUM_ITEM>			CPremiumItemArray;
+typedef CSTLMap <_PREMIUM_ITEM>			PremiumItemArray;
+typedef CSTLMap <_PREMIUM_ITEM_EXP>		PremiumItemExpArray;

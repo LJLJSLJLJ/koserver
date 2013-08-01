@@ -403,6 +403,7 @@
     <ClInclude Include="..\shared\database\MagicType8Set.h" />
     <ClInclude Include="..\shared\database\MagicType9Set.h" />
     <ClInclude Include="..\shared\database\MonsterSummonListSet.h" />
+    <ClInclude Include="..\shared\database\PremiumItemExpSet.h" />
     <ClInclude Include="..\shared\database\PremiumItemSet.h" />
     <ClInclude Include="..\shared\database\QuestHelperSet.h" />
     <ClInclude Include="..\shared\database\QuestMonsterSet.h" />

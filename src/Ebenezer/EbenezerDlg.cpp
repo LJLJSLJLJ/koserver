@@ -148,7 +148,8 @@ bool CEbenezerDlg::Startup()
 		|| !MapFileLoad()
 		|| !LoadKingSystem()
 		|| !LoadMonsterSummonListTable()
-		|| !LoadPremiumItemTable())
+		|| !LoadPremiumItemTable()
+		|| !LoadPremiumItemExpTable())
 		return false;
 
 	// Clear any remaining users in the currently logged in list
