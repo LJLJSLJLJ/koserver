@@ -25,11 +25,13 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 		return;
 	}
 
-	instance.bSendSkillFailed = false;
-
-	if (instance.nSkillID < 500000) {
-		if (instance.pSkill->bType[0] == TO_USER(pCaster)->m_LastSkillType) {
+	if (instance.nSkillID < 400000 && TO_USER(pCaster)->isPlayer()) {
+		if (TO_USER(pCaster)->m_LastSkillID != instance.nSkillID &&  instance.pSkill->bType[0] == TO_USER(pCaster)->m_LastSkillType) {
 			if ((UNIXTIME - TO_USER(pCaster)->m_LastSkillUseTime) <= PLAYER_SKILL_REQUEST_INTERVAL) {
+				instance.bSendSkillFailed = true;
+			}
+		} else if (TO_USER(pCaster)->m_LastSkillID == instance.nSkillID) {
+			if ((UNIXTIME - TO_USER(pCaster)->m_LastSkillUseTime) * 1000 <= (instance.pSkill->sReCastTime * 100) && instance.pSkill->sReCastTime != 0) {
 				instance.bSendSkillFailed = true;
 			}
 		}
@@ -47,7 +49,6 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 
 	instance.bIsRecastingSavedMagic = false;
 	instance.Run();
-
 }
 
 void CMagicProcess::UpdateAIServer(uint32 nSkillID, AISkillOpcode opcode, 

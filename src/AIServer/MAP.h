@@ -60,6 +60,8 @@ public:
 	bool RegionUserRemove( int rx, int rz, int uid );
 	void RegionUserAdd( int rx, int rz, int uid );
 
+	CRegion * GetRegion(uint16 regionX, uint16 regionZ);
+
 	int IsRoomCheck(float fx, float fz);	// 던젼에서 사용, 유저의 현재위치가 던젼의 어느 위치에 있는지를 판단
 	bool IsRoomStatusCheck();
 

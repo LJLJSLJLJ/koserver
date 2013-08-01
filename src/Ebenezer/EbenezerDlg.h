@@ -60,6 +60,8 @@ public:
 	bool LoadBattleTable();
 	bool LoadKingSystem();
 	bool LoadMonsterSummonListTable();
+	bool LoadPremiumItemTable();
+	bool LoadPremiumItemExpTable();
 
 	bool MapFileLoad();
 	bool LoadNoticeData();
@@ -297,6 +299,8 @@ public:
 	ItemOpArray				m_ItemOpArray;
 	KingSystemArray			m_KingSystemArray;
 	MonsterSummonListArray	m_MonsterSummonList;
+	PremiumItemArray		m_PremiumItemArray;
+	PremiumItemExpArray		m_PremiumItemExpArray;
 
 	Atomic<uint16>			m_sPartyIndex;
 	short	m_sZoneCount;							// AI Server 재접속시 사용

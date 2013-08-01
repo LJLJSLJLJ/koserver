@@ -2,7 +2,7 @@
 #include "CircularBuffer.h"
 
 /** Constructor
- */
+*/
 CircularBuffer::CircularBuffer()
 {
 	m_buffer = m_bufferEnd = m_regionAPointer = m_regionBPointer = nullptr;
@@ -10,17 +10,17 @@ CircularBuffer::CircularBuffer()
 }
 
 /** Destructor
- */
+*/
 CircularBuffer::~CircularBuffer()
 {
 	free(m_buffer);
 }
 
 /** Read bytes from the buffer
- * @param destination pointer to destination where bytes will be written
- * @param bytes number of bytes to read
- * @return true if there was enough data, false otherwise
- */
+* @param destination pointer to destination where bytes will be written
+* @param bytes number of bytes to read
+* @return true if there was enough data, false otherwise
+*/
 bool CircularBuffer::Read(void * destination, size_t bytes)
 {
 	// copy as much out of region a
@@ -84,10 +84,10 @@ void CircularBuffer::AllocateB()
 }
 
 /** Write bytes to the buffer
- * @param data pointer to the data to be written
- * @param bytes number of bytes to be written
- * @return true if was successful, otherwise false
- */
+* @param data pointer to the data to be written
+* @param bytes number of bytes to be written
+* @return true if was successful, otherwise false
+*/
 bool CircularBuffer::Write(const void * data, size_t bytes)
 {
 	// If buffer B exists, write to it.
@@ -124,7 +124,7 @@ bool CircularBuffer::Write(const void * data, size_t bytes)
 }
 
 /** Returns the number of available bytes left.
- */
+*/
 size_t CircularBuffer::GetSpace()
 {
 	if( m_regionBPointer != nullptr )
@@ -144,14 +144,14 @@ size_t CircularBuffer::GetSpace()
 }
 
 /** Returns the number of bytes currently stored in the buffer.
- */
+*/
 size_t CircularBuffer::GetSize()
 {
 	return m_regionASize + m_regionBSize;
 }
 
 /** Returns the number of contiguous bytes (that can be pushed out in one operation)
- */
+*/
 size_t CircularBuffer::GetContiguousBytes()
 {
 	if( m_regionASize )			// A before B
@@ -161,8 +161,8 @@ size_t CircularBuffer::GetContiguousBytes()
 }
 
 /** Removes len bytes from the front of the buffer
- * @param len the number of bytes to "cut"
- */
+* @param len the number of bytes to "cut"
+*/
 void CircularBuffer::Remove(size_t len)
 {
 	// remove from A first before we remove from b
@@ -196,7 +196,7 @@ void CircularBuffer::Remove(size_t len)
 			// push it all to the start of the buffer.
 			if( m_regionBPointer != m_buffer )
 				memmove(m_buffer, m_regionBPointer, m_regionBSize);
-	
+
 			m_regionAPointer = m_buffer;
 			m_regionASize = m_regionBSize;
 			m_regionBPointer = nullptr;
@@ -214,7 +214,7 @@ void CircularBuffer::Remove(size_t len)
 }
 
 /** Returns a pointer at the "end" of the buffer, where new data can be written
- */
+*/
 void * CircularBuffer::GetBuffer()
 {
 	if( m_regionBPointer != nullptr )
@@ -224,8 +224,8 @@ void * CircularBuffer::GetBuffer()
 }
 
 /** Allocate the buffer with room for size bytes
- * @param size the number of bytes to allocate
- */
+* @param size the number of bytes to allocate
+*/
 void CircularBuffer::Allocate(size_t size)
 {
 	m_buffer = (uint8*)malloc(size);
@@ -235,8 +235,8 @@ void CircularBuffer::Allocate(size_t size)
 }
 
 /** Increments the "writen" pointer forward len bytes
- * @param len number of bytes to step
- */
+* @param len number of bytes to step
+*/
 void CircularBuffer::IncrementWritten(size_t len)			// known as "commit"
 {
 	if( m_regionBPointer != nullptr )
@@ -246,12 +246,12 @@ void CircularBuffer::IncrementWritten(size_t len)			// known as "commit"
 }
 
 /** Returns a pointer at the "beginning" of the buffer, where data can be pulled from
- */
+*/
 void * CircularBuffer::GetBufferStart()
 {
 	if( m_regionASize > 0 )
 		return m_regionAPointer;
 	else
 		return m_regionBPointer;
-		
+
 }

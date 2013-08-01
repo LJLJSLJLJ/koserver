@@ -13,8 +13,8 @@ CNpc::~CNpc()
 }
 
 /**
- * @brief	Initializes this object.
- */
+* @brief	Initializes this object.
+*/
 void CNpc::Initialize()
 {
 	Unit::Initialize();
@@ -27,12 +27,12 @@ void CNpc::Initialize()
 	m_iHP = 0;					// 현재 HP
 	//m_byState = 0;			// 몬스터 (NPC) 상태이상
 	m_tNpcType = 0;				// NPC Type
-								// 0 : Normal Monster
-								// 1 : NPC
-								// 2 : 각 입구,출구 NPC
-								// 3 : 경비병
+	// 0 : Normal Monster
+	// 1 : NPC
+	// 2 : 각 입구,출구 NPC
+	// 3 : 경비병
 	m_iSellingGroup = 0;
-//	m_dwStepDelay = 0;		
+	//	m_dwStepDelay = 0;		
 
 	m_byDirection = 0;			// npc의 방향,,
 	m_iWeapon_1 = 0;
@@ -45,11 +45,11 @@ void CNpc::Initialize()
 }
 
 /**
- * @brief	Adds the NPC to the region.
- *
- * @param	new_region_x	The new region x coordinate.
- * @param	new_region_z	The new region z coordinate.
- */
+* @brief	Adds the NPC to the region.
+*
+* @param	new_region_x	The new region x coordinate.
+* @param	new_region_z	The new region z coordinate.
+*/
 void CNpc::AddToRegion(int16 new_region_x, int16 new_region_z)
 {
 	GetRegion()->Remove(this);
@@ -58,13 +58,13 @@ void CNpc::AddToRegion(int16 new_region_x, int16 new_region_z)
 }
 
 /**
- * @brief	Sends the movement packet for the NPC.
- *
- * @param	fPosX 	The position x coordinate.
- * @param	fPosY 	The position y coordinate.
- * @param	fPosZ 	The position z coordinate.
- * @param	fSpeed	The speed.
- */
+* @brief	Sends the movement packet for the NPC.
+*
+* @param	fPosX 	The position x coordinate.
+* @param	fPosY 	The position y coordinate.
+* @param	fPosZ 	The position z coordinate.
+* @param	fSpeed	The speed.
+*/
 void CNpc::MoveResult(float fPosX, float fPosY, float fPosZ, float fSpeed)
 {
 	Packet result(WIZ_NPC_MOVE);
@@ -77,11 +77,11 @@ void CNpc::MoveResult(float fPosX, float fPosY, float fPosZ, float fSpeed)
 }
 
 /**
- * @brief	Constructs an in/out packet for the NPC.
- *
- * @param	result	The packet buffer the constructed packet will be stored in.
- * @param	bType 	The type (in or out).
- */
+* @brief	Constructs an in/out packet for the NPC.
+*
+* @param	result	The packet buffer the constructed packet will be stored in.
+* @param	bType 	The type (in or out).
+*/
 void CNpc::GetInOut(Packet & result, uint8 bType)
 {
 	result.Initialize(WIZ_NPC_INOUT);
@@ -91,13 +91,13 @@ void CNpc::GetInOut(Packet & result, uint8 bType)
 }
 
 /**
- * @brief	Constructs and sends an in/out packet for the NPC.
- *
- * @param	bType	The type (in or out).
- * @param	fX   	The x coordinate.
- * @param	fZ   	The z coordinate.
- * @param	fY   	The y coordinate.
- */
+* @brief	Constructs and sends an in/out packet for the NPC.
+*
+* @param	bType	The type (in or out).
+* @param	fX   	The x coordinate.
+* @param	fZ   	The z coordinate.
+* @param	fY   	The y coordinate.
+*/
 void CNpc::SendInOut(uint8 bType, float fX, float fZ, float fY)
 {
 	if (GetRegion() == nullptr)
@@ -123,10 +123,10 @@ void CNpc::SendInOut(uint8 bType, float fX, float fZ, float fY)
 }
 
 /**
- * @brief	Gets NPC information for use in various NPC packets.
- *
- * @param	pkt	The packet the information will be stored in.
- */
+* @brief	Gets NPC information for use in various NPC packets.
+*
+* @param	pkt	The packet the information will be stored in.
+*/
 void CNpc::GetNpcInfo(Packet & pkt)
 {
 	pkt << GetProtoID()
@@ -147,11 +147,11 @@ void CNpc::GetNpcInfo(Packet & pkt)
 }
 
 /**
- * @brief	Sends a gate status.
- *
- * @param	bFlag  	The flag (open or shut).
- * @param	bSendAI	true to update the AI server.
- */
+* @brief	Sends a gate status.
+*
+* @param	bFlag  	The flag (open or shut).
+* @param	bSendAI	true to update the AI server.
+*/
 void CNpc::SendGateFlag(uint8 bFlag /*= -1*/, bool bSendAI /*= true*/)
 {
 	Packet result(WIZ_OBJECT_EVENT, uint8(OBJECT_FLAG_LEVER));
@@ -174,12 +174,12 @@ void CNpc::SendGateFlag(uint8 bFlag /*= -1*/, bool bSendAI /*= true*/)
 }
 
 /**
- * @brief	Changes an NPC's hitpoints.
- *
- * @param	amount   	The amount to adjust the HP by.
- * @param	pAttacker	The attacker.
- * @param	bSendToAI	true to update the AI server.
- */
+* @brief	Changes an NPC's hitpoints.
+*
+* @param	amount   	The amount to adjust the HP by.
+* @param	pAttacker	The attacker.
+* @param	bSendToAI	true to update the AI server.
+*/
 void CNpc::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /*= true*/) 
 {
 	uint16 tid = (pAttacker != nullptr ? pAttacker->GetID() : -1);
@@ -229,10 +229,10 @@ void CNpc::SendHpChangeToAI(uint16 sTargetID, int amount, AttributeType attribut
 }
 
 /**
- * @brief	Changes an NPC's mana.
- *
- * @param	amount	The amount to adjust the mana by.
- */
+* @brief	Changes an NPC's mana.
+*
+* @param	amount	The amount to adjust the mana by.
+*/
 void CNpc::MSpChange(int amount)
 {
 #if 0 // TO-DO: Implement this
@@ -296,10 +296,10 @@ float CNpc::GetPartyRewardModifier(uint32 nPartyLevel, uint32 nPartyMembers)
 }
 
 /**
- * @brief	Executes the death action.
- *
- * @param	pKiller	The killer.
- */
+* @brief	Executes the death action.
+*
+* @param	pKiller	The killer.
+*/
 void CNpc::OnDeath(Unit *pKiller)
 {
 	if (m_NpcState == NPC_DEAD)

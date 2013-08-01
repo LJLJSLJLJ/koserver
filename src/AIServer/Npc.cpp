@@ -2183,9 +2183,10 @@ time_t CNpc::Attack()
 			nRandom = myrand(1, 10000);
 			if (nRandom < nPercent)	
 			{
-				CNpcMagicProcess::MagicPacket(MAGIC_EFFECTING, m_proto->m_iMagic1, GetID(), -1, int16(pUser->GetX()), int16(pUser->GetY()), int16(pUser->GetZ()));
-				printf("++++ AreaMagicAttack --- sid=%d, magicid=%d\n", GetID(), m_proto->m_iMagic1);
-				return m_sAttackDelay + 1000;
+				//CNpcMagicProcess::MagicPacket(MAGIC_EFFECTING, m_proto->m_iMagic1, GetID(), -1, int16(pUser->GetX()), int16(pUser->GetY()), int16(pUser->GetZ()));
+				//printf("++++ AreaMagicAttack --- sid=%d, magicid=%d\n", GetID(), m_proto->m_iMagic1);
+				//return m_sAttackDelay + 1000;
+				return 3000;
 			}
 		}
 		else if (GetProto()->m_byMagicAttack == 2)	
@@ -2193,9 +2194,10 @@ time_t CNpc::Attack()
 			nRandom = myrand(1, 10000);
 			if (nRandom < nPercent)	
 			{
-				CNpcMagicProcess::MagicPacket(MAGIC_EFFECTING, m_proto->m_iMagic1, GetID(), pUser->GetID());
-				printf("LongAndMagicAttack --- sid=%d, tid=%d\n", GetID(), pUser->GetID());
-				return m_sAttackDelay;
+				//CNpcMagicProcess::MagicPacket(MAGIC_EFFECTING, m_proto->m_iMagic1, GetID(), pUser->GetID());
+				//printf("LongAndMagicAttack --- sid=%d, tid=%d\n", GetID(), pUser->GetID());
+				//return m_sAttackDelay;
+				return 3000;
 			}
 		}
 
@@ -3138,7 +3140,7 @@ bool CNpc::GetUserInViewRange(int x, int z)
 	}
 
 	FastGuard lock(pMap->m_lock);
-	CRegion * pRegion = &pMap->m_ppRegion[x][z];
+	CRegion * pRegion = pMap->GetRegion(x, z);
 	float fDis = 0.0f; 
 
 	foreach_stlmap (itr, pRegion->m_RegionUserArray)
@@ -3147,7 +3149,7 @@ bool CNpc::GetUserInViewRange(int x, int z)
 		if (pUser == nullptr)
 			continue;
 
-		if (isInRange(pUser, NPC_VIEW_RANGE))
+		if (isInRangeSlow(pUser, NPC_VIEW_RANGE))
 			return true;
 	}
 	
@@ -3404,21 +3406,10 @@ bool CNpc::CheckFindEnemy()
 	if (isGuard())
 		return true;
 
-	MAP* pMap = GetMap();
-
-	if (pMap == nullptr
-		|| GetRegionX() > pMap->GetXRegionMax() 
-		|| GetRegionZ() > pMap->GetZRegionMax())
-	{
-		TRACE("#### CheckFindEnemy Fail : [nid=%d, sid=%d], nRX=%d, nRZ=%d #####\n", GetID(), GetProtoID(), GetRegionX(), GetRegionZ());
+	if (GetRegion() == nullptr)
 		return false;
-	}
 
-	FastGuard lock(pMap->m_lock);
-	if (pMap->m_ppRegion[GetRegionX()][GetRegionZ()].m_byMoving == 1)
-		return true;
-
-	return false;
+	return (GetRegion()->m_byMoving == 1);
 }
 
 int	CNpc::ItemProdution(int item_number)							// 아이템 제작

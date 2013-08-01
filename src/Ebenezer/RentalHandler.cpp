@@ -9,8 +9,8 @@ void CUser::RentalSystem(Packet & pkt)
 
 	// TO-DO
 	/*if (opcode == 1)
-		PremiumRentalProcess(pBuf + index);
+	PremiumRentalProcess(pBuf + index);
 	else if (opcode == 2)
-		PvPRentalProcess(pBuf + index);*/
+	PvPRentalProcess(pBuf + index);*/
 }
 

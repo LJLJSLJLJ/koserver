@@ -1281,6 +1281,12 @@ void CDBAgent::RefundNP(string & strUserID, uint32 nRefundNP)
 		ReportSQLError(m_GameDB->GetError());
 }
 
+/**
+* @brief	Change authority is logged out character.
+*
+* @param	strUserID	Character's name.
+* @param	nAuthority	New user authority.
+*/
 void CDBAgent::UpdateUserAuthority(string & strUserID, uint16 nAuthority)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());

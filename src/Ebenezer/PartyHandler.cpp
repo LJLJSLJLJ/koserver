@@ -24,7 +24,7 @@ void CUser::PartyProcess(Packet & pkt)
 		PartyRequest(pUser->GetSocketID(), (opcode == PARTY_CREATE));
 		break;
 
-	// Did the user we invited accept our party invite?
+		// Did the user we invited accept our party invite?
 	case PARTY_PERMIT:
 		if (pkt.read<uint8>()) 
 			PartyInsert();
@@ -32,17 +32,17 @@ void CUser::PartyProcess(Packet & pkt)
 			PartyCancel();
 		break;
 
-	// Authorises a member as the new party leader
+		// Authorises a member as the new party leader
 	case PARTY_PROMOTE:
 		PartyPromote(pkt.read<uint16>());
 		break;
 
-	// Remove a user from our party.
+		// Remove a user from our party.
 	case PARTY_REMOVE:
 		PartyRemove(pkt.read<uint16>());
 		break;
 
-	// Disband our party.
+		// Disband our party.
 	case PARTY_DELETE:
 		PartyDelete();
 		break;
@@ -63,7 +63,7 @@ void CUser::PartyCancel()
 
 	if (pParty == nullptr)
 		return;
-	
+
 	leader_id = pParty->uid[0];
 	CUser *pUser = g_pMain->GetUserPtr(leader_id);
 	if (pUser == nullptr)
@@ -112,7 +112,7 @@ void CUser::PartyRequest(int memberid, bool bCreate)
 			|| GetClanID() != pUser->GetClanID())
 		{
 			if ( !(   ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 1.5)) 
-				  || ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
+				|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
 			{
 				errorCode = -2;
 				goto fail_return;
@@ -125,14 +125,14 @@ void CUser::PartyRequest(int memberid, bool bCreate)
 		pParty = g_pMain->GetPartyPtr(GetPartyID());
 		if (pParty == nullptr)
 			goto fail_return;
-		
-			for (i = 0; i < MAX_PARTY_USERS; i++)
-			{
-				if (pParty->uid[i] < 0) 
-					break;
-			}
-			if (i == MAX_PARTY_USERS)
-				goto fail_return;	// party is full
+
+		for (i = 0; i < MAX_PARTY_USERS; i++)
+		{
+			if (pParty->uid[i] < 0) 
+				break;
+		}
+		if (i == MAX_PARTY_USERS)
+			goto fail_return;	// party is full
 	}
 	else
 	{
@@ -182,7 +182,7 @@ void CUser::PartyInsert()
 		m_sPartyIndex = -1;
 		return;
 	}
-	
+
 	// make sure user isn't already in the array...
 	// kind of slow, but it works for the moment
 	foreach_array (i, pParty->uid)
@@ -218,14 +218,14 @@ void CUser::PartyInsert()
 
 		result.clear();
 		result	<< uint8(PARTY_INSERT) << pParty->uid[i]
-				<< uint8(1) // success
-				<< pUser->GetName()
-				<< pUser->m_iMaxHp << pUser->m_sHp
-				<< pUser->GetLevel() << pUser->m_sClass
-				<< pUser->m_iMaxMp << pUser->m_sMp;
+		<< uint8(1) // success
+			<< pUser->GetName()
+			<< pUser->m_iMaxHp << pUser->m_sHp
+			<< pUser->GetLevel() << pUser->m_sClass
+			<< pUser->m_iMaxMp << pUser->m_sMp;
 		Send(&result);
 	}
-	
+
 	pUser = g_pMain->GetUserPtr(pParty->uid[0]);
 	if (pUser == nullptr)
 		return;
@@ -238,11 +238,11 @@ void CUser::PartyInsert()
 
 	result.clear();
 	result	<< uint8(PARTY_INSERT) << GetSocketID()
-			<< uint8(1) // success
-			<< GetName()
-			<< m_iMaxHp << m_sHp
-			<< GetLevel() << GetClass()
-			<< m_iMaxMp << m_sMp;
+		<< uint8(1) // success
+		<< GetName()
+		<< m_iMaxHp << m_sHp
+		<< GetLevel() << GetClass()
+		<< m_iMaxMp << m_sMp;
 	g_pMain->Send_PartyMember(GetPartyID(), &result);
 
 	result.Initialize(AG_USER_PARTY);
@@ -299,11 +299,11 @@ void CUser::PartyPromote(uint16 sMemberID)
 
 	Packet result(WIZ_PARTY, uint8(PARTY_INSERT));
 	result << pUser->GetSocketID()
-			<< uint8(100) // reset position to leader
-			<< pUser->GetName()
-			<< pUser->m_iMaxHp << pUser->m_sHp
-			<< pUser->GetLevel() << pUser->GetClass()
-			<< pUser->m_iMaxMp << pUser->m_sMp;
+		<< uint8(100) // reset position to leader
+		<< pUser->GetName()
+		<< pUser->m_iMaxHp << pUser->m_sHp
+		<< pUser->GetLevel() << pUser->GetClass()
+		<< pUser->m_iMaxMp << pUser->m_sMp;
 	g_pMain->Send_PartyMember(GetPartyID(), &result);
 
 	// Now update the slots in the AI server.
@@ -427,21 +427,21 @@ void CUser::PartyBBS(Packet & pkt)
 	uint8 opcode = pkt.read<uint8>();
 	switch (opcode)
 	{
-		case PARTY_BBS_REGISTER:
-			PartyBBSRegister(pkt);
-			break;
-		case PARTY_BBS_DELETE:
-			PartyBBSDelete(pkt);
-			break;
-		case PARTY_BBS_NEEDED:
-			PartyBBSNeeded(pkt, PARTY_BBS_NEEDED);
-			break;
-		case PARTY_BBS_WANTED:
-			PartyBBSWanted(pkt);
-			break;
-		case PARTY_BBS_LIST:
-			SendPartyBBSNeeded(0, PARTY_BBS_LIST);
-			break;
+	case PARTY_BBS_REGISTER:
+		PartyBBSRegister(pkt);
+		break;
+	case PARTY_BBS_DELETE:
+		PartyBBSDelete(pkt);
+		break;
+	case PARTY_BBS_NEEDED:
+		PartyBBSNeeded(pkt, PARTY_BBS_NEEDED);
+		break;
+	case PARTY_BBS_WANTED:
+		PartyBBSWanted(pkt);
+		break;
+	case PARTY_BBS_LIST:
+		SendPartyBBSNeeded(0, PARTY_BBS_LIST);
+		break;
 	}
 }
 
@@ -470,8 +470,8 @@ void CUser::PartyBBSRegister(Packet & pkt)
 			continue;
 
 		if( !(   ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 1.5)) 
-			  || ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
-			  continue;
+			|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
+			continue;
 
 		if (pUser->GetSocketID() == GetSocketID()) break;
 		counter++;		
@@ -508,7 +508,7 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 	uint16 start_counter = 0, BBS_Counter = 0;
 	uint8 valid_counter = 0;
 	int j = 0;
-	
+
 	start_counter = page_index * MAX_BBS_PAGE;
 
 	if (start_counter >= MAX_USER)
@@ -538,8 +538,8 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 			&& GetZoneID() != pUser->GetZoneID())
 			|| (pUser->m_bNeedParty == 1 && !pUser->m_bPartyLeader)
 			|| !(  ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3)) 
-				|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
-			  continue;
+			|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
+			continue;
 
 		BBS_Counter++;
 
@@ -559,14 +559,14 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 
 		result.DByte();
 		result	<< pUser->GetName()
-				<< sClass
-				<< uint16(0) << pUser->GetLevel() //Not sure what that uint16 does.
-				<< uint8(pUser->m_bPartyLeader ? 3 : 2); //2 is player, 3 is party leader
+			<< sClass
+			<< uint16(0) << pUser->GetLevel() //Not sure what that uint16 does.
+			<< uint8(pUser->m_bPartyLeader ? 3 : 2); //2 is player, 3 is party leader
 		result.SByte();
 		result	<< WantedMessage
-				<< pUser->GetZoneID()
-				<< PartyMembers
-				<< uint8(0);
+			<< pUser->GetZoneID()
+			<< PartyMembers
+			<< uint8(0);
 		valid_counter++;
 	}
 	g_pMain->m_socketMgr.ReleaseLock();
@@ -576,10 +576,10 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 	{
 		for (int j = valid_counter; j < MAX_BBS_PAGE; j++)
 			result	<< uint16(0) << uint16(0)
-					<< uint16(0) << uint8(0)
-					<< uint8(0) << uint8(0)
-					<< uint16(0)
-					<< uint8(0);
+			<< uint16(0) << uint8(0)
+			<< uint8(0) << uint8(0)
+			<< uint16(0)
+			<< uint8(0);
 	}
 
 	result << page_index << BBS_Counter;

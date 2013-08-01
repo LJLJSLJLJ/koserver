@@ -237,7 +237,7 @@ void CUser::HandleChallengeAcceptCVC(Packet & pkt)
 		Send(&result);
 		return;
 	}
-	
+
 	pUser->m_sChallengeUser = -1;
 	pUser->m_bRequestingChallenge = 0;
 

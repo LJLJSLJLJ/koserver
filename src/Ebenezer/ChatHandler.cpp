@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "DBAgent.h"
 
-extern CDBAgent g_DBAgent;
-
 using std::string;
 
 ServerCommandTable CEbenezerDlg::s_commandTable;
@@ -637,6 +635,11 @@ COMMAND_HANDLER(CUser::HandlePermitConnectCommand)
 
 	g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_PLAYER);
 
+	std::string sNoticeMessage = string_format("%s has been unbanned..!", strUserID.c_str());
+
+	if (!sNoticeMessage.empty())
+		g_pMain->SendNotice(sNoticeMessage.c_str(),Nation::ALL);
+
 	return true;
 }
 
@@ -763,30 +766,32 @@ COMMAND_HANDLER(CEbenezerDlg::HandleReloadNoticeCommand)
 COMMAND_HANDLER(CEbenezerDlg::HandleReloadTablesCommand)
 {
 	printf("Reloads the in-game tables.\n");
-	m_MagictableArray.DeleteAllData();
-	m_Magictype1Array.DeleteAllData();
-	m_Magictype2Array.DeleteAllData();
-	m_Magictype3Array.DeleteAllData();
-	m_Magictype4Array.DeleteAllData();
-	m_Magictype5Array.DeleteAllData();
-	m_Magictype6Array.DeleteAllData();
-	m_Magictype8Array.DeleteAllData();
-	m_Magictype9Array.DeleteAllData();
-	LoadMagicTable();
-	LoadMagicType1();
-	LoadMagicType2();
-	LoadMagicType3();
-	LoadMagicType4();
-	LoadMagicType5();
-	LoadMagicType6();
-	LoadMagicType7();
-	LoadMagicType8();
-	LoadMagicType9();
-	m_UserPersonalRankMap.clear();
-	m_UserKnightsRankMap.clear();
-	LoadUserRankings();
-
-
+	g_pMain->m_MagictableArray.DeleteAllData();
+	g_pMain->m_Magictype1Array.DeleteAllData();
+	g_pMain->m_Magictype2Array.DeleteAllData();
+	g_pMain->m_Magictype3Array.DeleteAllData();
+	g_pMain->m_Magictype4Array.DeleteAllData();
+	g_pMain->m_Magictype5Array.DeleteAllData();
+	g_pMain->m_Magictype6Array.DeleteAllData();
+	g_pMain->m_Magictype8Array.DeleteAllData();
+	g_pMain->m_Magictype9Array.DeleteAllData();
+	g_pMain->LoadMagicTable();
+	g_pMain->LoadMagicType1();
+	g_pMain->LoadMagicType2();
+	g_pMain->LoadMagicType3();
+	g_pMain->LoadMagicType4();
+	g_pMain->LoadMagicType5();
+	g_pMain->LoadMagicType6();
+	g_pMain->LoadMagicType7();
+	g_pMain->LoadMagicType8();
+	g_pMain->LoadMagicType9();
+	g_pMain->m_UserPersonalRankMap.clear();
+	g_pMain->m_UserKnightsRankMap.clear();
+	g_pMain->LoadUserRankings();
+	g_pMain->m_PremiumItemArray.DeleteAllData();
+	g_pMain->LoadPremiumItemTable();
+	g_pMain->m_PremiumItemExpArray.DeleteAllData();
+	g_pMain->LoadPremiumItemExpTable();
 
 	return true;
 }

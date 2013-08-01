@@ -1,11 +1,11 @@
 /*
- * Multiplatform Async Network Library
- * Copyright (c) 2007 Burlex
- * Hacked up to no good end by twostars (if you're looking for someone to blame!).
- *
- * SocketMgr - iocp-based SocketMgr for windows.
- *
- */
+* Multiplatform Async Network Library
+* Copyright (c) 2007 Burlex
+* Hacked up to no good end by twostars (if you're looking for someone to blame!).
+*
+* SocketMgr - iocp-based SocketMgr for windows.
+*
+*/
 
 #include "stdafx.h"
 #ifdef CONFIG_USE_IOCP

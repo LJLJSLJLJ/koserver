@@ -36,7 +36,7 @@ void CUser::ChangeHair(Packet & pkt)
 
 	pkt.SByte();
 	pkt >> bOpcode >> strUserID >> bFace >> nHair;
-	
+
 	Packet result(WIZ_CHANGE_HAIR);
 	result.SByte();
 	result << bOpcode << strUserID << bFace << nHair;
@@ -59,7 +59,7 @@ void CUser::NewCharToAgent(Packet & pkt)
 	if (bCharIndex > 2)
 		errorCode = NEWCHAR_NO_MORE;
 	else if (p_TableCoefficient == nullptr
-			|| (str + sta + dex + intel + cha) > 300) 
+		|| (str + sta + dex + intel + cha) > 300) 
 		errorCode = NEWCHAR_INVALID_DETAILS;
 	else if (str < 50 || sta < 50 || dex < 50 || intel < 50 || cha < 50) 
 		errorCode = NEWCHAR_STAT_TOO_LOW;
@@ -70,10 +70,10 @@ void CUser::NewCharToAgent(Packet & pkt)
 		Send(&result);
 		return;
 	}
-	
+
 	result	<< bCharIndex 
-			<< strUserID << bRace << sClass << bFace << nHair
-			<< str << sta << dex << intel << cha;
+		<< strUserID << bRace << sClass << bFace << nHair
+		<< str << sta << dex << intel << cha;
 	g_pMain->AddDatabaseRequest(result, this);
 }
 
@@ -167,7 +167,7 @@ void CUser::SelectCharacter(Packet & pkt)
 	// Disallow players from relogging in the opposite nation's home zone when an invasion's not running.
 	if ((GetZoneID() != GetNation() && GetZoneID() <= ZONE_ELMORAD && !g_pMain->m_byBattleOpen)
 		// also disallow players from logging back into war zones that aren't currently active...
-		|| (GetMap()->isWarZone() && (GetZoneID() - ZONE_BATTLE_BASE) != g_pMain->m_byBattleZone))
+			|| (GetMap()->isWarZone() && (GetZoneID() - ZONE_BATTLE_BASE) != g_pMain->m_byBattleZone))
 	{
 		NativeZoneReturn();
 		Disconnect();
@@ -229,8 +229,8 @@ void CUser::SetLogInInfoToDB(uint8 bInit)
 
 	Packet result(WIZ_LOGIN_INFO);
 	result	<< GetName() 
-			<< pInfo->strServerIP << uint16(_LISTEN_PORT) << GetRemoteIP() 
-			<< bInit;
+		<< pInfo->strServerIP << uint16(_LISTEN_PORT) << GetRemoteIP() 
+		<< bInit;
 	g_pMain->AddDatabaseRequest(result, this);
 }
 

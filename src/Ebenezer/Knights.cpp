@@ -59,17 +59,17 @@ void CKnights::ConstructClanNoticePacket(Packet *result)
 	result->Initialize(WIZ_NOTICE);
 	result->DByte();
 	*result	<< uint8(4)			// type
-			<< uint8(1)			// total blocks
-			<< "Clan Notice"	// header
-			<< m_strClanNotice;
+		<< uint8(1)			// total blocks
+		<< "Clan Notice"	// header
+		<< m_strClanNotice;
 }
 
 /**
- * @brief	Updates this clan's notice with clanNotice
- * 			and informs logged in clan members.
- *
- * @param	clanNotice	The clan notice.
- */
+* @brief	Updates this clan's notice with clanNotice
+* 			and informs logged in clan members.
+*
+* @param	clanNotice	The clan notice.
+*/
 void CKnights::UpdateClanNotice(std::string & clanNotice)
 {
 	if (clanNotice.length() > MAX_CLAN_NOTICE_LENGTH)
@@ -96,8 +96,8 @@ void CKnights::UpdateClanNotice(std::string & clanNotice)
 }
 
 /**
- * @brief	Sends a request to update the clan's fund in the database.
- */
+* @brief	Sends a request to update the clan's fund in the database.
+*/
 void CKnights::UpdateClanFund()
 {
 	Packet result(WIZ_KNIGHTS_PROCESS, uint8(KNIGHTS_UPDATE_FUND));
@@ -153,12 +153,12 @@ bool CKnights::AddUser(CUser *pUser)
 }
 
 /**
- * @brief	Removes the specified user from the clan array.
- *
- * @param	strUserID	Identifier for the user.
- *
- * @return	.
- */
+* @brief	Removes the specified user from the clan array.
+*
+* @param	strUserID	Identifier for the user.
+*
+* @return	.
+*/
 bool CKnights::RemoveUser(std::string & strUserID)
 {
 	for (int i = 0; i < MAX_CLAN_USERS; i++)
@@ -183,22 +183,22 @@ bool CKnights::RemoveUser(std::string & strUserID)
 }
 
 /**
- * @brief	Removes the specified user from this clan.
- *
- * @param	pUser	The user.
- */
+* @brief	Removes the specified user from this clan.
+*
+* @param	pUser	The user.
+*/
 bool CKnights::RemoveUser(CUser *pUser)
 {
 	if (pUser == nullptr
 		|| pUser->m_pKnightsUser == nullptr)
 		return false;
-	
+
 	// Ensure users are refunded when they leave/are removed from a clan.
 	// NOTE: If we bring back multiserver setups, this is going to cause synchronisation issues.
 	uint32 nDonatedNP = pUser->m_pKnightsUser->nDonatedNP;
 	if (nDonatedNP > 0)
 		RefundDonatedNP(nDonatedNP, pUser);
-	
+
 	pUser->SetClanID(0);
 	pUser->m_bFame = 0;
 
@@ -212,18 +212,18 @@ bool CKnights::RemoveUser(CUser *pUser)
 }
 
 /**
- * @brief	Refunds 30% of the user's donated NP.
- * 			If the user has the item "CONT Recovery", refund ALL of the user's 
- * 			donated NP.
- *
- * @param	nDonatedNP	The donated NP.
- * @param	pUser	  	The user's session, when refunding the user in-game.
- * 						Set to nullptr to indicate the use of the character's name
- * 						and consequently a database update instead.
- * @param	strUserID 	Logged out character's name. 
- * 						Used to refund logged out characters' national points 
- * 						when pUser is set to nullptr.
- */
+* @brief	Refunds 30% of the user's donated NP.
+* 			If the user has the item "CONT Recovery", refund ALL of the user's 
+* 			donated NP.
+*
+* @param	nDonatedNP	The donated NP.
+* @param	pUser	  	The user's session, when refunding the user in-game.
+* 						Set to nullptr to indicate the use of the character's name
+* 						and consequently a database update instead.
+* @param	strUserID 	Logged out character's name. 
+* 						Used to refund logged out characters' national points 
+* 						when pUser is set to nullptr.
+*/
 void CKnights::RefundDonatedNP(uint32 nDonatedNP, CUser * pUser /*= nullptr*/, const char * strUserID /*= nullptr*/)
 {
 	// Refund 30% of NP unless the user has the item "CONT Recovery".
@@ -282,7 +282,7 @@ void CKnights::SendUpdate()
 {
 	Packet result(WIZ_KNIGHTS_PROCESS, uint8(KNIGHTS_UPDATE));
 	result	<< GetID() << m_byFlag << GetCapeID()
-			<< m_bCapeR << m_bCapeG << m_bCapeB << uint8(0);
+		<< m_bCapeR << m_bCapeG << m_bCapeB << uint8(0);
 	Send(&result);
 }
 

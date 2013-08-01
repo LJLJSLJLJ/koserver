@@ -6,7 +6,7 @@ using std::string;
 void CUser::LetterSystem(Packet & pkt)
 {
 	uint8 opcode = pkt.read<uint8>();
-		
+
 	switch (opcode)
 	{
 	case LETTER_UNREAD:
@@ -18,16 +18,16 @@ void CUser::LetterSystem(Packet & pkt)
 		break;
 
 	case LETTER_DELETE:
-	{
-		uint8 bCount = pkt.read<uint8>();
-		if (bCount > 5)
 		{
-			Packet result(WIZ_SHOPPING_MALL, uint8(STORE_LETTER));
-			result << uint8(LETTER_DELETE) << int8(-3);
-			Send(&result);
-			return;
-		}
-	} break;
+			uint8 bCount = pkt.read<uint8>();
+			if (bCount > 5)
+			{
+				Packet result(WIZ_SHOPPING_MALL, uint8(STORE_LETTER));
+				result << uint8(LETTER_DELETE) << int8(-3);
+				Send(&result);
+				return;
+			}
+		} break;
 
 	default:
 		TRACE("Unknown letter packet: %X\n", opcode);
@@ -42,38 +42,38 @@ void CUser::ReqLetterSystem(Packet & pkt)
 	uint8 opcode = pkt.read<uint8>();
 	switch (opcode)
 	{
-	// Are there any letters to be read?
-	// This is for the notification at the top of the screen.
+		// Are there any letters to be read?
+		// This is for the notification at the top of the screen.
 	case LETTER_UNREAD:
 		ReqLetterUnread();
 		break;
 
-	// Lists all the new mail.
+		// Lists all the new mail.
 	case LETTER_LIST:
 		ReqLetterList();
 		break;
 
-	// Lists all the old mail.
+		// Lists all the old mail.
 	case LETTER_HISTORY:
 		ReqLetterList(false);
 		break;
 
-	// Opens up the letter & marks it as read.
+		// Opens up the letter & marks it as read.
 	case LETTER_READ:
 		ReqLetterRead(pkt);
 		break;
 
-	// Used to send a letter & any coins/items (coins are disabled though)
+		// Used to send a letter & any coins/items (coins are disabled though)
 	case LETTER_SEND:
 		ReqLetterSend(pkt);
 		break;
 
-	// Used to take an item from a letter. 
+		// Used to take an item from a letter. 
 	case LETTER_GET_ITEM:
 		ReqLetterGetItem(pkt);
 		break;
 
-	// Deletes up to 5 old letters at a time.
+		// Deletes up to 5 old letters at a time.
 	case LETTER_DELETE:
 		ReqLetterDelete(pkt);
 		break;
@@ -85,7 +85,7 @@ void CUser::ReqLetterUnread()
 	// TO-DO: Force this to use cached list data (or update if stale). Calling the DB for just this is pointless.
 	Packet result(WIZ_SHOPPING_MALL, uint8(STORE_LETTER));
 	result	<< uint8(LETTER_UNREAD) 
-			<< g_DBAgent.GetUnreadLetterCount(m_strUserID);
+		<< g_DBAgent.GetUnreadLetterCount(m_strUserID);
 	Send(&result);
 }
 
@@ -136,10 +136,10 @@ void CUser::ReqLetterSend(Packet & pkt)
 	// Invalid recipient name length
 	if (strRecipient.empty() || strRecipient.length() > MAX_ID_SIZE
 		// Invalid subject length
-		|| strSubject.empty() || strSubject.length() > 31
-		// Invalid type (as far as we're concerned)
-		|| bType == 0 || bType > 2)
-		bResult = -1;
+			|| strSubject.empty() || strSubject.length() > 31
+			// Invalid type (as far as we're concerned)
+			|| bType == 0 || bType > 2)
+			bResult = -1;
 	else if (STRCASECMP(m_strUserID.c_str(), strRecipient.c_str()) == 0)
 		bResult = -6;
 
@@ -156,10 +156,10 @@ void CUser::ReqLetterSend(Packet & pkt)
 		// Invalid item (ID doesn't exist)
 		if (pTable == nullptr
 			// Invalid slot ID
-			|| bSrcPos > HAVE_MAX
-			// Item doesn't match what the server sees.
-			|| (pItem = GetItem(SLOT_MAX + bSrcPos))->nNum != nItemID)
-			bResult = -1;
+				|| bSrcPos > HAVE_MAX
+				// Item doesn't match what the server sees.
+				|| (pItem = GetItem(SLOT_MAX + bSrcPos))->nNum != nItemID)
+				bResult = -1;
 		// Untradeable item
 		else if (pTable->m_bRace == RACE_UNTRADEABLE || nItemID >= ITEM_GOLD
 			|| pItem->isSealed() || pItem->isRented())
@@ -167,7 +167,7 @@ void CUser::ReqLetterSend(Packet & pkt)
 	}
 
 	pkt >> strMessage;
-	
+
 	// Invalid message length
 	if (strMessage.empty() || strMessage.size() > 128)
 		bResult = -1;
@@ -219,14 +219,14 @@ void CUser::ReqLetterGetItem(Packet & pkt)
 	uint16 sCount = 0, sDurability = 0;
 	int8 bResult = g_DBAgent.GetItemFromLetter(m_strUserID, nLetterID, nItemID, sCount, sDurability, nCoins, nSerialNum);
 	int pos = -1;
-	
+
 	// If the request was successful, check requirements...
 	if (bResult == 1)
 	{
 		// If we're being given an item, do we have enough room for this item?
 		if (nItemID
 			&& ((pos = FindSlotForItem(nItemID, sCount)) < 0
-				|| !CheckWeight(nItemID, sCount)))
+			|| !CheckWeight(nItemID, sCount)))
 			bResult = -1;
 
 		// If we're being given coins, do they exceed our max?

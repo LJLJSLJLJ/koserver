@@ -8,16 +8,16 @@ void CUser::FriendProcess(Packet & pkt)
 	uint8 opcode = pkt.read<uint8>();
 	switch (opcode)
 	{
-		case FRIEND_REQUEST:
-			FriendRequest();
-			break;
-		case FRIEND_REPORT:
-			FriendReport(pkt);
-			break;
-		case FRIEND_ADD:
-		case FRIEND_REMOVE:
-			FriendModify(pkt, opcode);
-			break;
+	case FRIEND_REQUEST:
+		FriendRequest();
+		break;
+	case FRIEND_REPORT:
+		FriendReport(pkt);
+		break;
+	case FRIEND_ADD:
+	case FRIEND_REMOVE:
+		FriendModify(pkt, opcode);
+		break;
 	}
 }
 

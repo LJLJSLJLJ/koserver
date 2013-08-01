@@ -5,7 +5,7 @@
 
 // When enabled, implements support for the official quest scripts.
 // This is generally a bad idea; the main benefit is the scripts are already written.
-//#define USE_ORIGINAL_QUESTS
+#define USE_ORIGINAL_QUESTS
 
 #if !defined(USE_ORIGINAL_QUESTS) // our unofficial quest script implementation
 #	define LUA_ENGINE_MODE						"new (unofficial)"

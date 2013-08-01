@@ -9,8 +9,8 @@ void CUser::Attack(Packet & pkt)
 
 	pkt >> bType >> bResult >> tid >> delaytime >> distance;
 
-//	delaytime = delaytime / 100.0f;
-//	distance = distance / 10.0f;
+	//	delaytime = delaytime / 100.0f;
+	//	distance = distance / 10.0f;
 
 	if (isIncapacitated())
 		return;
@@ -23,7 +23,7 @@ void CUser::Attack(Packet & pkt)
 
 	// If you're holding a weapon, do a client-based (ugh, do not trust!) delay check.
 	_ITEM_TABLE *pTable = GetItemPrototype(RIGHTHAND);
-	if (pTable != nullptr) 
+	if (pTable != nullptr && !isMage()) 
 	{
 		if (delaytime < (pTable->m_sDelay + 10) // client adds 0.1 onto the interval (0.1 of 100 is 10)
 			|| distance > pTable->m_sRange)
@@ -88,10 +88,10 @@ void CUser::Regene(uint8 regene_type, uint32 magicid /*= 0*/)
 		magicid = 490041;	// The Stone of Ressurection magic ID
 
 		// Is our level high enough to be able to resurrect using this skill?
- 		if (GetLevel() <= 5
+		if (GetLevel() <= 5
 			// Do we have enough resurrection stones?
-			|| !RobItem(379006000, 3 * GetLevel()))
-			return;
+				|| !RobItem(379006000, 3 * GetLevel()))
+				return;
 	}
 
 	// If we're in a home zone, we'll want the coordinates from there. Otherwise, assume our own home zone.

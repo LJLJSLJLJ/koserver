@@ -44,7 +44,7 @@ void CUser::ItemRepair(Packet & pkt)
 		quantity = pTable->m_sDuration - m_sItemArray[sSlot].sDuration;
 	else if( sPos == 2 ) 
 		quantity = pTable->m_sDuration - m_sItemArray[SLOT_MAX+sSlot].sDuration;
-	
+
 	money = (unsigned int)((((pTable->m_iBuyPrice-10) / 10000.0f) + pow((float)pTable->m_iBuyPrice, 0.75f)) * quantity / (double)durability);
 	if (!GoldLose(money, false))
 		goto fail_return;
@@ -305,10 +305,10 @@ void CUser::NpcEvent(Packet & pkt)
 		Send(&result);
 		break;
 
-	/*case NPC_MENU:
+		/*case NPC_MENU:
 		result.SetOpcode(WIZ_QUEST);
 		result	<< uint8(7) << uint16(SendNPCMenu(pNpc->m_sSid))
-				<< uint16(0) << uint16(pNpc->m_sSid);
+		<< uint16(0) << uint16(pNpc->m_sSid);
 		Send(&result);
 		break; */
 
@@ -321,34 +321,34 @@ void CUser::NpcEvent(Packet & pkt)
 	case NPC_RENTAL:
 		result.SetOpcode(WIZ_RENTAL);
 		result	<< uint8(RENTAL_NPC) 
-				<< uint16(1) // 1 = enabled, -1 = disabled 
-				<< pNpc->m_iSellingGroup;
+			<< uint16(1) // 1 = enabled, -1 = disabled 
+			<< pNpc->m_iSellingGroup;
 		Send(&result);
 		break;
 
 	case NPC_ELECTION:
 	case NPC_TREASURY:
-	{
-		CKingSystem * pKingSystem = g_pMain->m_KingSystemArray.GetData(GetNation());
-		result.SetOpcode(WIZ_KING);
-		if (pNpc->GetType() == NPC_ELECTION)
 		{
-			// Ensure this still works as per official without a row in the table.
-			string strKingName = (pKingSystem == nullptr ? "" : pKingSystem->m_strKingName);
-			result.SByte();
-			result	<< uint8(KING_NPC) << strKingName;
-		}
-		else
-		{
-			// Ensure this still works as per official without a row in the table.
-			uint32 nTribute = (pKingSystem == nullptr ? 0 : pKingSystem->m_nTribute + pKingSystem->m_nTerritoryTax);
-			uint32 nTreasury = (pKingSystem == nullptr ? 0 : pKingSystem->m_nNationalTreasury);
-			result	<< uint8(KING_TAX) << uint8(1) // success
+			CKingSystem * pKingSystem = g_pMain->m_KingSystemArray.GetData(GetNation());
+			result.SetOpcode(WIZ_KING);
+			if (pNpc->GetType() == NPC_ELECTION)
+			{
+				// Ensure this still works as per official without a row in the table.
+				string strKingName = (pKingSystem == nullptr ? "" : pKingSystem->m_strKingName);
+				result.SByte();
+				result	<< uint8(KING_NPC) << strKingName;
+			}
+			else
+			{
+				// Ensure this still works as per official without a row in the table.
+				uint32 nTribute = (pKingSystem == nullptr ? 0 : pKingSystem->m_nTribute + pKingSystem->m_nTerritoryTax);
+				uint32 nTreasury = (pKingSystem == nullptr ? 0 : pKingSystem->m_nNationalTreasury);
+				result	<< uint8(KING_TAX) << uint8(1) // success
 					<< uint16(isKing() ? 1 : 2) // 1 enables king-specific stuff (e.g. scepter), 2 is normal user stuff
 					<< nTribute << nTreasury;
-		}
-		Send(&result);
-	} break;
+			}
+			Send(&result);
+		} break;
 
 	case NPC_CAPTAIN:
 		result.SetOpcode(WIZ_CLASS_CHANGE);
@@ -442,8 +442,8 @@ void CUser::ItemTrade(Packet & pkt)
 	if (isTrading()
 		|| (pTable = g_pMain->GetItemPtr(itemid)) == nullptr
 		|| (type == 2 // if we're selling an item...
-				&& (itemid >= ITEM_NO_TRADE // Cannot be traded, sold or stored.
-					|| pTable->m_bRace == RACE_UNTRADEABLE))) // Cannot be traded or sold.
+		&& (itemid >= ITEM_NO_TRADE // Cannot be traded, sold or stored.
+		|| pTable->m_bRace == RACE_UNTRADEABLE))) // Cannot be traded or sold.
 		goto fail_return;
 
 	if (pos >= HAVE_MAX
@@ -553,11 +553,11 @@ send_packet:
 }
 
 /**
- * @brief	Handles the name change response packet
- * 			containing the specified new name.
- *
- * @param	pkt	The packet.
- */
+* @brief	Handles the name change response packet
+* 			containing the specified new name.
+*
+* @param	pkt	The packet.
+*/
 void CUser::HandleNameChange(Packet & pkt)
 {
 	uint8 opcode;
@@ -572,11 +572,11 @@ void CUser::HandleNameChange(Packet & pkt)
 }
 
 /**
- * @brief	Handles the character name change response packet
- * 			containing the specified new character's name.
- *
- * @param	pkt	The packet.
- */
+* @brief	Handles the character name change response packet
+* 			containing the specified new character's name.
+*
+* @param	pkt	The packet.
+*/
 void CUser::HandlePlayerNameChange(Packet & pkt)
 {
 	NameChangeOpcode response = NameChangeSuccess;
@@ -597,21 +597,21 @@ void CUser::HandlePlayerNameChange(Packet & pkt)
 	// Ensure we have the scroll before handling this request.
 	if (!CheckExistItem(ITEM_SCROLL_OF_IDENTITY))
 		return;
-	
+
 	Packet result(WIZ_NAME_CHANGE, uint8(NameChangePlayerRequest));
 	result << strUserID;
 	g_pMain->AddDatabaseRequest(result, this);
 }
 
 /**
- * @brief	Sends a name change packet.
- *
- * @param	opcode	Name change packet opcode.
- * 					NameChangeShowDialog shows the dialog where you can set your name.
- * 					NameChangeSuccess confirms the name was changed.
- * 					NameChangeInvalidName throws an error reporting the name is invalid.
- * 					NameChangeInClan throws an error reporting the user's still in a clan (and needs to leave).
- */
+* @brief	Sends a name change packet.
+*
+* @param	opcode	Name change packet opcode.
+* 					NameChangeShowDialog shows the dialog where you can set your name.
+* 					NameChangeSuccess confirms the name was changed.
+* 					NameChangeInvalidName throws an error reporting the name is invalid.
+* 					NameChangeInClan throws an error reporting the user's still in a clan (and needs to leave).
+*/
 void CUser::SendNameChange(NameChangeOpcode opcode /*= NameChangeShowDialog*/)
 {
 	Packet result(WIZ_NAME_CHANGE, uint8(opcode));
@@ -648,7 +648,7 @@ void CUser::HandleCapeChange(Packet & pkt)
 	// Make sure we're promoted
 	if (!pKnights->isPromoted()
 		// and that if we're in an alliance, we're the primary clan in the alliance.
-		|| (pKnights->isInAlliance() && !pKnights->isAllianceLeader()))
+			|| (pKnights->isInAlliance() && !pKnights->isAllianceLeader()))
 	{
 		sErrorCode = -1;
 		goto fail_return;
@@ -666,7 +666,7 @@ void CUser::HandleCapeChange(Packet & pkt)
 		// Is our clan allowed to use this cape?
 		if ((pCape->byGrade && pKnights->m_byGrade > pCape->byGrade)
 			// not sure if this should use another error, need to confirm
-			|| pKnights->m_byFlag < pCape->byRanking)
+				|| pKnights->m_byFlag < pCape->byRanking)
 		{
 			sErrorCode = -6;
 			goto fail_return;
@@ -717,7 +717,7 @@ void CUser::HandleCapeChange(Packet & pkt)
 		pKnights->m_nClanPointFund -= nReqClanPoints;
 		pKnights->UpdateClanFund();
 	}
-	
+
 	// Are we changing the cape?
 	if (sCapeID >= 0)
 		pKnights->m_sCape = sCapeID;
@@ -731,11 +731,11 @@ void CUser::HandleCapeChange(Packet & pkt)
 	}
 
 	result	<< uint16(1) // success
-			<< pKnights->GetAllianceID()
-			<< pKnights->GetID()
-			<< pKnights->GetCapeID()
-			<< pKnights->m_bCapeR << pKnights->m_bCapeG << pKnights->m_bCapeB
-			<< uint8(0);
+		<< pKnights->GetAllianceID()
+		<< pKnights->GetID()
+		<< pKnights->GetCapeID()
+		<< pKnights->m_bCapeR << pKnights->m_bCapeG << pKnights->m_bCapeB
+		<< uint8(0);
 
 	Send(&result);
 
@@ -749,7 +749,7 @@ void CUser::HandleCapeChange(Packet & pkt)
 	// Now tell Aujard to save (we don't particularly care whether it was able to do so or not).
 	result.Initialize(WIZ_CAPE);
 	result	<< pKnights->GetID() << pKnights->GetCapeID()
-			<< pKnights->m_bCapeR << pKnights->m_bCapeG << pKnights->m_bCapeB;
+		<< pKnights->m_bCapeR << pKnights->m_bCapeG << pKnights->m_bCapeB;
 	g_pMain->AddDatabaseRequest(result, this);
 	return;
 
