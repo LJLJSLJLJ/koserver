@@ -34,7 +34,7 @@ public:
 	static void DonationList(CUser *pUser, Packet & pkt);
 
 	static bool AddKnightsUser(int index, std::string & strUserID);
-	static void AddUserDonatedNP(int index, std::string & strUserID, uint32 nDonatedNP);
+	static void AddUserDonatedNP(int index, std::string & strUserID, uint32 nDonatedNP, bool bIsKillReward = false);
 	static bool RemoveKnightsUser(int index, std::string & strUserID);
 	static bool LoadKnightsIndex(int index);
 	static bool LoadAllKnights();

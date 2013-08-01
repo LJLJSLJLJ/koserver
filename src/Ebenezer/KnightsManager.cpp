@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "KnightsManager.h"
 #include "../shared/tstring.h"
+#include "DBAgent.h"
 
 // TO-DO: Move this to the CUser class.
 void CKnightsManager::PacketProcess(CUser *pUser, Packet & pkt)
@@ -637,11 +638,21 @@ void CKnightsManager::UpdateKnightsGrade(uint16 sClanID, uint8 byFlag)
 	g_pMain->AddDatabaseRequest(result);
 }
 
-void CKnightsManager::AddUserDonatedNP(int index, std::string & strUserID, uint32 nDonatedNP)
+void CKnightsManager::AddUserDonatedNP(int index, std::string & strUserID, uint32 nDonatedNP, bool bIsKillReward)
 {
 	CKnights *pKnights = g_pMain->GetClanPtr(index);
 	if (pKnights == nullptr)
 		return;
+
+	if (bIsKillReward) {
+
+		CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
+		if (pUser == nullptr)
+			return;
+
+		pKnights->m_nClanPointFund += nDonatedNP;
+		g_DBAgent.DonateClanPoints(pUser, nDonatedNP);
+	}
 
 	for (int i = 0; i < MAX_CLAN_USERS; i++)
 	{
