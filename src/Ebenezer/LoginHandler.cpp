@@ -8,11 +8,11 @@ void CUser::VersionCheck(Packet & pkt)
 	int16 unk = pkt.read<int16>(); // -1
 	pkt >> strAccountID;
 	if (strAccountID.empty() || strAccountID.size() > MAX_ID_SIZE)
-		return;
+	return;
 	*/
 
 	result	<< uint8(0) << uint16(__VERSION) << m_crypto.GenerateKey()
-			<< uint8(0); // 0 = success, 1 = prem error
+		<< uint8(0); // 0 = success, 1 = prem error
 	Send(&result);
 
 	// Enable encryption

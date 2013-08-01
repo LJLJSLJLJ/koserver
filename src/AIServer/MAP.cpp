@@ -178,6 +178,17 @@ bool MAP::RegionNpcRemove(int rx, int rz, int nid)
 	return true;
 }
 
+
+CRegion * MAP::GetRegion(uint16 regionX, uint16 regionZ)
+{
+	if (regionX > GetXRegionMax()
+		|| regionZ > GetZRegionMax())
+		return nullptr;
+
+	FastGuard lock(m_lock);
+	return &m_ppRegion[regionX][regionZ];
+}
+
 bool MAP::LoadRoomEvent()
 {
 	uint32		length, count;

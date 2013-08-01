@@ -28,15 +28,15 @@ CKingSystem::CKingSystem()
 }
 
 /**
- * @brief	Handles timed events related to the King system.
- */
+* @brief	Handles timed events related to the King system.
+*/
 void CKingSystem::CheckKingTimer()
 {
 	// Get the current time.
 	uint8	bCurMonth = g_localTime.tm_mon + 1,
-			bCurDay = g_localTime.tm_mday,
-			bCurHour = g_localTime.tm_hour,
-			bCurMinute = g_localTime.tm_min;
+		bCurDay = g_localTime.tm_mday,
+		bCurHour = g_localTime.tm_hour,
+		bCurMinute = g_localTime.tm_min;
 
 	// If there's an ongoing coin or XP event...
 	if (m_byNoahEvent || m_byExpEvent)
@@ -94,8 +94,8 @@ void CKingSystem::CheckKingTimer()
 			m_bSentFirstMessage = false;
 		} break;
 
-	// This state seems like it could be completely removed.
-	// Leaving until the system's more complete, just in case.
+		// This state seems like it could be completely removed.
+		// Leaving until the system's more complete, just in case.
 	case ELECTION_TYPE_PRE_ELECTION:
 		{
 			DateTime dt(m_sYear, m_byMonth, m_byDay, m_byHour, m_byMinute);
@@ -155,7 +155,7 @@ void CKingSystem::CheckKingTimer()
 		} break;
 
 	case 2: // 2 days (48 hours) after the impeachment time, set the impeachment type to 3 
-			// and send IDS_KING_IMPEACHMENT_ELECTION_MESSAGE as WAR_SYSTEM_CHAT
+		// and send IDS_KING_IMPEACHMENT_ELECTION_MESSAGE as WAR_SYSTEM_CHAT
 		{
 			DateTime dt(m_sImYear, m_byImMonth, m_byImDay, m_byImHour, m_byImMinute);
 			dt.AddDays(2);
@@ -170,7 +170,7 @@ void CKingSystem::CheckKingTimer()
 		} break;
 
 	case 3: // 3 days (72 hours) after the impeachment time, set the impeachment type to 4 
-			// and call GetImpeachmentElectionResult()
+		// and call GetImpeachmentElectionResult()
 		{
 			DateTime dt(m_sImYear, m_byImMonth, m_byImDay, m_byImHour, m_byImMinute);
 			dt.AddDays(3);
@@ -187,32 +187,32 @@ void CKingSystem::CheckKingTimer()
 }
 
 /**
- * @brief	Updates the election status.
- *
- * @param	byElectionStatus	The election status.
- */
+* @brief	Updates the election status.
+*
+* @param	byElectionStatus	The election status.
+*/
 void CKingSystem::UpdateElectionStatus(uint8 byElectionStatus)
 {
 	Packet result(WIZ_KING, uint8(KING_ELECTION));
 	result	<< uint8(KING_ELECTION) << uint8(KING_ELECTION_UPDATE_STATUS)
-			<< m_byNation << byElectionStatus;
+		<< m_byNation << byElectionStatus;
 	m_byType = byElectionStatus;
 	g_pMain->AddDatabaseRequest(result);
 }
 
 /**
- * @brief	Updates the election list.
- *
- * @param	byElectionListType	Which list are we referring to?
- * 								1 = ?  
- * 								2 = ?
- * 								3 = senator list
- * 								4 = voted for king list
- * @param	bDeleteList		  	true to delete the list.
- * @param	sClanID			  	Identifier for the clan.
- * @param	strUserID		  	Identifier for the user.
- * @param	pUser				The user making the request, if applicable.
- */
+* @brief	Updates the election list.
+*
+* @param	byElectionListType	Which list are we referring to?
+* 								1 = ?  
+* 								2 = ?
+* 								3 = senator list
+* 								4 = voted for king list
+* @param	bDeleteList		  	true to delete the list.
+* @param	sClanID			  	Identifier for the clan.
+* @param	strUserID		  	Identifier for the user.
+* @param	pUser				The user making the request, if applicable.
+*/
 void CKingSystem::UpdateElectionList(uint8 byElectionListType, bool bDeleteList, uint16 sClanID, std::string & strUserID, CUser * pUser /*= nullptr*/)
 {
 	FastGuard lock(m_lock);
@@ -221,9 +221,9 @@ void CKingSystem::UpdateElectionList(uint8 byElectionListType, bool bDeleteList,
 	Packet result(WIZ_KING, uint8(KING_ELECTION));
 
 	result	<< uint8(KING_ELECTION) // special, looks redundant but implies these special opcodes
-			<< uint8(KING_ELECTION_UPDATE_LIST) << m_byNation 
-			<< byElectionListType << bDeleteList
-			<< sClanID << strUserID;
+		<< uint8(KING_ELECTION_UPDATE_LIST) << m_byNation 
+		<< byElectionListType << bDeleteList
+		<< sClanID << strUserID;
 
 	g_pMain->AddDatabaseRequest(result, pUser);
 
@@ -259,14 +259,14 @@ void CKingSystem::UpdateElectionList(uint8 byElectionListType, bool bDeleteList,
 }
 
 /**
- * @brief	Checks to see if a special (coin/XP) event should end.
- */
+* @brief	Checks to see if a special (coin/XP) event should end.
+*/
 void CKingSystem::CheckSpecialEvent()
 {
 	// Get the current time.
 	uint8	bCurDay = g_localTime.tm_mday,
-			bCurHour = g_localTime.tm_hour,
-			bCurMinute = g_localTime.tm_min;
+		bCurHour = g_localTime.tm_hour,
+		bCurMinute = g_localTime.tm_min;
 
 	int16 sEventExpiry;
 
@@ -325,9 +325,9 @@ void CKingSystem::CheckSpecialEvent()
 }
 
 /**
- * @brief	Generates a list of the top 10 clan leaders eligible to nominate a King.
- * 			NOTE: These players are senators.
- */
+* @brief	Generates a list of the top 10 clan leaders eligible to nominate a King.
+* 			NOTE: These players are senators.
+*/
 void CKingSystem::LoadRecommendList()
 {
 	FastGuard lock(m_lock);
@@ -342,8 +342,8 @@ void CKingSystem::LoadRecommendList()
 		// Ignore this entry if no such clan is ranked #i
 		if (pRating == nullptr
 			// or for whatever reason the clan no longer exists...
-			|| (pKnights = g_pMain->GetClanPtr(pRating->sClanID)) == nullptr)
-			continue;
+				|| (pKnights = g_pMain->GetClanPtr(pRating->sClanID)) == nullptr)
+				continue;
 
 		// Add user as senator.
 		UpdateElectionList(3, false, pRating->sClanID, pKnights->m_strChief);
@@ -373,21 +373,21 @@ void CKingSystem::LoadRecommendList()
 }
 
 /**
- * @brief	This sends the appropriate resource as a notice to the server (or to a particular
- * 			user)
- * 			Beyond initial reversing, this doesn't need to exist -- in fact, not even going to
- * 			use it. It's just a temporary point of reference.
- *
- * @param	nResourceID	Identifier for the resource found in the SERVER_RESOURCE table.
- * @param	byNation   	The nation to send the notice/announcement to.
- * @param	chatType   	The chat type (notice/announcement).
- */
+* @brief	This sends the appropriate resource as a notice to the server (or to a particular
+* 			user)
+* 			Beyond initial reversing, this doesn't need to exist -- in fact, not even going to
+* 			use it. It's just a temporary point of reference.
+*
+* @param	nResourceID	Identifier for the resource found in the SERVER_RESOURCE table.
+* @param	byNation   	The nation to send the notice/announcement to.
+* @param	chatType   	The chat type (notice/announcement).
+*/
 void CKingSystem::KingNotifyMessage(uint32 nResourceID, int byNation, ChatType chatType)
 {
 	std::string result;
 	switch (nResourceID)
 	{
-	//	Resource ID (SERVER_RESOURCE)						// ID used internally (officially)
+		//	Resource ID (SERVER_RESOURCE)						// ID used internally (officially)
 	case IDS_KING_RECOMMEND_TIME:							// 1 (none)
 	case IDS_KING_RECOMMEND_FINISH_TIME:					// 2 (none)
 	case IDS_KING_ELECTION_TIME:							// 3 (none)
@@ -427,11 +427,11 @@ void CKingSystem::KingNotifyMessage(uint32 nResourceID, int byNation, ChatType c
 }
 
 /**
- * @brief	Wrapper for the King system's packet handler.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Wrapper for the King system's packet handler.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::PacketProcess(CUser * pUser, Packet & pkt)
 {
 	if (pUser == nullptr)
@@ -444,11 +444,11 @@ void CKingSystem::PacketProcess(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	The real packet handler for the King system.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	The real packet handler for the King system.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::KingPacketProcess(CUser * pUser, Packet & pkt)
 {
 	switch (pkt.read<uint8>())
@@ -475,11 +475,11 @@ void CKingSystem::KingPacketProcess(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	Election system.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Election system.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::ElectionSystem(CUser * pUser, Packet & pkt)
 {
 	switch (pkt.read<uint8>())
@@ -507,11 +507,11 @@ void CKingSystem::ElectionSystem(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	"Check election day" button at the election NPC
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	"Check election day" button at the election NPC
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::ElectionScheduleConfirmation(CUser * pUser, Packet & pkt)
 {
 	Packet result(WIZ_KING, uint8(KING_ELECTION));
@@ -520,7 +520,7 @@ void CKingSystem::ElectionScheduleConfirmation(CUser * pUser, Packet & pkt)
 	switch (m_byImType)
 	{
 		// No impeachment, send election date.
-		case 0:
+	case 0:
 		{
 			// Client expects month as 1,12 (tm_mon is 0,11)
 			uint8 byElectionMonth = g_localTime.tm_mon + 1;
@@ -537,20 +537,20 @@ void CKingSystem::ElectionScheduleConfirmation(CUser * pUser, Packet & pkt)
 			}
 
 			result	<< uint8(1) // election type
-					<< byElectionMonth 
-					<< m_byDay << m_byHour << m_byMinute;
+				<< byElectionMonth 
+				<< m_byDay << m_byHour << m_byMinute;
 		} break;
 
 		// Last scheduled impeachment?
-		case 1:
+	case 1:
 		{
 			result	<< uint8(3)
-					<< m_byImMonth 
-					<< m_byImDay << m_byImHour << m_byImMinute;
+				<< m_byImMonth 
+				<< m_byImDay << m_byImHour << m_byImMinute;
 		} break;
 
 		// Next impeachment?
-		case 3:
+	case 3:
 		{
 			// This should not be necessary, but will leave.
 			uint8 byImpeachmentMonth = m_byImMonth;
@@ -558,24 +558,24 @@ void CKingSystem::ElectionScheduleConfirmation(CUser * pUser, Packet & pkt)
 				m_byImMonth -= 12;
 
 			result	<< uint8(2)
-					<< byImpeachmentMonth
-					<< m_byImDay << m_byImHour << m_byImMinute;
+				<< byImpeachmentMonth
+				<< m_byImDay << m_byImHour << m_byImMinute;
 		} break;
 
-		default:
-			return;
+	default:
+		return;
 	}
 
 	pUser->Send(&result);
 }
 
 /**
- * @brief	Handles King candidacy recommendations by 
- * 			leaders of top 10 clans.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Handles King candidacy recommendations by 
+* 			leaders of top 10 clans.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::CandidacyRecommend(CUser * pUser, Packet & pkt) 
 {
 	Packet result(WIZ_KING, uint8(KING_ELECTION));
@@ -600,9 +600,9 @@ void CKingSystem::CandidacyRecommend(CUser * pUser, Packet & pkt)
 	// Make sure the user nominating a King is a clan leader
 	if (!pUser->isClanLeader()
 		// ... of a top 10 clan.
-		|| m_top10ClanSet.find(pUser->GetClanID()) == m_top10ClanSet.end()
-		// ... and they haven't resigned their candidacy.
-		|| m_resignedCandidateList.find(pUser->m_strUserID) != m_resignedCandidateList.end())
+			|| m_top10ClanSet.find(pUser->GetClanID()) == m_top10ClanSet.end()
+			// ... and they haven't resigned their candidacy.
+			|| m_resignedCandidateList.find(pUser->m_strUserID) != m_resignedCandidateList.end())
 	{
 		result << int16(-3);
 		pUser->Send(&result);
@@ -615,10 +615,10 @@ void CKingSystem::CandidacyRecommend(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	Inserts the nominated candidate to the election list.
- *
- * @param	strNominee	The nominee.
- */
+* @brief	Inserts the nominated candidate to the election list.
+*
+* @param	strNominee	The nominee.
+*/
 void CKingSystem::InsertNominee(std::string & strNominee)
 {
 	FastGuard lock(m_lock);
@@ -645,11 +645,11 @@ void CKingSystem::InsertNominee(std::string & strNominee)
 }
 
 /**
- * @brief	Candidacy notice board system.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Candidacy notice board system.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 {
 	Packet result(WIZ_KING, uint8(KING_ELECTION));
@@ -660,7 +660,7 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 
 	switch (opcode)
 	{
-	// Write to the candidacy noticeboard
+		// Write to the candidacy noticeboard
 	case KING_CANDIDACY_BOARD_WRITE:
 		{
 			if (m_byType != ELECTION_TYPE_NOMINATION 
@@ -714,7 +714,7 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 			g_pMain->AddDatabaseRequest(result, pUser);
 		} return;
 
-	// Read from the candidacy noticeboard
+		// Read from the candidacy noticeboard
 	case KING_CANDIDACY_BOARD_READ:
 		{ 
 			if (m_byType != ELECTION_TYPE_NOMINATION 
@@ -734,7 +734,7 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 			{
 				FastGuard lock(m_lock);
 				result	<< int16(1) // success
-						<< uint8(m_noticeBoardMap.size());
+					<< uint8(m_noticeBoardMap.size());
 
 				result.SByte();
 				foreach (itr, m_noticeBoardMap)
@@ -753,7 +753,7 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 				KingCandidacyNoticeBoardMap::iterator itr = m_noticeBoardMap.find(strCandidate);
 				if (itr == m_noticeBoardMap.end()
 					// and is the message actually set?
-					|| itr->second.empty())
+						|| itr->second.empty())
 				{
 					result	<< int16(-2);
 					/*
@@ -761,14 +761,14 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 					// client reason to explain this.
 					result.DByte();
 					result	<< strCandidate 
-							<< <name of last user on notice board>;
+					<< <name of last user on notice board>;
 					*/
 				}
 				else
 				{
 					result.DByte();
 					result	<< int16(1) // success
-							<< strCandidate << itr->second;
+						<< strCandidate << itr->second;
 				}
 			}
 
@@ -790,9 +790,9 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 		break;
 
 	case 5:
-			if (m_byType == ELECTION_TYPE_NOMINATION 
-				|| m_byType == ELECTION_TYPE_PRE_ELECTION
-				|| m_byType == ELECTION_TYPE_ELECTION)
+		if (m_byType == ELECTION_TYPE_NOMINATION 
+			|| m_byType == ELECTION_TYPE_PRE_ELECTION
+			|| m_byType == ELECTION_TYPE_ELECTION)
 			bSuccess = true;
 		break;
 
@@ -809,11 +809,11 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	Election poll.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Election poll.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::ElectionPoll(CUser * pUser, Packet & pkt)
 {
 	Packet result(WIZ_KING, uint8(KING_ELECTION));
@@ -833,7 +833,7 @@ void CKingSystem::ElectionPoll(CUser * pUser, Packet & pkt)
 	FastGuard lock(m_lock);
 	switch (opcode)
 	{
-	// Show candidate list
+		// Show candidate list
 	case 1:
 		{
 			uint8 count = (uint8)m_candidateList.size();
@@ -851,7 +851,7 @@ void CKingSystem::ElectionPoll(CUser * pUser, Packet & pkt)
 			pUser->Send(&result);
 		} break;
 
-	// Vote for candidate
+		// Vote for candidate
 	case 2:
 		{
 			std::string strCandidate;
@@ -878,20 +878,20 @@ void CKingSystem::ElectionPoll(CUser * pUser, Packet & pkt)
 			}
 
 			UpdateElectionList(	4,						// voted for King
-								false,					// registering our vote, not deleting.
-								itr->second->sKnights,	// clan ID
-								strCandidate,			// candidate's name
-								pUser);					// us, glorious us (so that it can let us know what happened with the request)
+				false,					// registering our vote, not deleting.
+				itr->second->sKnights,	// clan ID
+				strCandidate,			// candidate's name
+				pUser);					// us, glorious us (so that it can let us know what happened with the request)
 		} break;
 	}
 }
 
 /**
- * @brief	Handles candidate resignations.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Handles candidate resignations.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::CandidacyResign(CUser * pUser, Packet & pkt) 
 {
 	Packet result(WIZ_KING, uint8(KING_ELECTION));
@@ -930,11 +930,11 @@ void CKingSystem::CandidacyResign(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	Impeachment system.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Impeachment system.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::ImpeachmentSystem(CUser * pUser, Packet & pkt)
 {
 	switch (pkt.read<uint8>())
@@ -971,11 +971,11 @@ void CKingSystem::ImpeachmentList(CUser * pUser, Packet & pkt) {}
 void CKingSystem::ImpeachmentElect(CUser * pUser, Packet & pkt) {}
 
 /**
- * @brief	Attempt to open the impeachment request UI.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Attempt to open the impeachment request UI.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::ImpeachmentRequestUiOpen(CUser * pUser, Packet & pkt) 
 {
 	Packet result(WIZ_KING, uint8(KING_IMPEACHMENT));
@@ -995,11 +995,11 @@ void CKingSystem::ImpeachmentRequestUiOpen(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	Attempt to open the impeachment election UI.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Attempt to open the impeachment election UI.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::ImpeachmentElectionUiOpen(CUser * pUser, Packet & pkt)
 {
 	Packet result(WIZ_KING, uint8(KING_IMPEACHMENT));
@@ -1007,17 +1007,17 @@ void CKingSystem::ImpeachmentElectionUiOpen(CUser * pUser, Packet & pkt)
 	// If it's not the impeachment's election stage, send -1 as the error code
 	// otherwise, send 1 for success.
 	result	<< uint8(KING_IMPEACHMENT_ELECTION_UI_OPEN)
-			<< int16(m_byImType != 3 ? -1 : 1);
+		<< int16(m_byImType != 3 ? -1 : 1);
 
 	pUser->Send(&result);
 }
 
 /**
- * @brief	King tax system.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	King tax system.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::KingTaxSystem(CUser * pUser, Packet & pkt)
 {
 	Packet result(WIZ_KING, uint8(KING_TAX));
@@ -1035,11 +1035,11 @@ void CKingSystem::KingTaxSystem(CUser * pUser, Packet & pkt)
 	switch (bOpcode)
 	{
 		// Collect King's fund
-		case 2:
-			break;
+	case 2:
+		break;
 
 		// Lookup the tariff
-		case 3:
+	case 3:
 		{
 			C3DMap * pMap = g_pMain->GetZoneByID(m_byNation);
 			if (pMap == nullptr)
@@ -1050,7 +1050,7 @@ void CKingSystem::KingTaxSystem(CUser * pUser, Packet & pkt)
 		} break;
 
 		// Update the tariff
-		case 4:
+	case 4:
 		{
 			C3DMap * pMap = g_pMain->GetZoneByID(m_byNation);
 			uint8 byTerritoryTariff = pkt.read<uint8>();
@@ -1076,7 +1076,7 @@ void CKingSystem::KingTaxSystem(CUser * pUser, Packet & pkt)
 		} break;
 
 		// King's scepter / "unnecessary translation"
-		case 7:
+	case 7:
 		{
 			if (pUser->CheckExistItem(KING_SCEPTER))
 			{
@@ -1097,11 +1097,11 @@ void CKingSystem::KingTaxSystem(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	Handles commands accessible to the King.
- *
- * @param	pUser	The user sending the packet.
- * @param	pkt  	The packet.
- */
+* @brief	Handles commands accessible to the King.
+*
+* @param	pUser	The user sending the packet.
+* @param	pkt  	The packet.
+*/
 void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 {
 	Packet result(WIZ_KING, uint8(KING_EVENT));
@@ -1153,7 +1153,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 			result << m_byNation << bAmount << m_byNoahEvent_Day << m_byNoahEvent_Hour << m_byNoahEvent_Minute << m_sNoahEvent_Duration;
 			g_pMain->AddDatabaseRequest(result);
 		} break;
-		
+
 	case KING_EVENT_EXP: // EXP event
 		{
 			FastGuard lock(m_lock);
@@ -1199,7 +1199,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 			std::string strUserID;
 			pkt.SByte();
 			pkt >> nCoins >> strUserID;
-			
+
 			// If the user submitted invalid input, chances are 
 			// the coins will end up 0. We can safely ignore it.
 			if (nCoins == 0)
@@ -1207,9 +1207,9 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 
 			CUser * pTUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
 			if (pTUser == nullptr	// this session check isn't official behaviour
-								// as they try to handle offline users -
-								// note the 'try' (it doesn't work properly)...
-				|| strUserID.empty() || strUserID.length() > MAX_ID_SIZE)
+				// as they try to handle offline users -
+					// note the 'try' (it doesn't work properly)...
+						|| strUserID.empty() || strUserID.length() > MAX_ID_SIZE)
 			{
 				result << int16(-2);
 				pUser->Send(&result);
@@ -1229,7 +1229,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 			// (awarded %s %d coins)
 			g_pMain->SendFormattedResource(m_byNation == KARUS ? IDS_KING_KARUS_PRIZE_EVENT_MESSAGE : IDS_KING_ELMO_PRIZE_EVENT_MESSAGE,
 				m_byNation, false, pTUser->m_strUserID.c_str(), nCoins);
-				
+
 			// TO-DO: Update other servers via UDP
 
 			// Update the database
@@ -1276,8 +1276,8 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 			// This works because they're sequential.
 			uint32 nResourceID = 
 				(m_byNation == KARUS 
-					? IDS_KING_KARUS_WEATHER_FINE_EVENT + (bType-1) 
-					: IDS_KING_ELMO_WEATHER_FINE_EVENT  + (bType-1));
+				? IDS_KING_KARUS_WEATHER_FINE_EVENT + (bType-1) 
+				: IDS_KING_ELMO_WEATHER_FINE_EVENT  + (bType-1));
 
 			g_pMain->SendFormattedResource(nResourceID, m_byNation, false);
 		} break;
@@ -1298,8 +1298,8 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 }
 
 /**
- * @brief	Resets the election lists.
- */
+* @brief	Resets the election lists.
+*/
 void CKingSystem::ResetElectionLists()
 {
 	FastGuard lock(m_lock);

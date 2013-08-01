@@ -118,9 +118,9 @@ void CUser::ExchangeAdd(Packet & pkt)
 	_ITEM_TABLE *pTable = g_pMain->GetItemPtr(nItemID);
 	if (pTable == nullptr
 		|| (nItemID != ITEM_GOLD 
-			&& (pos >= HAVE_MAX // Invalid position
-				|| nItemID >= ITEM_NO_TRADE // Cannot be traded, stored or sold.
-				|| pTable->m_bRace == RACE_UNTRADEABLE)) // Cannot be traded or sold.
+		&& (pos >= HAVE_MAX // Invalid position
+		|| nItemID >= ITEM_NO_TRADE // Cannot be traded, stored or sold.
+		|| pTable->m_bRace == RACE_UNTRADEABLE)) // Cannot be traded or sold.
 		|| m_bExchangeOK)
 		goto add_fail;
 
@@ -165,7 +165,7 @@ void CUser::ExchangeAdd(Packet & pkt)
 		}
 
 		pSrcItem->sCount -= count;
-	
+
 		duration = pSrcItem->sDuration;
 		nSerialNum = pSrcItem->nSerialNum;
 	}
@@ -200,7 +200,7 @@ void CUser::ExchangeAdd(Packet & pkt)
 	result.clear();
 
 	result << uint8(EXCHANGE_OTHERADD)
-			<< nItemID << count << duration;
+		<< nItemID << count << duration;
 	pUser->Send(&result);
 	return;
 
@@ -245,28 +245,28 @@ void CUser::ExchangeDecide()
 
 		Packet result(WIZ_EXCHANGE);
 		result << uint8(EXCHANGE_DONE) << uint8(1)
-				<< GetCoins()
-				<< uint16(pUser->m_ExchangeItemList.size());
+			<< GetCoins()
+			<< uint16(pUser->m_ExchangeItemList.size());
 
 		foreach (itr, pUser->m_ExchangeItemList)
 		{
 			result	<< (*itr)->bDstPos << (*itr)->nItemID
-					<< uint16((*itr)->nCount) << (*itr)->sDurability
-					<< uint32(0); //Unknown, , maybe serial?
+				<< uint16((*itr)->nCount) << (*itr)->sDurability
+				<< uint32(0); //Unknown, , maybe serial?
 		}
 		Send(&result);
 
 		result.clear();
 
 		result << uint8(EXCHANGE_DONE) << uint8(1)
-				<< pUser->GetCoins()
-				<< uint16(m_ExchangeItemList.size());
+			<< pUser->GetCoins()
+			<< uint16(m_ExchangeItemList.size());
 
 		foreach (itr, m_ExchangeItemList)
 		{
 			result	<< (*itr)->bDstPos << (*itr)->nItemID
-					<< uint16((*itr)->nCount) << (*itr)->sDurability
-					<< uint32(0); //Unknown, maybe serial?
+				<< uint16((*itr)->nCount) << (*itr)->sDurability
+				<< uint32(0); //Unknown, maybe serial?
 		}
 		pUser->Send(&result);
 
@@ -329,11 +329,11 @@ void CUser::InitExchange(bool bStart)
 }
 
 /**
- * @brief	Determines if a trade will be successful.
- * 			If it's successful, we can exchange the items.
- *
- * @return	true if it succeeds, false if it fails.
- */
+* @brief	Determines if a trade will be successful.
+* 			If it's successful, we can exchange the items.
+*
+* @return	true if it succeeds, false if it fails.
+*/
 bool CUser::CheckExchange()
 {
 	uint32 money = 0;
@@ -421,7 +421,7 @@ bool CUser::ExecuteExchange()
 
 		if (pDstItem->sCount > MAX_ITEM_COUNT)
 			pDstItem->sCount = MAX_ITEM_COUNT;
-	
+
 		pDstItem->sDuration = pSrcItem->sDuration;
 		pDstItem->nSerialNum = pSrcItem->nSerialNum;
 

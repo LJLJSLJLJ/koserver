@@ -12,17 +12,17 @@ void CGameEvent::RunEvent(CUser *pUser)
 {
 	switch (m_bType)
 	{
-		case ZONE_CHANGE:
-			if (pUser->m_bWarp)
-				break;
-			pUser->ZoneChange( m_iExec[0], (float)m_iExec[1], (float)m_iExec[2] );
+	case ZONE_CHANGE:
+		if (pUser->m_bWarp)
 			break;
-		case ZONE_TRAP_DEAD:
+		pUser->ZoneChange( m_iExec[0], (float)m_iExec[1], (float)m_iExec[2] );
+		break;
+	case ZONE_TRAP_DEAD:
 		//	TRACE("&&& User - zone trap dead ,, name=%s\n", pUser->GetName().c_str());
 		//	pUser->Dead();
-			break;	
-		case ZONE_TRAP_AREA:
-			pUser->TrapProcess();
-			break;
+		break;	
+	case ZONE_TRAP_AREA:
+		pUser->TrapProcess();
+		break;
 	}
 }

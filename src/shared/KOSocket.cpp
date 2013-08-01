@@ -113,10 +113,10 @@ bool KOSocket::DecryptPacket(uint8 *in_stream, Packet & pkt)
 		// Invalid packet (all encrypted packets need a CRC32 checksum!)
 		if (m_remaining < 4 
 			// Invalid checksum 
-			|| m_crypto.JvDecryptionWithCRC32(m_remaining, in_stream, in_stream) < 0 
-			// Invalid sequence ID
-			|| ++m_sequence != *(uint32 *)(in_stream)) 
-			return false;
+				|| m_crypto.JvDecryptionWithCRC32(m_remaining, in_stream, in_stream) < 0 
+				// Invalid sequence ID
+				|| ++m_sequence != *(uint32 *)(in_stream)) 
+				return false;
 
 		m_remaining -= 8; // remove the sequence ID & CRC checksum
 		final_packet = &in_stream[4];

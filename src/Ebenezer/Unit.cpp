@@ -315,7 +315,6 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 		result = GetHitRate(m_fTotalHitrate / pTarget->m_fTotalEvasionrate);
 	}
 
-
 	switch (result)
 	{						// 1. Magical item damage....
 	case GREAT_SUCCESS:
@@ -332,15 +331,15 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 		}
 		else
 		{	// Normal Hit.	
-			damage = temp_hit_B;
-			random = myrand(0, damage);
-			damage = (short)((0.85f * temp_hit_B) + 0.3f * random);
-
 			if (isGM() && !pTarget->isPlayer())
 			{
 				damage = 30000;
 				return damage;
 			}
+
+			damage = temp_hit_B;
+			random = myrand(0, damage);
+			damage = (short)((0.85f * temp_hit_B) + 0.3f * random);
 		}		
 
 		break;
@@ -842,22 +841,16 @@ void Unit::OnDeath(Unit *pKiller)
 
 void Unit::SendDeathAnimation(Unit * pKiller /*= nullptr*/)
 {
-	try{
 #ifdef EBENEZER
-		Packet result(WIZ_DEAD);
-		result << GetID();
-		SendToRegion(&result);
+	Packet result(WIZ_DEAD);
+	result << GetID();
+	SendToRegion(&result);
 #else
-		Packet result(AG_DEAD);
-		int16 tid = (pKiller == nullptr ? -1 : pKiller->GetID());
-		result << GetID() << pKiller->GetID();
-		g_pMain->Send(&result);
+	Packet result(AG_DEAD);
+	int16 tid = (pKiller == nullptr ? -1 : pKiller->GetID());
+	result << GetID() << pKiller->GetID();
+	g_pMain->Send(&result);
 #endif
-	}
-	catch (std::exception & ex)
-	{
-		printf("Exception occurred: %s\n", ex.what());
-	}
 }
 
 void Unit::AddType4Buff(uint8 bBuffType, _BUFF_TYPE4_INFO & pBuffInfo)

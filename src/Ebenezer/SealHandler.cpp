@@ -23,10 +23,10 @@ enum SealErrorCodes
 };
 
 /**
- * @brief	Packet handler for the item sealing system.
- *
- * @param	pkt	The packet.
- */
+* @brief	Packet handler for the item sealing system.
+*
+* @param	pkt	The packet.
+*/
 void CUser::ItemSealProcess(Packet & pkt)
 {
 	// Seal type
@@ -38,7 +38,7 @@ void CUser::ItemSealProcess(Packet & pkt)
 	switch (opcode)
 	{
 		// Used when sealing an item.
-		case SEAL_TYPE_SEAL:
+	case SEAL_TYPE_SEAL:
 		{
 			string strPasswd;
 			uint32 nItemID; 
@@ -47,18 +47,18 @@ void CUser::ItemSealProcess(Packet & pkt)
 			pkt >> unk0 >> nItemID >> bSrcPos >> strPasswd;
 
 			/* 
-				Most of these checks are handled client-side, so we shouldn't need to provide error messages.
-				Also, item sealing requires certain premium types (gold, platinum, etc) - need to double-check 
-				these before implementing this check.
+			Most of these checks are handled client-side, so we shouldn't need to provide error messages.
+			Also, item sealing requires certain premium types (gold, platinum, etc) - need to double-check 
+			these before implementing this check.
 			*/
 
 			// is this a valid position? (need to check if it can be taken from new slots)
 			if (bSrcPos >= HAVE_MAX 
 				// does the item exist where the client says it does?
-				|| GetItem(SLOT_MAX + bSrcPos)->nNum != nItemID
-				// i ain't be allowin' no stealth items to be sealed!
-				|| GetItem(SLOT_MAX + bSrcPos)->nSerialNum == 0)
-				bResponse = SealErrorFailed;
+					|| GetItem(SLOT_MAX + bSrcPos)->nNum != nItemID
+					// i ain't be allowin' no stealth items to be sealed!
+					|| GetItem(SLOT_MAX + bSrcPos)->nSerialNum == 0)
+					bResponse = SealErrorFailed;
 			// is the password valid by client limits?
 			else if (strPasswd.empty() || strPasswd.length() > 8)
 				bResponse = SealErrorInvalidCode;
@@ -91,7 +91,7 @@ void CUser::ItemSealProcess(Packet & pkt)
 		} break;
 
 		// Used when unsealing an item.
-		case SEAL_TYPE_UNSEAL:
+	case SEAL_TYPE_UNSEAL:
 		{
 			string strPasswd;
 			uint32 nItemID; 
@@ -123,7 +123,7 @@ void CUser::ItemSealProcess(Packet & pkt)
 		} break;
 
 		// Used when binding a Krowaz item (used to take it from not bound -> bound)
-		case SEAL_TYPE_KROWAZ:
+	case SEAL_TYPE_KROWAZ:
 		{
 			string strPasswd = "0"; //Dummy, not actually used.
 			uint32 nItemID;
@@ -153,26 +153,26 @@ void CUser::SealItem(uint8 bSealType, uint8 bSrcPos)
 
 	switch (bSealType)
 	{
-		case SEAL_TYPE_SEAL:
-			pItem->bFlag = ITEM_FLAG_SEALED;
-			GoldLose(ITEM_SEAL_PRICE);
-			break;
+	case SEAL_TYPE_SEAL:
+		pItem->bFlag = ITEM_FLAG_SEALED;
+		GoldLose(ITEM_SEAL_PRICE);
+		break;
 
-		case SEAL_TYPE_UNSEAL:
-			pItem->bFlag = 0;
-			break;
+	case SEAL_TYPE_UNSEAL:
+		pItem->bFlag = 0;
+		break;
 
-		case SEAL_TYPE_KROWAZ:
-			pItem->bFlag = ITEM_FLAG_BOUND;
-			break;
+	case SEAL_TYPE_KROWAZ:
+		pItem->bFlag = ITEM_FLAG_BOUND;
+		break;
 	}
 }
 
 /**
- * @brief	Packet handler for the character sealing system.
- *
- * @param	pkt	The packet.
- */
+* @brief	Packet handler for the character sealing system.
+*
+* @param	pkt	The packet.
+*/
 void CUser::CharacterSealProcess(Packet & pkt)
 {
 }
