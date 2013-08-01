@@ -23,7 +23,7 @@ void CUser::Attack(Packet & pkt)
 
 	// If you're holding a weapon, do a client-based (ugh, do not trust!) delay check.
 	_ITEM_TABLE *pTable = GetItemPrototype(RIGHTHAND);
-	if (pTable != nullptr) 
+	if (pTable != nullptr && !isMage()) 
 	{
 		if (delaytime < (pTable->m_sDelay + 10) // client adds 0.1 onto the interval (0.1 of 100 is 10)
 			|| distance > pTable->m_sRange)
