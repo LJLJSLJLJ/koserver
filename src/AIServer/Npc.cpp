@@ -2193,9 +2193,10 @@ time_t CNpc::Attack()
 			nRandom = myrand(1, 10000);
 			if (nRandom < nPercent)	
 			{
-				CNpcMagicProcess::MagicPacket(MAGIC_EFFECTING, m_proto->m_iMagic1, GetID(), pUser->GetID());
-				printf("LongAndMagicAttack --- sid=%d, tid=%d\n", GetID(), pUser->GetID());
-				return m_sAttackDelay;
+				//CNpcMagicProcess::MagicPacket(MAGIC_EFFECTING, m_proto->m_iMagic1, GetID(), pUser->GetID());
+				//printf("LongAndMagicAttack --- sid=%d, tid=%d\n", GetID(), pUser->GetID());
+				//return m_sAttackDelay;
+				return 3000;
 			}
 		}
 

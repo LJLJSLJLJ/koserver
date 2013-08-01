@@ -3997,13 +3997,20 @@ void CUser::OnDeath(Unit *pKiller)
 	{
 		if (pKiller->isNPC())
 		{
+			int64 nExpLost = 0;
+
 			CNpc *pNpc = TO_NPC(pKiller);
-			if (pNpc->GetType() == NPC_PATROL_GUARD
-				|| (GetZoneID() != GetNation() && GetZoneID() <= ELMORAD))
-				ExpChange(-m_iMaxExp / 100);
+			if (pNpc->GetType() == NPC_PATROL_GUARD || (GetZoneID() != GetNation() && GetZoneID() <= ELMORAD))
+				nExpLost = m_iMaxExp / 100;
 			else
-				ExpChange(-m_iMaxExp / 20);
+				nExpLost = m_iMaxExp / 20;
+
+			if (m_bPremiumType != 0)
+				nExpLost = nExpLost * (g_pMain->m_PremiumItemArray.GetData(m_bPremiumType)->ExpRestorePercent) / 100;
+
+			ExpChange(-nExpLost);
 		}
+
 		else
 		{
 			CUser *pUser = TO_USER(pKiller);
