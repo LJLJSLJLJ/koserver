@@ -413,6 +413,12 @@ void CAISocket::RecvNpcGiveItem(Packet & pkt)
 				if (sCount[i] + coinAmount > USHRT_MAX)
 					coinAmount = USHRT_MAX;
 
+				pUser = g_pMain->GetUserPtr(sUid);
+
+				if (pUser != nullptr) 
+					if (pUser->m_bPremiumType != 0)
+						coinAmount = coinAmount * (100 + g_pMain->m_CPremiumItemArray.GetData(pUser->m_bPremiumType)->NoahPercent) / 100;
+
 				pItem.sCount = coinAmount;
 			}
 
@@ -426,7 +432,6 @@ void CAISocket::RecvNpcGiveItem(Packet & pkt)
 		return;
 	}
 
-	pUser = g_pMain->GetUserPtr(sUid);
 	if (pUser == nullptr) 
 		return;
 

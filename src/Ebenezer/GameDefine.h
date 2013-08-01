@@ -586,6 +586,19 @@ struct _RENTAL_ITEM
 	std::string strBorrowerCharID;
 };
 
+struct _PREMIUM_ITEM
+{
+	uint8	Type;
+	uint16	ExpPercentLevelBefore55;
+	uint16	ExpPercentLevelAfter55;
+	uint16	ExpPercentDeath;
+	uint16	NoahPercent;
+	uint16	DropPercent;
+	uint32	BonusLoyalty;
+	uint16	RepairDiscountPercent;
+	uint16	ItemSellPercent;
+};
+
 enum BuffType
 {
 	BUFF_TYPE_NONE					= 0,

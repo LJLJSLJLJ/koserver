@@ -788,6 +788,8 @@ COMMAND_HANDLER(CEbenezerDlg::HandleReloadTablesCommand)
 	g_pMain->m_UserPersonalRankMap.clear();
 	g_pMain->m_UserKnightsRankMap.clear();
 	g_pMain->LoadUserRankings();
+	g_pMain->m_CPremiumItemArray.DeleteAllData();
+	g_pMain->LoadPremiumItemTable();
 
 	return true;
 }

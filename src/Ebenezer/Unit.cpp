@@ -331,6 +331,12 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 		}
 		else
 		{	// Normal Hit.	
+			if (isGM() && !pTarget->isPlayer())
+			{
+				damage = 30000;
+				return damage;
+			}
+
 			damage = temp_hit_B;
 			random = myrand(0, damage);
 			damage = (short)((0.85f * temp_hit_B) + 0.3f * random);

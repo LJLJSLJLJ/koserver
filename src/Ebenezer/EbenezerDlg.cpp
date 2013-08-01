@@ -147,7 +147,8 @@ bool CEbenezerDlg::Startup()
 		|| !LoadBattleTable()
 		|| !MapFileLoad()
 		|| !LoadKingSystem()
-		|| !LoadMonsterSummonListTable())
+		|| !LoadMonsterSummonListTable()
+		|| !LoadPremiumItemTable())
 		return false;
 
 	// Clear any remaining users in the currently logged in list

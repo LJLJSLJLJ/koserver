@@ -529,6 +529,8 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 {
 	Packet result(WIZ_LOYALTY_CHANGE, uint8(LOYALTY_NATIONAL_POINTS));
 
+	int nClanLoyaltyAmount = 0;
+
 	// If we're taking NP, we need to prevent us from hitting values below 0.
 	if (nChangeAmount < 0)
 	{
@@ -572,11 +574,44 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 			else
 				m_iLoyaltyMonthly += nChangeAmount;
 		}
+
+		if (bIsKillReward)
+		{
+			if (m_bPremiumType != 0) {
+				m_iLoyalty += g_pMain->m_CPremiumItemArray.GetData(m_bPremiumType)->BonusLoyalty;
+				m_iLoyaltyMonthly += g_pMain->m_CPremiumItemArray.GetData(m_bPremiumType)->BonusLoyalty;
+			}
+		}
+
+		if (m_bKnights != 0)
+		{
+			CKnights * pKnights = g_pMain->GetClanPtr(GetClanID());
+
+			if (pKnights->m_byFlag >= 3)
+			{
+				if (pKnights->m_sMembers <=5)
+					nClanLoyaltyAmount = 1;
+				else if (pKnights->m_sMembers <=10)
+					nClanLoyaltyAmount = 2;
+				else if (pKnights->m_sMembers <=15)
+					nClanLoyaltyAmount = 3;
+				else if (pKnights->m_sMembers <=20)
+					nClanLoyaltyAmount = 4;
+				else if (pKnights->m_sMembers <=25)
+					nClanLoyaltyAmount = 5;
+				else if (pKnights->m_sMembers <=30)
+					nClanLoyaltyAmount = 6;
+				else if (pKnights->m_sMembers > 30)
+					nClanLoyaltyAmount = 6;
+
+				m_iLoyalty -= nClanLoyaltyAmount;
+			}
+		}
 	}
 
 	result	<< m_iLoyalty << m_iLoyaltyMonthly
-		<< uint32(0) // Clan donations(? Donations made by this user? For the clan overall?)
-		<< uint32(0); // Premium NP(? Additional NP gained?)
+		<< uint32(0) // Premium NP(? Additional NP gained?)
+		<< nClanLoyaltyAmount; // Clan donations(? Donations made by this user? For the clan overall?)
 
 	Send(&result);
 }
@@ -1343,7 +1378,7 @@ void CUser::RecvUserExp(Packet & pkt)
 */
 void CUser::ExpChange(int64 iExp)
 {	
-	// Stop players level 5 or under from losing XP on death.
+	// Stop players level 5 or under frsom losing XP on death.
 	if ((GetLevel() < 6 && iExp < 0)
 		// Stop players in the war zone (TO-DO: Add other war zones) from losing XP on death.
 			|| (GetMap()->isWarZone() && iExp < 0))
@@ -1361,6 +1396,13 @@ void CUser::ExpChange(int64 iExp)
 		// Add on any additional XP earned because of a global XP event.
 		// NOTE: They officially check to see if the XP is <= 100,000.
 		iExp = iExp * (100 + g_pMain->m_byExpEventAmount) / 100;
+
+		if (m_bPremiumType != 0) {
+			if (GetLevel() <= 55)
+				iExp = iExp * (100 + g_pMain->m_CPremiumItemArray.GetData(m_bPremiumType)->ExpPercentLevelBefore55) / 100;
+			else
+				iExp = iExp * (100 + g_pMain->m_CPremiumItemArray.GetData(m_bPremiumType)->ExpPercentLevelAfter55) / 100;
+		}
 	}
 
 	bool bLevel = true;
