@@ -53,11 +53,11 @@ INLINE void* allocate_and_copy(uint32 len, void * pointer)
 
 #define init_command_table(t, command_table, command_map) \
 	for (int i = 0; i < sizeof(command_table) / sizeof(*command_table); i++) \
-		command_map.insert(std::make_pair(command_table[i].Name, (Command<t> *)(allocate_and_copy(sizeof(*command_table), (void *)&command_table[i]))));
+	command_map.insert(std::make_pair(command_table[i].Name, (Command<t> *)(allocate_and_copy(sizeof(*command_table), (void *)&command_table[i]))));
 
 #define free_command_table(command_map) \
 	for (auto itr = command_map.begin(); itr != command_map.end(); ++itr) \
-		delete itr->second; \
+	delete itr->second; \
 	command_map.clear();
 
 static std::list<std::string> StrSplit(const std::string &src, const std::string &sep)
