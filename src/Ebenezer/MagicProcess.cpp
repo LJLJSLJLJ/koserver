@@ -30,6 +30,10 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 			if ((UNIXTIME - TO_USER(pCaster)->m_LastSkillUseTime) <= PLAYER_SKILL_REQUEST_INTERVAL) {
 				instance.bSendSkillFailed = true;
 			}
+		} else if (TO_USER(pCaster)->m_LastSkillID == instance.nSkillID) {
+			if ((UNIXTIME - TO_USER(pCaster)->m_LastSkillUseTime) * 1000 <= (instance.pSkill->sReCastTime * 100) && instance.pSkill->sReCastTime != 0) {
+				instance.bSendSkillFailed = true;
+			}
 		}
 	}
 
